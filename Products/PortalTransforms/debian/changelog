@@ -1,0 +1,39 @@
+zope-cmftransforms (1.0.3-1) unstable; urgency=low
+
+  * New upstream release
+  * added rtf_to_html.py converter
+  * added rtf to as mimetypes to mime_types/__init__.py
+  * added rtf_to_xml.py converter
+  * added pdf_to_text.py converter
+  * removed dependency from CMFDefault.utils for misc
+    converters (integrated code into libtransforms/utils.py)
+  * commandtransform.py: fixed sick cleanDir() implementation
+  * mime_types/magic.py (guessMime): Don't try to be so magic :)
+  * transforms/office_com.py: fix wrong import
+  * transforms/pdf_to_text.py:
+    return text utf-8 encoded
+
+ -- Christian Heimes <heimes@faho.rwth-aachen.de>  Sun, 21 Mar 2004 16:52:09 +0100
+
+zope-cmftransforms (1.0.1-1) unstable; urgency=low
+
+  * new upstream release
+  * fixed license
+  * move tests in a separated package
+  * only html doc in the html subdirectory
+
+ -- Sylvain Thénault <sylvain.thenault@logilab.fr>  Wed, 19 Nov 2003 11:00:04 +0100
+
+zope-cmftransforms (1.0a3-2) unstable; urgency=low
+
+  * fix docutils dependancy (was python2.1-docutils instead of
+    python-docutils)
+
+ -- Sylvain Thénault <sylvain.thenault@logilab.fr>  Wed, 13 Aug 2003 14:42:05 +0200
+
+zope-cmftransforms (1.0a3-1) unstable; urgency=low
+
+  * Initial Release of PortalTransforms. 
+
+ -- Sylvain Thénault <sylvain.thenault@logilab.fr>  Wed, 9 Jul 2003 14:42:05 +0200
+

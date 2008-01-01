@@ -1,0 +1,36 @@
+Source: zope-cmftransforms
+Section: web
+Priority: optional
+Maintainer: Sylvain Thenault <sylvain.thenault@logilab.fr> 
+Build-Depends-Indep: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1
+
+Package: zope-cmftransforms
+Architecture: all
+Depends: zope, lynx, pdftohtml, python-docutils, xpdf-utils
+Suggests: wv, xsltproc, tidy, unrtf, ppthtml, xlhtml, gs-common
+Description: MIME types based transformations for the CMF
+ This package provides two new CMF tools in order to
+ make MIME types based transformations on the portal contents and so an
+ easy to way to plugin some new transformations for previously
+ unsupported content types. You will find more info in the package's
+ README and docs directory.
+ .
+ It's part of the Archetypes project, but the only requirement to use it
+ is to have a CMF based site. If you are using Archetypes, this package
+ replaces the transform package.
+ .
+ Notice this package can also be used as a standalone Python package. If
+ you've downloaded the Python distribution, you can't make it a Zope
+ product since Zope files have been removed from this distribution.
+ .
+ Homepage: http://www.sourceforge.net/projects/archetypes
+
+
+
+
+Package: zope-cmftransforms-test
+Architecture: all
+Depends: zope-cmftransforms (= ${Source-Version})
+Description: zope-cmftransforms's test files.
+ This package contains test files shared by the zope-cmftransforms package.
