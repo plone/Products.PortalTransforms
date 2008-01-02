@@ -7,7 +7,7 @@ setup(name='Products.PortalTransforms',
       version=version,
       description="MIME based content transformations",
       long_description=open("README.txt").read() + "\n" + \
-              open(os.path.join("docs", "HiSTORY.txt")).read(),
+              open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
         "Framework :: Zope2",
         "Operating System :: OS Independent",
