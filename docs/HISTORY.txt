@@ -4,6 +4,9 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Implemented entity conversion in html to plain text transform.
+  [fschulze]
+
 * Added metadata.xml file to the profile.
   [hannosch]
 
