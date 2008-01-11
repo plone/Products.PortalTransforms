@@ -19,6 +19,9 @@ from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
 
+from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
+from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+
 from os.path import exists
 import sys
 # we have to set locale because lynx output is locale sensitive !
@@ -183,13 +186,19 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.image_to_pcx',
      "logo.png", "logo.pcx", None, 0
      ),
-    ('Products.PortalTransforms.transforms.markdown_to_html',
-     "markdown.txt", "markdown.html", None, 0
-     ),
-    ('Products.PortalTransforms.transforms.textile_to_html',
-     "input.textile", "textile.html", None, 0
-    ), 
    )
+if HAS_MARKDOWN:
+    TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
+        ('Products.PortalTransforms.transforms.markdown_to_html',
+         "markdown.txt", "markdown.html", None, 0
+         ),
+       )
+if HAS_TEXTILE:
+    TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
+        ('Products.PortalTransforms.transforms.textile_to_html',
+         "input.textile", "textile.html", None, 0
+        ), 
+       )
 
 def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO

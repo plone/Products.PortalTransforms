@@ -4,6 +4,9 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Disabled markdown and textile tests when their libraries aren't installed
+  [fschulze]
+
 * Implemented entity conversion in html to plain text transform.
   [fschulze]
 
