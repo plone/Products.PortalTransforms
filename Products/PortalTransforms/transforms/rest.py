@@ -19,19 +19,25 @@ class rest:
     default:
 
       >>> try:
-      ...     transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
+      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:
-      ...     print 'Failure'
+      ...     if "&quot;raw&quot; directive disabled." in out.value:
+      ...         print 'Good'
+      ...     else:
+      ...         print 'Failure'
       Good
 
       >>> try:
-      ...     transform.convert('.. include:: <isonum.txt>', D())
+      ...     out = transform.convert('.. include:: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:
-      ...     print 'Failure'
+      ...     if "&quot;include&quot; directive disabled." in out.value:
+      ...         print 'Good'
+      ...     else:
+      ...         print 'Failure'
       Good
     """
     __implements__ = itransform

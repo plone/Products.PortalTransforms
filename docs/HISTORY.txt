@@ -4,6 +4,10 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Fixed rest tests when run on Zope 2.11. The raw and include directives are
+  disabled but no longer removed.
+  [hannosch]
+
 * Disabled markdown and textile tests when their libraries aren't installed
   [fschulze]
 
