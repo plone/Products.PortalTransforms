@@ -57,7 +57,7 @@ The MIME types registry
 The tranformation tool
 ``````````````````````
 
-    class iengine(Interface):
+    class IEngine(Interface):
 
 	def registerTransform(transform):
 	    """register a transform
@@ -100,7 +100,7 @@ utilities may help to do it quicker...
 Related interfaces
 ``````````````````
 
-    class itransform(Interface):
+    class ITransform(Interface):
 	"""A transformation plugin -- tranform data somehow must be threadsafe and stateless"""
 
         inputs = Attribute("""list of imimetypes (or registered rfc-2046
@@ -114,7 +114,7 @@ Related interfaces
 	def convert(data, idata, \**kwargs):
 	    """convert the data, store the result in idata and return that"""
 
-    class idatastream(Interface):
+    class IDataStream(Interface):
 	"""data stream, is the result of a transform"""
 
 	def setData(self, value):

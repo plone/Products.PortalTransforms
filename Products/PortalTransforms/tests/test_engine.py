@@ -3,7 +3,7 @@ from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.interfaces import *
+from Products.PortalTransforms.z3.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
 import urllib
@@ -16,7 +16,7 @@ class BaseTransform:
 
 
 class HtmlToText(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ('text/html',)
     output = 'text/plain'
 
@@ -33,7 +33,7 @@ class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
 
 class FooToBar(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -47,7 +47,7 @@ class FooToBar(BaseTransform):
         return data
 
 class DummyHtmlFilter1(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     __name__ = 'dummy_html_filter1'
     inputs = ('text/html',)
     output = 'text/html'
@@ -57,7 +57,7 @@ class DummyHtmlFilter1(BaseTransform):
         return data
 
 class DummyHtmlFilter2(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     __name__ = 'dummy_html_filter2'
     inputs = ('text/html',)
     output = 'text/html'
@@ -67,30 +67,30 @@ class DummyHtmlFilter2(BaseTransform):
         return data
 
 class TransformNoIO(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
 
 class BadTransformMissingImplements(BaseTransform):
-    __implements__ = None
+    #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
 class BadTransformBadMIMEType1(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
 class BadTransformBadMIMEType2(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
 
 class BadTransformNoInput(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ()
     output = 'text/plain'
 
 class BadTransformWildcardOutput(BaseTransform):
-    __implements__ = itransform
+    implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
     

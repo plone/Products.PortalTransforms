@@ -19,7 +19,8 @@ import string
 import keyword, token, tokenize
 from cStringIO import StringIO
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from DocumentTemplate.DT_Util import html_quote
 
 ## Python Source Parser #####################################################
@@ -109,7 +110,7 @@ class Parser:
 class PythonTransform:
     """Colorize Python source files
     """
-    __implements__ = itransform
+    implements(ITransform)
 
     __name__ = "python_to_html"
     inputs  = ("text/x-python",)

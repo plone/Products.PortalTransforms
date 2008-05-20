@@ -4,6 +4,11 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Purge old zope2 Interface interfaces for Zope 2.12 compatibility.
+  Consider branching before this checkin if releases required before Plone 4.
+  [elro]
+
+
 * Fixed rest tests when run on Zope 2.11. The raw and include directives are
   disabled but no longer removed.
   [hannosch]

@@ -3,7 +3,8 @@ from sgmllib import SGMLParser
 import re
 from cgi import escape
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.utils import log
 from Products.CMFDefault.utils import bodyfinder
 from Products.CMFDefault.utils import IllegalHTML
@@ -194,7 +195,7 @@ class SafeHTML:
         -> Flush Cache.
     """
 
-    __implements__ = itransform
+    implements(ITransform)
 
     __name__ = "safe_html"
     inputs   = ('text/html',)

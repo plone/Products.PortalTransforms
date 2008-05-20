@@ -5,7 +5,8 @@ author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.CMFDefault.utils import bodyfinder
@@ -20,7 +21,7 @@ else:
     
 
 class textile:
-    __implements__ = itransform
+    implements(ITransform)
 
     __name__ = "textile_to_html"
     inputs  = ("text/x-web-textile",)

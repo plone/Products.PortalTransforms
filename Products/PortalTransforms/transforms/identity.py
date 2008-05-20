@@ -4,14 +4,15 @@ A simple identity transform
 
 __revision__ = '$Id$'
 
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 
 class IdentityTransform:
     """ Identity transform
 
     return content unchanged.
     """
-    __implements__ = (itransform,)
+    implements(ITransform)
 
     __name__ = "rest_to_text"
 

@@ -1,13 +1,11 @@
 from zope.interface import implements
 
-from Products.PortalTransforms.interfaces import idatastream
 from Products.PortalTransforms.z3.interfaces import IDataStream
 
 
 class datastream:
     """A transformation datastream packet"""
 
-    __implements__ = idatastream
     __slots__ = ('name', '_data', '_metadata')
 
     implements(IDataStream)

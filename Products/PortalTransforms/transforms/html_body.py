@@ -1,10 +1,11 @@
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from Products.CMFDefault.utils import bodyfinder
 
 class HTMLBody:
     """Simple transform which extracts the content of the body tag"""
 
-    __implements__ = itransform
+    implements(ITransform)
 
     __name__ = "html_body"
     inputs   = ('text/html',)

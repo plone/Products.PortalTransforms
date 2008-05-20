@@ -16,7 +16,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.utils import getToolByName
 
-from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.z3.interfaces import ITransform
 from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
@@ -69,7 +68,6 @@ class Transform(SimpleItem):
     additional configuration information
     """
 
-    __implements__ = itransform
     implements(ITransform)
 
     meta_type = 'Transform'
@@ -120,8 +118,8 @@ class Transform(SimpleItem):
         # check this is a valid transform
         if not hasattr(transform, '__class__'):
             raise TransformException('Invalid transform : transform is not a class')
-        if not itransform.isImplementedBy(transform):
-            raise TransformException('Invalid transform : itransform is not implemented by %s' % transform.__class__)
+        if not ITransform.providedBy(transform):
+            raise TransformException('Invalid transform : ITransform is not implemented by %s' % transform.__class__)
         if not hasattr(transform, 'inputs'):
             raise TransformException('Invalid transform : missing required "inputs" attribute')
         if not hasattr(transform, 'output'):

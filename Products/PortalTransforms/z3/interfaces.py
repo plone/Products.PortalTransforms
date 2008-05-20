@@ -68,7 +68,7 @@ class IEngine(Interface):
     def registerTransform(transform):
         """register a transform
 
-        transform must implements itransform
+        transform must implements ITransform
         """
 
     def unregisterTransform(name):

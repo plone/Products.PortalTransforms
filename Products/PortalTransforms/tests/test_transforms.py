@@ -6,6 +6,7 @@ from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from utils import input_file_path, output_file_path, normalize_html,\
      load, matching_inputs
 from Products.PortalTransforms.data import datastream
+from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.interfaces import idatastream
 from Products.MimetypesRegistry.MimeTypesTool import MimeTypesTool
 from Products.PortalTransforms.TransformEngine import TransformTool
@@ -40,7 +41,7 @@ class TransformTest(ATSiteTestCase):
         input.close()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
-        self.assert_(idatastream.isImplementedBy(res_data))
+        self.assert_(IDataStream.providedBy(res_data))
         got = res_data.getData()
         try:
             output = open(output)

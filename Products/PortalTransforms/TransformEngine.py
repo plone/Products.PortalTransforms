@@ -21,9 +21,9 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms import transforms
-from Products.PortalTransforms.interfaces import iengine
-from Products.PortalTransforms.interfaces import idatastream
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import IDataStream
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.interfaces import IEngine
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.chain import TransformsChain
@@ -33,7 +33,6 @@ from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
-from Products.PortalTransforms.z3.interfaces import IEngine
 
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
@@ -42,7 +41,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1 # Show up in the ZMI
 
-    __implements__ = iengine
     implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
@@ -94,7 +92,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         * orig is an encoded string
 
-        * data an optional idatastream object. If None a new datastream will be
+        * data an optional IDataStream object. If None a new datastream will be
         created and returned
 
         * optional object argument is the object on which is bound the data.
@@ -103,7 +101,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         * additional arguments (kwargs) will be passed to the transformations.
         Some usual arguments are : filename, mimetype, encoding
 
-        return an object implementing idatastream or None if no path has been
+        return an object implementing IDataStream or None if no path has been
         found.
         """
         target_mimetype = str(target_mimetype)
@@ -179,15 +177,15 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             transform = path[0]
 
         result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
-        assert(idatastream.isImplementedBy(result),
-               'result doesn\'t implemented idatastream')
+        assert(IDataStream.providedBy(result),
+               'result doesn\'t implemented IDataStream')
         self._setMetaData(result, transform)
 
         # set cache if possible
         if object is not None and result.isCacheable():
             cache.setCache(str(target_mimetype), result)
 
-        # return idatastream object
+        # return IDataStream object
         return result
 
     security.declarePublic('convertToData')
@@ -250,7 +248,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _unwrap(self, data):
         """unwrap data from an icache"""
-        if idatastream.isImplementedBy(data):
+        if IDataStream.providedBy(data):
             data = data.getData()
         return data
 
@@ -470,8 +468,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # register non zope transform
         module = str(transform.__module__)
         transform = Transform(transform.name(), module, transform)
-        if not itransform.isImplementedBy(transform):
-            raise TransformException('%s does not implement itransform' % transform)
+        if not ITransform.providedBy(transform):
+            raise TransformException('%s does not implement ITransform' % transform)
         name = transform.name()
         __traceback_info__ = (name, transform)
         if name not in self.objectIds():

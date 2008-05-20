@@ -1,10 +1,11 @@
-from Products.PortalTransforms.interfaces import itransform
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implements
 from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml
 
 class WebIntelligentPlainTextToHtml:
     """Transform which replaces urls and email into hyperlinks"""
 
-    __implements__ = itransform
+    implements(ITransform)
 
     __name__ = "web_intelligent_plain_text_to_html"
     output = "text/html"
