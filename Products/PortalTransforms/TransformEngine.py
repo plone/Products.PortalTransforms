@@ -343,6 +343,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         outputs = self._mtmap.get(orig)
         if outputs is None:
             return result
+
+        registry = getToolByName(self, 'mimetypes_registry') 
+        mto = registry.lookup(target) 
+        # target mimetype aliases 
+        target_aliases = mto[0].mimetypes
+
         path.append(None)
         for o_mt, transforms in outputs.items():
             for transform in transforms:
@@ -355,7 +361,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     # avoid infinite loop...
                     continue
                 path[-1] = transform
-                if o_mt == target:
+                if o_mt in target_aliases:
                     if not requirements:
                         result.append(path[:])
                 else:

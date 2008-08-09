@@ -4,6 +4,11 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Transforms to target mimetype with multiple alias mimetypes in
+  mimetypes_registry failed. This closes
+  http://dev.plone.org/plone/ticket/8187.
+  [hannosch]
+
 * Added logging to markdown and textile transforms if the libraries are not
   installed. This closes http://dev.plone.org/plone/ticket/8285.
   [hannosch]
