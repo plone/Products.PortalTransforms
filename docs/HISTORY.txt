@@ -4,10 +4,13 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Added logging to markdown and textile transforms if the libraries are not
+  installed. This closes http://dev.plone.org/plone/ticket/8285.
+  [hannosch]
+
 * Purge old zope2 Interface interfaces for Zope 2.12 compatibility.
   Consider branching before this checkin if releases required before Plone 4.
   [elro]
-
 
 * Fixed rest tests when run on Zope 2.11. The raw and include directives are
   disabled but no longer removed.

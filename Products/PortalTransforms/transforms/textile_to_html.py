@@ -4,18 +4,24 @@ Uses Roberto A. F. De Almeida's http://dealmeida.net/ module to do its handy wor
 author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
+import os
+
+from zope.interface import implements
+
+from Products.CMFDefault.utils import bodyfinder
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.CMFDefault.utils import bodyfinder
-import os
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import sansext
+from Products.PortalTransforms.utils import log
 
 try:
     import textile as textile_transformer
 except ImportError:
     HAS_TEXTILE = False
+    log('textile_to_html: Could not import textile.')
+    
 else:
     HAS_TEXTILE = True
     

@@ -4,18 +4,23 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module to do its ha
 author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
+import os
+
+from zope.interface import implements
+
+from Products.CMFDefault.utils import bodyfinder
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.CMFDefault.utils import bodyfinder
-import os
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import sansext
+from Products.PortalTransforms.utils import log
 
 try:
     import markdown as markdown_transformer
 except ImportError:
     HAS_MARKDOWN = False
+    log('markdown_to_html: Could not import python-markdown.')
 else:
     HAS_MARKDOWN = True
     
