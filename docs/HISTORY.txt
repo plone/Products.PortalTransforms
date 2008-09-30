@@ -1,7 +1,10 @@
 Changelog
 =========
 
-trunk - unreleased
+1.6.2 - unreleased
+------------------
+
+1.6.1 - 2008-09-30
 ------------------
 
 * Fixed rest tests when run on Zope 2.11. The raw and include directives are
