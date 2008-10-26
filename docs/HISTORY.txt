@@ -4,6 +4,9 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Structured Text is gone in Zope 2.12.
+  [hannosch]
+
 * Transforms to target mimetype with multiple alias mimetypes in
   mimetypes_registry failed. This closes
   http://dev.plone.org/plone/ticket/8187.
