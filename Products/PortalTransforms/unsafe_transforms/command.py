@@ -21,7 +21,7 @@ class ExternalCommandTransform(commandtransform):
     the command line parameters) and return output on stdout.
     Input and output mime types must be set correctly !
     """
-    implements(ITransform),)
+    implements(ITransform)
 
     __name__ = "command_transform"
 
