@@ -24,7 +24,7 @@ class XsltTransform(commandtransform):
 
     You can associate different document type to different transformations.
     """
-    implements(ITransform),)
+    implements(ITransform)
 
     __name__ = "xml_to_html"
 
