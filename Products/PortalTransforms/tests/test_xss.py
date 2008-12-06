@@ -16,10 +16,7 @@ class TestXSSFilter(ATSiteTestCase):
 
    def doTest(self, data_in, data_out):
        html = self.engine.convertTo('text/x-html-safe', data_in, mimetype="text/html")
-       assert(html.getData())
        self.assertEqual (data_out,html.getData())
-
-
 
    def test_1(self):
        data_in = """<html><body><img src="javascript:Alert('XSS');" /></body></html>"""

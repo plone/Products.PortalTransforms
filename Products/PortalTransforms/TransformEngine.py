@@ -177,8 +177,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             transform = path[0]
 
         result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
-        assert(IDataStream.providedBy(result),
-               'result doesn\'t implemented IDataStream')
         self._setMetaData(result, transform)
 
         # set cache if possible

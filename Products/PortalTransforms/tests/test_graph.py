@@ -1,5 +1,3 @@
-
-from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from utils import input_file_path
@@ -15,7 +13,7 @@ class TestGraph(ATSiteTestCase):
         ### XXX Local file and expected output
         data = open(FILE_PATH, 'r').read()
         out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
-        assert(out.getData())
+        self.failUnless(out.getData())
 
     def testIdentity(self):
         orig = 'Some text'

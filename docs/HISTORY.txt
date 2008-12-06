@@ -4,6 +4,9 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Removed useless assert statements.
+  [hannosch]
+
 * Structured Text is gone in Zope 2.12.
   [hannosch]
 
