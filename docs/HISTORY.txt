@@ -4,6 +4,10 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Made the graph tests conditional on the availability of the external
+  binaries for the transform.
+  [hannosch]
+
 * Removed useless assert statements.
   [hannosch]
 
