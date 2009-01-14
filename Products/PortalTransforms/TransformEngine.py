@@ -3,8 +3,8 @@ from zope.interface import implements
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Globals import InitializeClass
-from Globals import PersistentMapping
+from App.class_init import InitializeClass
+from Persistence import PersistentMapping
 try:
     from ZODB.PersistentList import PersistentList
 except ImportError:

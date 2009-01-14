@@ -19,9 +19,22 @@ setup(name='Products.PortalTransforms',
       namespace_packages=['Products'],
       include_package_data=True,
       zip_safe=False,
+      extras_require=dict(
+        test=[
+            'zope.testing',
+            'Products.Archetypes',
+        ]
+      ),
       install_requires=[
           'setuptools',
+          'plone.intelligenttext',
+          'zope.interface',
+          'zope.structuredtext',
           'Products.CMFCore',
+          'Products.CMFDefault',
           'Products.MimetypesRegistry',
+          # 'Acquisition',
+          # 'ZODB3',
+          # 'Zope2',
       ],
       )

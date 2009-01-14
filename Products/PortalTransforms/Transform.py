@@ -4,8 +4,8 @@ from UserDict import UserDict
 from zope.interface import implements
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
-from Globals import PersistentMapping
+from App.class_init import InitializeClass
+from Persistence import PersistentMapping
 try:
     from ZODB.PersistentList import PersistentList
 except ImportError:

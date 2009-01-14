@@ -4,6 +4,10 @@ Changelog
 trunk - unreleased
 ------------------
 
+* Declare test dependencies in an extra and fixed deprecation warnings
+  for use of Globals.
+  [hannosch]
+
 * Made the graph tests conditional on the availability of the external
   binaries for the transform.
   [hannosch]

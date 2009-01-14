@@ -1,8 +1,8 @@
 from zope.interface import implements
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import Persistent
-from Globals import InitializeClass
+from Persistence import Persistent
+from App.class_init import InitializeClass
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from AccessControl.Role import RoleManager
