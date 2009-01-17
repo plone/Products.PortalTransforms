@@ -1,9 +1,5 @@
-import os.path
-__version__ = open(os.path.join(__path__[0], 'version.txt')).read().strip()
-
 from Products.PortalTransforms.TransformEngine import TransformTool
 
-GLOBALS = globals()
 PKG_NAME = 'PortalTransforms'
 
 tools = (
