@@ -1,6 +1,6 @@
 from zope.interface import implements
 
-from Products.PortalTransforms.z3.interfaces import IDataStream
+from Products.PortalTransforms.interfaces import IDataStream
 
 
 class datastream:

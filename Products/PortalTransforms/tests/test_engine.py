@@ -4,7 +4,7 @@ from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from zope.interface import implements
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.z3.interfaces import ITransform
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
 import urllib

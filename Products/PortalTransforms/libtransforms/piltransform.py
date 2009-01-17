@@ -1,4 +1,4 @@
-from Products.PortalTransforms.z3.interfaces import ITransform
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from StringIO import StringIO
 import PIL.Image

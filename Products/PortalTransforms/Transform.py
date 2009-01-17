@@ -6,17 +6,14 @@ from zope.interface import implements
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.class_init import InitializeClass
 from Persistence import PersistentMapping
-try:
-    from ZODB.PersistentList import PersistentList
-except ImportError:
-    from persistent.list import PersistentList
+from persistent.list import PersistentList
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.utils import getToolByName
 
-from Products.PortalTransforms.z3.interfaces import ITransform
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
 

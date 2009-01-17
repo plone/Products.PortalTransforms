@@ -8,7 +8,7 @@ from os.path import join, basename
 from zope.interface import implements
 
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
-from Products.PortalTransforms.z3.interfaces import ITransform
+from Products.PortalTransforms.interfaces import ITransform
 
 class commandtransform:
     """abstract class for external command based transform

@@ -13,8 +13,8 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.PortalTransforms.utils import _www
 
-from Products.PortalTransforms.z3.interfaces import IChain
-from Products.PortalTransforms.z3.interfaces import ITransform
+from Products.PortalTransforms.interfaces import IChain
+from Products.PortalTransforms.interfaces import ITransform
 
 from UserList import UserList
 

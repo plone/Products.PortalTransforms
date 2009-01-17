@@ -4,6 +4,9 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Removed z3 sub-package. Interfaces are in the interfaces module.
+  [hannosch]
+
 * Cleaned up package metadata.
   [hannosch]
 
