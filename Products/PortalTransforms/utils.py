@@ -1,9 +1,6 @@
 """some common utilities
 """
 import logging
-from types import UnicodeType, StringType
-
-STRING_TYPES = (UnicodeType, StringType)
 
 class TransformException(Exception):
     pass
@@ -19,18 +16,10 @@ def log(message, severity=logging.INFO):
 # directory where template for the ZMI are located
 import os.path
 _www = os.path.join(os.path.dirname(__file__), 'www')
-skins_dir = os.path.join(os.path.dirname(__file__), 'skins')
-
-# directory where template for the ZMI are located
-import os.path
-_www = os.path.join(os.path.dirname(__file__), 'www')
-skins_dir = None
 
 def safeToInt(value):
     """Convert value to integer or just return 0 if we can't"""
     try:
         return int(value)
-    except ValueError:
-        return 0
-    except TypeError:
+    except (TypeError, ValueError):
         return 0

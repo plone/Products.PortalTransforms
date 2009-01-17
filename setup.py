@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.6.1'
+version = '2.0'
 
 setup(name='Products.PortalTransforms',
       version=version,
       description="MIME based content transformations",
       long_description=open("README.txt").read() + "\n" + \
-              open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[
         "Framework :: Zope2",
         "Operating System :: OS Independent",
@@ -33,8 +33,8 @@ setup(name='Products.PortalTransforms',
           'Products.CMFCore',
           'Products.CMFDefault',
           'Products.MimetypesRegistry',
-          # 'Acquisition',
-          # 'ZODB3',
-          # 'Zope2',
+          'Acquisition',
+          'ZODB3',
+          'Zope2',
       ],
       )
