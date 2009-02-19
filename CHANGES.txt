@@ -4,6 +4,9 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Updated test output to be compatible with docutils 0.5.
+  [hannosch]
+
 * Removed z3 sub-package. Interfaces are in the interfaces module.
   [hannosch]
 
