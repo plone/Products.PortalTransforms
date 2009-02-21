@@ -10,7 +10,7 @@ FB_REGISTRY = None
 # logging function
 logger = logging.getLogger('PortalTransforms')
 
-def log(message, severity=logging.INFO):
+def log(message, severity=logging.DEBUG):
     logger.log(severity, message)
 
 # directory where template for the ZMI are located

@@ -4,6 +4,9 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Downgraded log messages about unavailable binaries to debug level.
+  [hannosch]
+
 * Updated test output to be compatible with docutils 0.5.
   [hannosch]
 
