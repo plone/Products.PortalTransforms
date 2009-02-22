@@ -4,6 +4,9 @@ Changelog
 1.6.2 - unreleased
 ------------------
 
+* Make markdown transformation unicode safe
+  [tomster]
+
 1.6.1 - 2008-09-30
 ------------------
 
