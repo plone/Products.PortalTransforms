@@ -4,16 +4,9 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module to do its ha
 author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
-import os
-
 from zope.interface import implements
 
-from Products.CMFDefault.utils import bodyfinder
-
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.PortalTransforms.libtransforms.utils import bin_search
-from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.utils import log
 
 try:
@@ -37,7 +30,11 @@ class markdown:
 
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
-            html = markdown_transformer.markdown(orig)
+            # markdown expects unicode input:
+            orig = unicode(orig.decode('utf-8'))
+            # PortalTransforms, however expects a string as result,
+            # so we encode the unicode result back to UTF8:
+            html = markdown_transformer.markdown(orig).encode('utf-8')
         else:
             html = orig
         data.setData(html)

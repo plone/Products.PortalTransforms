@@ -1,7 +1,11 @@
 from setuptools import setup, find_packages
 import os
 
+<<<<<<< HEAD:setup.py
 version = '2.0'
+=======
+version = '1.6.2dev'
+>>>>>>> development:setup.py
 
 setup(name='Products.PortalTransforms',
       version=version,
@@ -33,8 +37,12 @@ setup(name='Products.PortalTransforms',
           'Products.CMFCore',
           'Products.CMFDefault',
           'Products.MimetypesRegistry',
+<<<<<<< HEAD:setup.py
           'Acquisition',
           'ZODB3',
           'Zope2',
+=======
+          'Markdown>=1.7',
+>>>>>>> development:setup.py
       ],
       )

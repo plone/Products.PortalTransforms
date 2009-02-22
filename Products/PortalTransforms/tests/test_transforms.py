@@ -1,6 +1,5 @@
 import os
 import logging
-from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from utils import input_file_path, output_file_path, normalize_html,\
@@ -8,8 +7,6 @@ from utils import input_file_path, output_file_path, normalize_html,\
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.interfaces import idatastream
-from Products.MimetypesRegistry.MimeTypesTool import MimeTypesTool
-from Products.PortalTransforms.TransformEngine import TransformTool
 
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
@@ -24,7 +21,6 @@ from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 
 from os.path import exists
-import sys
 # we have to set locale because lynx output is locale sensitive !
 os.environ['LC_ALL'] = 'C'
 logger = logging.getLogger('PortalTransforms')
