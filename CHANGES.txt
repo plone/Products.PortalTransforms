@@ -46,7 +46,7 @@ Changelog
 1.6.2 - unreleased
 ------------------
 
-* Make markdown transformation unicode safe
+* Make markdown transformation unicode safe and depend on Markdown>=1.7
   [tomster]
 
 1.6.1 - 2008-09-30
