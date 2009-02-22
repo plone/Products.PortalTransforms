@@ -23,5 +23,6 @@ setup(name='Products.PortalTransforms',
           'setuptools',
           'Products.CMFCore',
           'Products.MimetypesRegistry',
+          'Markdown>=1.7',
       ],
       )
