@@ -6,10 +6,6 @@ author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
 from Products.PortalTransforms.interfaces import itransform
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.CMFDefault.utils import bodyfinder
-import os
 
 try:
     import markdown as markdown_transformer
