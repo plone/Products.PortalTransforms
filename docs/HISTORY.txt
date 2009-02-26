@@ -4,6 +4,10 @@ Changelog
 1.6.2 - unreleased
 ------------------
 
+* Fix the way that unsafe transforms calls the input file for the command line
+  plugin.
+  [encolpe]
+
 * Make markdown transformation unicode safe and depend on Markdown>=1.7
   [tomster]
 
