@@ -4,6 +4,10 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Fix the way that unsafe transforms calls the input file for the command line
+  plugin.
+  [encolpe]
+
 * Downgraded log messages about unavailable binaries to debug level.
   [hannosch]
 
