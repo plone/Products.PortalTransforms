@@ -4,6 +4,9 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Avoid acquiring `mimetypes_registry` and call it via a proper API.
+  [hannosch]
+
 * Fix the way that unsafe transforms calls the input file for the command line
   plugin.
   [encolpe]
