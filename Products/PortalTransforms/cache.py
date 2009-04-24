@@ -3,6 +3,8 @@
 from time import time
 from Acquisition import aq_base
 
+_marker = object()
+
 class Cache:
 
     def __init__(self, context, _id='_v_transform_cache'):
@@ -52,7 +54,7 @@ class Cache:
         """
         context = self.context
         id = self._id
-        if not shasattr(context, id):
+        if getattr(context, id, _marker) is _marker:
             return
         if key is None:
             delattr(context, id)

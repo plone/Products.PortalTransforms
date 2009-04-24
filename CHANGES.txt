@@ -53,6 +53,9 @@ Changelog
 1.6.2 - unreleased
 ------------------
 
+* Fix NameError in the purgeCache method.
+  [davisagli]
+
 * Make markdown transformation unicode safe and depend on Markdown>=1.7
   [tomster]
 
