@@ -4,6 +4,9 @@ Changelog
 1.6.2 - unreleased
 ------------------
 
+* Fix NameError in the purgeCache method.
+  [davisagli]
+
 * Fix the way that unsafe transforms calls the input file for the command line
   plugin.
   [encolpe]
