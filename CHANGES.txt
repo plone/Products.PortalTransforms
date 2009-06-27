@@ -7,10 +7,6 @@ Changelog
 * Avoid acquiring `mimetypes_registry` and call it via a proper API.
   [hannosch]
 
-* Fix the way that unsafe transforms calls the input file for the command line
-  plugin.
-  [encolpe]
-
 * Downgraded log messages about unavailable binaries to debug level.
   [hannosch]
 
@@ -50,11 +46,19 @@ Changelog
   Consider branching before this checkin if releases required before Plone 4.
   [elro]
 
-1.6.2 - unreleased
+1.6.3 - unreleased
+------------------
+
+
+1.6.2 - 2009-06-18
 ------------------
 
 * Fix NameError in the purgeCache method.
   [davisagli]
+
+* Fix the way that unsafe transforms calls the input file for the command line
+  plugin.
+  [encolpe]
 
 * Make markdown transformation unicode safe and depend on Markdown>=1.7
   [tomster]
