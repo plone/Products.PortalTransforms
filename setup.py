@@ -35,6 +35,6 @@ setup(name='Products.PortalTransforms',
           'Acquisition',
           'ZODB3',
           'Zope2',
-          'Markdown>=1.7,<2.0dev',
+          'Markdown>=1.7',
       ],
       )
