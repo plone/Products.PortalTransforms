@@ -1,9 +1,12 @@
 Changelog
 =========
 
-1.6.3 - Unreleased
+1.6.3 - 2009-09-09
 ------------------
 
+* The safe_html parser would silently drop CDATA sections due to a bug in
+  SGMLParser. Apply a fix originally found in BeautifulSoup.
+  [optilude]
 
 1.6.2 - 2009-06-18
 ------------------
