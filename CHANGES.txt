@@ -46,9 +46,11 @@ Changelog
   Consider branching before this checkin if releases required before Plone 4.
   [elro]
 
-1.6.3 - unreleased
+1.6.3 - 2009-09-09
 ------------------
 
+* Fix handling of CDATA sections.
+  [optilude]
 
 1.6.2 - 2009-06-18
 ------------------

@@ -22,6 +22,7 @@ setup(name='Products.PortalTransforms',
         test=[
             'zope.testing',
             'Products.Archetypes',
+            'Products.CMFTestCase',
         ]
       ),
       install_requires=[
