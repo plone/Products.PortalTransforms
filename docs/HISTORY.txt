@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.6.4 - Unreleased
+------------------
+
+* Clean up temporary files/directories after memory errors and failed
+  conversions.
+  [witsch]
+
 1.6.3 - 2009-09-09
 ------------------
 
