@@ -46,6 +46,13 @@ Changelog
   Consider branching before this checkin if releases required before Plone 4.
   [elro]
 
+1.6.4 - 2009-10-08
+------------------
+
+* Clean up temporary files/directories after memory errors and failed
+  conversions.
+  [witsch]
+
 1.6.3 - 2009-09-09
 ------------------
 
@@ -148,13 +155,13 @@ Changelog
 1.5.1-final - 2007-04-17
 ------------------------
 
-* note for release-managers: The version-bump to 1.5 was a bit early, but now 
+* note for release-managers: The version-bump to 1.5 was a bit early, but now
   as we have it, i keep it and next release number in the cycle needed for
   Archetypes 1.4.2 (used for Plone 2.5.2) of PortalTransforms is then the 1.5
   final.
-  We dont need increasing of release numbers because of Plone 3.0, 
-  Archetypes 1.5, ... if theres no change in the dependen product, like 
-  this one. 
+  We dont need increasing of release numbers because of Plone 3.0,
+  Archetypes 1.5, ... if theres no change in the dependen product, like
+  this one.
   [jensens]
 
 1.5.0-final - 2006-12-15
@@ -202,7 +209,7 @@ Changelog
 1.3.9-final02 - 2006-01-15
 --------------------------
 
-* nothing - the odd version checking needs a version change to stick to 
+* nothing - the odd version checking needs a version change to stick to
   Archetypes version.
   [yenzenz]
 
@@ -210,8 +217,8 @@ Changelog
 ----------------------
 
 * Fixed [ 1293684 ], unregistered Transforms are not unmaped,
-  Transformation was deleted from portal_transforms, but remained 
-  active. 
+  Transformation was deleted from portal_transforms, but remained
+  active.
   http://sourceforge.net/tracker/index.php?func-detail&aid-1293684&group_id-75272&atid-543430
   Added a cleanup that unmaps deleted transforms on reinstall
   [csenger]
@@ -244,21 +251,21 @@ Changelog
 1.3.8-final02 - 2005-10-11
 --------------------------
 
-* nothing - the odd version checking needs a version change to stick to 
+* nothing - the odd version checking needs a version change to stick to
   Archetypes version.
   [yenzenz]
 
 1.3.7-final01 - 2005-08-30
 --------------------------
 
-* nothing - the odd version checking needs a version change to stick to 
+* nothing - the odd version checking needs a version change to stick to
   Archetypes version.
   [yenzenz]
 
 1.3.6-final02 - 2005-08-07
 --------------------------
 
-* nothing - the odd version checking needs a version change to stick to 
+* nothing - the odd version checking needs a version change to stick to
   Archetypes version.
   [yenzenz]
 
@@ -313,7 +320,7 @@ Changelog
 * Updated link to rtf converter to http://freshmeat.net/projects/rtfconverter/
   [tiran]
 
-* Small fix for the com office converter. COM could crash if word is 
+* Small fix for the com office converter. COM could crash if word is
   invisible. Also a pop up might appeare when quitting word.
   [gogo]
 
@@ -392,7 +399,7 @@ Changelog
 1.3.2-1 - 2004-09-04
 --------------------
 
-* Disabled filters that were introduced in 1.3.1-1. The currently used 
+* Disabled filters that were introduced in 1.3.1-1. The currently used
   transform path algo is broken took too long to find a path.
   [tiran]
 
@@ -408,7 +415,7 @@ Changelog
   destination are the same mimetype).
   [dreamcatcher]
 
-* Add a html filter to extract the content of the body tag (so we don't get a 
+* Add a html filter to extract the content of the body tag (so we don't get a
   double <body> when uploading full html files).
   [dreamcatcher]
 
@@ -441,7 +448,7 @@ Changelog
 
 * Fixed [ 1002014 ] Add policy screen doesn't accept single entry
   [tiran]
- 
+
 1.3.0-2 - 2004-07-29
 --------------------
 
