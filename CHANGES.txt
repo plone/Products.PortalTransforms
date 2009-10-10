@@ -4,6 +4,10 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Added stripped_attributes, stripped_combinations, style_whitelist and
+  class_blacklist attributes to the safe_html transform.
+  [robgietema]
+
 * Avoid acquiring `mimetypes_registry` and call it via a proper API.
   [hannosch]
 
