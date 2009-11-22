@@ -35,6 +35,9 @@ VALID_TAGS['tfoot'] = 1
 VALID_TAGS['col'] = 1
 VALID_TAGS['colgroup'] = 1
 
+# add some tags to nasty.  These should also probably be backported to CMFDefault.
+NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
+
 
 msg_pat = """
 <div class="system-message">
