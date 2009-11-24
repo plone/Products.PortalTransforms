@@ -1,6 +1,16 @@
 Changelog
 =========
 
+2.0 - (Unreleased)
+------------------
+
+* Added HTML5 tags as allowed tags.
+  [limi]
+
+* Made sure the meta tag is stripped, since not doing it can let things like
+  HTML redirects slip through, which makes for unpredictable behavior.
+  [limi]
+
 2.0a1 - 2009-11-13
 ------------------
 

@@ -35,6 +35,33 @@ VALID_TAGS['tfoot'] = 1
 VALID_TAGS['col'] = 1
 VALID_TAGS['colgroup'] = 1
 
+# HTML5 tags that should be allowed:
+VALID_TAGS['article'] = 1
+VALID_TAGS['aside'] = 1
+VALID_TAGS['audio'] = 1
+VALID_TAGS['canvas'] = 1
+VALID_TAGS['command'] = 1
+VALID_TAGS['datalist'] = 1
+VALID_TAGS['details'] = 1
+VALID_TAGS['dialog'] = 1
+VALID_TAGS['figure'] = 1
+VALID_TAGS['footer'] = 1
+VALID_TAGS['header'] = 1
+VALID_TAGS['hgroup'] = 1
+VALID_TAGS['keygen'] = 1
+VALID_TAGS['mark'] = 1
+VALID_TAGS['meter'] = 1
+VALID_TAGS['nav'] = 1
+VALID_TAGS['output'] = 1
+VALID_TAGS['progress'] = 1
+VALID_TAGS['rp'] = 1
+VALID_TAGS['rt'] = 1
+VALID_TAGS['ruby'] = 1
+VALID_TAGS['section'] = 1
+VALID_TAGS['source'] = 1
+VALID_TAGS['time'] = 1
+VALID_TAGS['video'] = 1
+
 # add some tags to nasty. These should also probably be backported to CMFDefault.
 NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
 NASTY_TAGS['meta'] = 1  # allowed by parsers, but can cause unexpected behavior
