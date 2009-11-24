@@ -35,8 +35,9 @@ VALID_TAGS['tfoot'] = 1
 VALID_TAGS['col'] = 1
 VALID_TAGS['colgroup'] = 1
 
-# add some tags to nasty.  These should also probably be backported to CMFDefault.
+# add some tags to nasty. These should also probably be backported to CMFDefault.
 NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
+NASTY_TAGS['meta'] = 1  # allowed by parsers, but can cause unexpected behavior
 
 
 msg_pat = """
