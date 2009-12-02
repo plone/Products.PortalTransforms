@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0 - (Unreleased)
+2.0a2 - 2009-12-02
 ------------------
 
 * Added HTML5 tags as allowed tags.
@@ -10,6 +10,9 @@ Changelog
 * Made sure the meta tag is stripped, since not doing it can let things like
   HTML redirects slip through, which makes for unpredictable behavior.
   [limi]
+
+* Added style to nasty tags, addresses http://dev.plone.org/plone/ticket/9015.
+  [jonstahl]
 
 2.0a1 - 2009-11-13
 ------------------
