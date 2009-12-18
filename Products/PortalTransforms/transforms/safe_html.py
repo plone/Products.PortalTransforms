@@ -22,7 +22,7 @@ VALID_TAGS['ins'] = 1
 VALID_TAGS['del'] = 1
 VALID_TAGS['q'] = 1
 VALID_TAGS['map'] = 1
-VALID_TAGS['area'] = 1
+VALID_TAGS['area'] = 0
 VALID_TAGS['abbr'] = 1
 VALID_TAGS['acronym'] = 1
 VALID_TAGS['var'] = 1
@@ -193,7 +193,7 @@ class StrippingParser(SGMLParser):
         if safeToInt(self.valid.get(tag)):
             self.result.append('</%s>' % tag)
             #remTag = '</%s>' % tag
-    
+
     def parse_declaration(self, i):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
@@ -213,7 +213,7 @@ class StrippingParser(SGMLParser):
                 self.result.append(toHandle)
                 j = i + len(toHandle)
         return j
-    
+
     def getResult(self):
         return ''.join(self.result)
 
@@ -231,13 +231,13 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
 
 class SafeHTML:
     """Simple transform which uses CMFDefault functions to
-    clean potentially bad tags.   
+    clean potentially bad tags.
 
     Tags must explicit be allowed in valid_tags to pass. Only
     the tags themself are removed, not their contents. If tags
     are removed and in nasty_tags, they are removed with
-    all of their contents.         
-    
+    all of their contents.
+
     Objects will not be transformed again with changed settings.
     You need to clear the cache by e.g.
     1.) restarting your zope or
