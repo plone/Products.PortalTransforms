@@ -22,7 +22,6 @@ setup(name='Products.PortalTransforms',
         test=[
             'zope.testing',
             'Products.Archetypes',
-            'Products.CMFTestCase',
         ]
       ),
       install_requires=[
@@ -34,6 +33,7 @@ setup(name='Products.PortalTransforms',
           'Products.CMFDefault',
           'Products.MimetypesRegistry',
           'Acquisition',
+          'PIL',
           'ZODB3',
           'Zope2',
           'Markdown>=1.7',
