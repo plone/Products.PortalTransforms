@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.5 - Unreleased
+1.6.5 - 2009-12-24
 ------------------
 
 * Fixed a serious performance issue in the find transform path algorithm.
