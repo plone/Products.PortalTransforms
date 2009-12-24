@@ -4,6 +4,9 @@ Changelog
 1.6.5 - Unreleased
 ------------------
 
+* Fixed a serious performance issue in the find transform path algorithm.
+  This closes http://dev.plone.org/plone/ticket/9497.
+  [hannosch, sig]
 
 1.6.4 - 2009-10-08
 ------------------
