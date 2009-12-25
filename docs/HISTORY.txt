@@ -4,6 +4,8 @@ Changelog
 1.6.6 - unreleased
 ------------------
 
+* Reverted fix for path algorithm change. It broke in various simple cases.
+  [hannosch]
 
 1.6.5 - 2009-12-24
 ------------------
