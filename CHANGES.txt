@@ -4,10 +4,6 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
-* Fixed a serious performance issue in the find transform path algorithm.
-  This refs http://dev.plone.org/plone/ticket/9497.
-  [hannosch, sig]
-
 * Fixed package dependency declaration.
   [hannosch]
 
