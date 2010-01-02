@@ -4,6 +4,10 @@ Changelog
 2.0b1 - Unreleased
 ------------------
 
+* Protect against failures in the transform engine, which prevented zexp
+  imports of sites.
+  [hannosch]
+
 * Fixed package dependency declaration.
   [hannosch]
 
