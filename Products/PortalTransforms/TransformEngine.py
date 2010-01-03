@@ -317,23 +317,121 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if not self._mtmap:
             return None
 
-        # naive algorithm :
-        #  find all possible paths with required transforms
-        #  take the shortest
-        #
-        # it should be enough since we should not have so much possible paths
-        shortest, winner = 9999, None
-        for path in self._getPaths(str(orig), str(target), required_transforms):
-            if len(path) < shortest:
-                winner = path
-                shortest = len(path)
+        orig = str(orig)
+        target = str(target)
+        # First, let's deal with required transforms.
+        if required_transforms:
+            # Let's decompose paths, then.
+            required_transform = required_transforms.pop(0)
+            # The first path must lead to one of the inputs supported
+            # by this first required transform.
+            # Which input types are supported by this transform ?
+            supportedInputs = {}
+            for input, outputs in self._mtmap.items():
+                for output, transforms in outputs.items():
+                    for transform in transforms:
+                        if transform.name() == required_transform:
+                            supportedInputs[input] = 'ok'
+                            # BTW, let's remember the output type
+                            transformOutput = output
+                            # and remember the transform, it is
+                            # useful later
+                            requiredTransform = transform
+            # Which of these inputs will be reachable with the
+            # shortest path ?
+            shortest = 9999 # big enough, I guess
+            shortestFirstPath = None
+            for supportedInput in supportedInputs.keys():
+                # We start from orig
+                firstOrig = orig
+                # And want to reach supportedInput
+                firstTarget = supportedInput
+                # What's the shortest path ?
+                firstPath = self._findPath(firstOrig,firstTarget)
+                if firstPath is not None:
+                    if len(firstPath) < shortest:
+                        # Here is a path which is shorter than others
+                        # which also reach the required transform.
+                        shortest = len(firstPath)
+                        shortestFirstPath = firstPath
+            if shortestFirstPath == None:
+                return None # there is no path leading to this transform
+            # Then we have to take this transform.
+            secondPath = [requiredTransform]
+            # From the output of this transform, we then have to
+            # reach our target, possible through other required
+            # transforms.
+            thirdOrig = transformOutput
+            thirdTarget = target
+            thirdPath = self._findPath(thirdOrig,thirdTarget,required_transforms)
+            if thirdPath is None:
+                return None # no path
+            # Final result is the concatenation of these 3 parts
+            return shortestFirstPath + secondPath + thirdPath
 
-        return winner
+        if orig == target:
+            return []
+        
+        # Now let's efficiently find the shortest path from orig
+        # to target (without required transforms).
+        # The overall idea is that we build all possible paths
+        # starting from orig and of given length. And we increment
+        # this length until one of these paths reaches our target or
+        # until all reachable types have been reached.
+        currentPathLength = 0
+        pathToType = { orig: [] } # all paths we know, by end of path.
+        def typesWithPathOfLength(length):
+            '''Returns the lists of known paths of a given length'''
+            result = []
+            for type,path in pathToType.items():
+                if len(path) == length:
+                    result.append(type)
+            return result
+        # We will start exploring paths which start from types
+        # reachable in zero steps. That is paths which start from
+        # orig.
+        typesToStartFrom = typesWithPathOfLength(currentPathLength)
+        # Explore paths while there are new paths to be explored
+        while len(typesToStartFrom) > 0:
+            for startingType in typesToStartFrom:
+                # Where can we go in one step starting from here ?
+                outputs = self._mtmap.get(startingType)
+                if outputs:
+                    for reachedType, transforms in outputs.items():
+                        # Does this lead to a type we never reached before ?
+                        if reachedType not in pathToType.keys():
+                            # Yes, we did not know any path reaching this type
+                            # Let's remember the path to here
+                            pathToType[reachedType] = pathToType[startingType] + [transforms[0]]
+                            # By the way, is this the target we are looking for ?
+                            if reachedType == target:
+                                # Yes ! This is the first time we reach
+                                # our target. We have our shortest path
+                                # to target.
+                                return pathToType[target]
+            # We explored all possible paths of length currentPathLength
+            # Let's increment that length.
+            currentPathLength += 1
+            # What are the next types to start from ?
+            typesToStartFrom = typesWithPathOfLength(currentPathLength)
+        # We are done exploring paths starting from orig
+        # and this exploration did not reach our target.
+        # Hence there is no path from orig to target.
+        return None
 
     def _getPaths(self, orig, target, requirements, path=None, result=None):
-        """return a all path for transformation from orig mimetype to
-        target mimetype
+        """return some of the paths for transformation from orig mimetype to
+        target mimetype with the guarantee that the shortest path is included.
+        If target is the same as orig, then returns an empty path.
         """
+
+        shortest = 9999
+        if result:
+            for okPath in result:
+                shortest = min(shortest,len(okPath))
+        
+        if orig == target:
+            return [[]]
         if path is None:
             result = []
             path = []
@@ -362,8 +460,13 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if o_mt in target_aliases:
                     if not requirements:
                         result.append(path[:])
+                        if len(path[:]) < shortest:
+                            # here is a shorter one !
+                            shortest = len(path)
                 else:
-                    self._getPaths(o_mt, target, requirements, path, result)
+                    if len(path) < shortest:
+                        # keep exploring this path, it is still short enough
+                        self._getPaths(o_mt, target, requirements, path, result)
                 if required:
                     requirements.append(name)
         path.pop()
