@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0b1 - Unreleased
+2.0b1 - 2010-01-03
 ------------------
 
 * Fixed a serious performance issue in the find transform path algorithm.
