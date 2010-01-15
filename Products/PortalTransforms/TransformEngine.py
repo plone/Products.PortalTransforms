@@ -374,14 +374,11 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         transform tool is added
         """
         Folder.manage_afterAdd(self, item, container)
-        transforms.initialize(self)
-        # XXX required?
-        #try:
-        #    # first initialization
-        #    transforms.initialize(self)
-        #except:
-        #    # may fail on copy
-        #    pass
+        try:
+            transforms.initialize(self)
+        except TransformException:
+            # may fail on copy or zexp import
+            pass
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
     def manage_addTransform(self, id, module, REQUEST=None):
