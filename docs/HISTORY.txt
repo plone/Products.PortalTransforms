@@ -4,6 +4,10 @@ Changelog
 1.6.7 - unreleased
 ------------------
 
+* Fixed a serious performance issue in the find transform path algorithm.
+  This refs http://dev.plone.org/plone/ticket/9497.
+  [hannosch, sig]
+
 * Protect against failures in the transform engine, which prevented zexp
   imports of sites.
   [hannosch]
