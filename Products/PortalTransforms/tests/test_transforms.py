@@ -66,13 +66,13 @@ class TransformTest(ATSiteTestCase):
     def testSame(self):
         try:
             self.do_convert(filename=self.input)
-        except MissingBinary, e:
+        except MissingBinary:
             pass
 
     def testSameNoFilename(self):
         try:
             self.do_convert()
-        except MissingBinary, e:
+        except MissingBinary:
             pass
 
     def __repr__(self):

@@ -4,6 +4,8 @@ Changelog
 2.0b2 - unreleased
 ------------------
 
+* Updated expected output images to most current format.
+  [hannosch]
 
 2.0b1 - 2010-01-03
 ------------------
