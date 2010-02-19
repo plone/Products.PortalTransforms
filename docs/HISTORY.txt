@@ -4,6 +4,9 @@ Changelog
 1.6.8 - unreleased
 ------------------
 
+* Make tests pass with poppler's pdftohtml converter. Standalone
+  pdftohtml produces different output and should be avoided.
+  [stefan]
 
 1.6.7 - 2010-01-15
 ------------------
