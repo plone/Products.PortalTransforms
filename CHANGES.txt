@@ -4,6 +4,9 @@ Changelog
 2.0b3 - unreleased
 ------------------
 
+* Make tests pass with poppler's pdftohtml converter. Standalone
+  pdftohtml produces different output and should be avoided.
+  [stefan]
 
 2.0b2 - 2010-02-05
 ------------------
