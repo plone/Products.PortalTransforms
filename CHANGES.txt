@@ -4,6 +4,8 @@ Changelog
 2.0b4 - unreleased
 ------------------
 
+* Restore output/logo.jpg and output/logo.bmp from 1.6 branch.
+  [stefan]
 
 2.0b3 - 2010-02-19
 ------------------
