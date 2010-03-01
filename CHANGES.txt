@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0b4 - unreleased
+2.0b4 - 2010-03-01
 ------------------
 
 * Restore output/logo.jpg and output/logo.bmp from 1.6 branch.
