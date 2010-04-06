@@ -4,6 +4,11 @@ Changelog
 1.6.9 - unreleased
 ------------------
 
+* Fixed a problem where the cache would return data from transforms
+  which are sensitive to virtual hosting (such as the resolve UID
+  transforms used by visual editors) which had been cached for a
+  different virtual host.
+  [rossp]
 
 1.6.8 - 2010-02-19
 ------------------
