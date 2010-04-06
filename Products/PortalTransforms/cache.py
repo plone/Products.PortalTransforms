@@ -19,6 +19,8 @@ class Cache:
         key = key.replace('+', '_')
         key = key.replace('-', '_')
         key = key.replace(' ', '_')
+        if hasattr(self.context, 'absolute_url'):
+            return key, self.context.absolute_url()
         return key
 
     def setCache(self, key, value):
