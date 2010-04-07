@@ -89,6 +89,14 @@ class TestGraph(ATSiteTestCase):
                     self.assertEquals(expectedPath, gotPath)
         self.engine._mtmap = originalMap
 
+    def testFindPathWithEmptyTransform(self):
+        """ _findPath should not throw "index out of range" when dealing with
+            empty transforms list
+        """
+        dummyMap = {'1': {'2': []}}
+        self.engine._mtmap = dummyMap
+        self.engine._findPath('1','2')
+    
     def testIdentity(self):
         orig = 'Some text'
         converted = self.engine.convertTo(
