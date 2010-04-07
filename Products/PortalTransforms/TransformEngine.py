@@ -399,7 +399,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if outputs:
                     for reachedType, transforms in outputs.items():
                         # Does this lead to a type we never reached before ?
-                        if reachedType not in pathToType.keys():
+                        if reachedType not in pathToType.keys() and transforms:
                             # Yes, we did not know any path reaching this type
                             # Let's remember the path to here
                             pathToType[reachedType] = pathToType[startingType] + [transforms[0]]
