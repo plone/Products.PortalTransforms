@@ -5,7 +5,7 @@ Changelog
 ------------------
 
 * Let mimetype maps with empty transform lists be handled more gracefully.
-  Fixes: https://dev.plone.org/plone/ticket/10402, refs: r12421
+  Fixes: http://dev.plone.org/plone/ticket/10402, refs: r12421.
   [thet]
 
 * Fixed a problem where the cache would return data from transforms
