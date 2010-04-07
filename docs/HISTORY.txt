@@ -4,6 +4,10 @@ Changelog
 1.6.9 - unreleased
 ------------------
 
+* Let mimetype maps with empty transform lists be handled more gracefully.
+  Fixes http://dev.plone.org/plone/ticket/10402.
+  [thet]
+
 * Fixed a problem where the cache would return data from transforms
   which are sensitive to virtual hosting (such as the resolve UID
   transforms used by visual editors) which had been cached for a
