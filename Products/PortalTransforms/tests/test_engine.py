@@ -251,11 +251,27 @@ class TestEngine(ATSiteTestCase):
             out.getData(), '<a href="http://nohost">vhost link</a>',
             out.getData())
 
+        # Test when object is not a context
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://nohost">vhost link</a>',
+            out.getData())
+
         # Change the virtual hosting
         self.folder.REQUEST['SERVER_URL'] = 'http://otherhost'
 
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self.folder,
+            context=self.folder)
+        self.failUnlessEqual(
+            out.getData(), '<a href="http://otherhost">vhost link</a>',
+            out.getData())
+
+        # Test when object is not a context
+        out = self.engine.convertTo(
+            mt, data, mimetype='text/html', object=self,
             context=self.folder)
         self.failUnlessEqual(
             out.getData(), '<a href="http://otherhost">vhost link</a>',
