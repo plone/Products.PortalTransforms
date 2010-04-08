@@ -107,7 +107,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         target_mimetype = str(target_mimetype)
 
         if object is not None:
-            cache = Cache(object)
+            cache = Cache(object, context=context)
             data = cache.getCache(target_mimetype)
             if data is not None:
                 time, data = data
