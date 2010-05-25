@@ -23,7 +23,7 @@ class Cache:
         key = key.replace('+', '_')
         key = key.replace('-', '_')
         key = key.replace(' ', '_')
-        if hasattr(self.context, 'absolute_url'):
+        if hasattr(aq_base(self.context), 'absolute_url'):
             return key, self.context.absolute_url()
         return key
 
@@ -54,7 +54,7 @@ class Cache:
             return time() - orig_time, value
         except TypeError:
             return None
-        
+
     def purgeCache(self, key=None):
         """Remove cache
         """
