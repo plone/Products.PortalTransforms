@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.10 - unreleased
+1.6.10 - 2010-05-25
 -------------------
 
 * Fix the incomplete vhost transform cache fix to respect cases where
