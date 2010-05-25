@@ -4,7 +4,7 @@ Changelog
 1.6.10 - unreleased
 -------------------
 
-* Fix the imcomplete vhost transform cache fix to respect cases where
+* Fix the incomplete vhost transform cache fix to respect cases where
   the object being transformed is not the context, such as with AT
   BaseUnit.
   [rossp]
