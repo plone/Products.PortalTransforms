@@ -54,7 +54,7 @@ class Cache:
             return time() - orig_time, value
         except TypeError:
             return None
-        
+
     def purgeCache(self, key=None):
         """Remove cache
         """
