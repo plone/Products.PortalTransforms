@@ -284,17 +284,20 @@ class SafeHTML:
             data.setData(orig)
             return data
 
-        try:
-            safe = scrubHTML(
-                bodyfinder(orig),
-                valid=self.config.get('valid_tags', {}),
-                nasty=self.config.get('nasty_tags', {}),
-                remove_javascript=self.config.get('remove_javascript', True),
-                raise_error=False)
-        except IllegalHTML, inst:
-            data.setData(msg_pat % ("Error", str(inst)))
-        else:
-            data.setData(safe)
+        for repeat in range(2):
+            try:
+                safe = scrubHTML(
+                    bodyfinder(orig),
+                    valid=self.config.get('valid_tags', {}),
+                    nasty=self.config.get('nasty_tags', {}),
+                    remove_javascript=self.config.get('remove_javascript', True),
+                    raise_error=False)
+            except IllegalHTML, inst:
+                data.setData(msg_pat % ("Error", str(inst)))
+                break
+            else:
+                data.setData(safe)
+                orig = safe
         return data
 
 def register():
