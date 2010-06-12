@@ -4,6 +4,9 @@ Changelog
 1.6.11 - unreleased
 -------------------
 
+* Repeat safe_html transform to block a malicious HTML injection vector. 
+  Thanks to evilbungle for the report.
+  [MatthewWilkes]
 
 1.6.10 - 2010-05-25
 -------------------
