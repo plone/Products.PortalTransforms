@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0b6 - unreleased
+2.0b6 - 2010-06-13
 ------------------
 
 * Repeat safe_html transform to block a malicious HTML injection vector. 
