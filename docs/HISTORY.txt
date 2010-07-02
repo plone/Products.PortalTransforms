@@ -1,8 +1,11 @@
 Changelog
 =========
 
-1.6.11 - unreleased
+1.6.12 - 2010-07-02
 -------------------
+
+* Fix minor packaging bug.
+  [MatthewWilkes]
 
 1.6.11 - 2010-06-13
 -------------------
