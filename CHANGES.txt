@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0 - unreleased
+2.0 - 2010-07-16
 ----------------
 
 * Lower test requirements for transform tests to only check the start of each
