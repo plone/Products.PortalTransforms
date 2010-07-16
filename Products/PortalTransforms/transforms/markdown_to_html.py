@@ -1,9 +1,9 @@
 """
-Uses the http://www.freewisdom.org/projects/python-markdown/ module to do its handy work
+Uses the http://www.freewisdom.org/projects/python-markdown/ module
 
-author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
-
+Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
+
 from zope.interface import implements
 
 from Products.PortalTransforms.interfaces import ITransform
@@ -16,7 +16,7 @@ except ImportError:
     log('markdown_to_html: Could not import python-markdown.')
 else:
     HAS_MARKDOWN = True
-    
+
 
 class markdown:
     implements(ITransform)
@@ -39,6 +39,7 @@ class markdown:
             html = orig
         data.setData(html)
         return data
+
 
 def register():
     return markdown()
