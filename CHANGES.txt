@@ -4,6 +4,11 @@ Changelog
 2.0 - unreleased
 ----------------
 
+* Lower test requirements for transform tests to only check the start of each
+  file. There's too many subtle differences in the exact output on different
+  machines.
+  [hannosch]
+
 * PEP8 cleanup of the transform engine code.
   [hannosch]
 
