@@ -4,7 +4,8 @@ Changelog
 2.0 - unreleased
 ----------------
 
-
+* PEP8 cleanup of the transform engine code.
+  [hannosch]
 
 2.0b6 - 2010-06-13
 ------------------
