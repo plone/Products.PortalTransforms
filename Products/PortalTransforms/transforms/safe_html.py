@@ -8,7 +8,6 @@ from zope.interface import implements
 from Products.PortalTransforms.utils import log
 from Products.CMFDefault.utils import bodyfinder
 from Products.CMFDefault.utils import IllegalHTML
-from Products.CMFDefault.utils import SimpleHTMLParser
 from Products.CMFDefault.utils import VALID_TAGS
 from Products.CMFDefault.utils import NASTY_TAGS
 from Products.PortalTransforms.utils import safeToInt
@@ -62,7 +61,7 @@ VALID_TAGS['source'] = 1
 VALID_TAGS['time'] = 1
 VALID_TAGS['video'] = 1
 
-# add some tags to nasty. These should also probably be backported to CMFDefault.
+# add some tags to nasty.
 NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
 NASTY_TAGS['meta'] = 1  # allowed by parsers, but can cause unexpected behavior
 
@@ -73,41 +72,45 @@ msg_pat = """
 %s</d>
 """
 
-def hasScript(s):
-   """Dig out evil Java/VB script inside an HTML attribute.
 
-   >>> hasScript('script:evil(1);')
-   True
-   >>> hasScript('expression:evil(1);')
-   True
-   >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
-   False
-   """
-   s = decode_htmlentities(s)
-   s = ''.join(s.split()).lower()
-   for t in ('script:', 'expression:', 'expression('):
-      if t in s:
-         return True
-   return False
+def hasScript(s):
+    """Dig out evil Java/VB script inside an HTML attribute.
+
+    >>> hasScript('script:evil(1);')
+    True
+    >>> hasScript('expression:evil(1);')
+    True
+    >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
+    False
+    """
+    s = decode_htmlentities(s)
+    s = ''.join(s.split()).lower()
+    for t in ('script:', 'expression:', 'expression('):
+        if t in s:
+            return True
+    return False
+
 
 def decode_htmlentities(s):
-   """ XSS code can be hidden with htmlentities """
+    """ XSS code can be hidden with htmlentities """
 
-   entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
-   s = entity_pattern.sub(decode_htmlentity,s)
-   return s
+    entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+    s = entity_pattern.sub(decode_htmlentity, s)
+    return s
+
 
 def decode_htmlentity(m):
-   entity_value = m.groupdict()['htmlentity']
-   if entity_value.lower().startswith('x'):
-      try:
-          return chr(int('0'+entity_value,16))
-      except ValueError:
-          return entity_value
-   try:
-      return chr(int(entity_value))
-   except ValueError:
-      return entity_value
+    entity_value = m.groupdict()['htmlentity']
+    if entity_value.lower().startswith('x'):
+        try:
+            return chr(int('0'+entity_value, 16))
+        except ValueError:
+            return entity_value
+    try:
+        return chr(int(entity_value))
+    except ValueError:
+        return entity_value
+
 
 class StrippingParser(SGMLParser):
     """Pass only allowed tags;  raise exception for known-bad.
@@ -119,7 +122,7 @@ class StrippingParser(SGMLParser):
     from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
 
     def __init__(self, valid, nasty, remove_javascript, raise_error):
-        SGMLParser.__init__( self )
+        SGMLParser.__init__(self)
         self.result = []
         self.valid = valid
         self.nasty = nasty
@@ -128,12 +131,14 @@ class StrippingParser(SGMLParser):
         self.suppress = False
 
     def handle_data(self, data):
-        if self.suppress: return
+        if self.suppress:
+            return
         if data:
             self.result.append(escape(data))
 
     def handle_charref(self, name):
-        if self.suppress: return
+        if self.suppress:
+            return
         self.result.append('&#%s;' % name)
 
     def handle_comment(self, comment):
@@ -143,33 +148,37 @@ class StrippingParser(SGMLParser):
         pass
 
     def handle_entityref(self, name):
-        if self.suppress: return
+        if self.suppress:
+            return
         if self.entitydefs.has_key(name):
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
             x = ''
-
         self.result.append('&%s%s' % (name, x))
 
     def unknown_starttag(self, tag, attrs):
         """ Delete all tags except for legal ones.
         """
-
-        if self.suppress: return
+        if self.suppress:
+            return
 
         if self.valid.has_key(tag):
             self.result.append('<' + tag)
 
-            remove_script = getattr(self,'remove_javascript',True)
+            remove_script = getattr(self, 'remove_javascript', True)
 
             for k, v in attrs:
                 if remove_script and k.strip().lower().startswith('on'):
-                    if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Script event "%s" not allowed.' % k
+                    if not self.raise_error:
+                        continue
+                    else:
+                        raise IllegalHTML('Script event "%s" not allowed.' % k)
                 elif remove_script and hasScript(v):
-                    if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
+                    if not self.raise_error:
+                        continue
+                    else:
+                        raise IllegalHTML('Script URI "%s" not allowed.' % v)
                 else:
                     self.result.append(' %s="%s"' % (k, v))
 
@@ -181,7 +190,7 @@ class StrippingParser(SGMLParser):
         elif self.nasty.has_key(tag):
             self.suppress = True
             if self.raise_error:
-                raise IllegalHTML, 'Dynamic tag "%s" not allowed.' % tag
+                raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
         else:
             # omit tag
             pass
@@ -189,22 +198,22 @@ class StrippingParser(SGMLParser):
     def unknown_endtag(self, tag):
         if self.nasty.has_key(tag) and not self.valid.has_key(tag):
             self.suppress = False
-        if self.suppress: return
+        if self.suppress:
+            return
         if safeToInt(self.valid.get(tag)):
             self.result.append('</%s>' % tag)
-            #remTag = '</%s>' % tag
 
     def parse_declaration(self, i):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
         if self.rawdata[i:i+9] == '<![CDATA[':
-             k = self.rawdata.find(']]>', i)
-             if k == -1:
-                 k = len(self.rawdata)
-             data = self.rawdata[i+9:k]
-             j = k+3
-             self.result.append("<![CDATA[%s]]>" % data)
+            k = self.rawdata.find(']]>', i)
+            if k == -1:
+                k = len(self.rawdata)
+            data = self.rawdata[i+9:k]
+            j = k+3
+            self.result.append("<![CDATA[%s]]>" % data)
         else:
             try:
                 j = SGMLParser.parse_declaration(self, i)
@@ -217,6 +226,7 @@ class StrippingParser(SGMLParser):
     def getResult(self):
         return ''.join(self.result)
 
+
 def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
               remove_javascript=True, raise_error=True):
 
@@ -228,6 +238,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     parser.feed(html)
     parser.close()
     return parser.getResult()
+
 
 class SafeHTML:
     """Simple transform which uses CMFDefault functions to
@@ -249,18 +260,18 @@ class SafeHTML:
     implements(ITransform)
 
     __name__ = "safe_html"
-    inputs   = ('text/html',)
+    inputs = ('text/html', )
     output = "text/x-html-safe"
 
     def __init__(self, name=None, **kwargs):
-
-
         self.config = {
             'inputs': self.inputs,
             'output': self.output,
             'valid_tags': VALID_TAGS,
             'nasty_tags': NASTY_TAGS,
-            'stripped_attributes': ['lang','valign','halign','border','frame','rules','cellspacing','cellpadding','bgcolor'],
+            'stripped_attributes': [
+                'lang', 'valign', 'halign', 'border', 'frame', 'rules',
+                'cellspacing', 'cellpadding', 'bgcolor'],
             'stripped_combinations': {'table th td': 'width height'},
             'style_whitelist': ['text-align', 'list-style-type', 'float'],
             'class_blacklist': [],
@@ -269,41 +280,51 @@ class SafeHTML:
             }
 
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
-            'valid_tags' : ('dict',
-                            'valid_tags',
-                            'List of valid html-tags, value is 1 if they ' +
-                            'have a closing part (e.g. <p>...</p>) and 0 for empty ' +
-                            'tags (like <br />). Be carefull!',
-                            ('tag', 'value')),
-            'nasty_tags' : ('dict',
-                            'nasty_tags',
-                            'Dynamic Tags that are striped with ' +
-                            'everything they contain (like applet, object). ' +
-                            'They are only deleted if they are not marked as valid_tags.',
-                            ('tag', 'value')),
+            'inputs': ('list',
+                       'Inputs',
+                       'Input(s) MIME type. Change with care.'),
+            'valid_tags': ('dict',
+                           'valid_tags',
+                           'List of valid html-tags, value is 1 if they ' +
+                           'have a closing part (e.g. <p>...</p>) and 0 for ' +
+                           'empty tags (like <br />). Be carefull!',
+                           ('tag', 'value')),
+            'nasty_tags': ('dict',
+                           'nasty_tags',
+                           'Dynamic Tags that are striped with ' +
+                           'everything they contain (like applet, object). ' +
+                           'They are only deleted if they are not marked ' +
+                           'as valid_tags.',
+                           ('tag', 'value')),
             'stripped_attributes': ('list',
                                     'stripped_attributes',
-                                    'These attributes are stripped from any tag.'),
-            'stripped_combinations' : ('dict',
-                                       'stripped_combinations',
-                                       'These attributes are stripped from any tag.',
-                                       ('tag', 'value')),
+                                    'These attributes are stripped from ' +
+                                    'any tag.'),
+            'stripped_combinations': ('dict',
+                                      'stripped_combinations',
+                                      'These attributes are stripped from ' +
+                                      'any tag.',
+                                      ('tag', 'value')),
             'style_whitelist': ('list',
                                 'style_whitelist',
-                                'These CSS styles are allowed in style attributes.'),
+                                'These CSS styles are allowed in style ' +
+                                'attributes.'),
             'class_blacklist': ('list',
                                 'class_blacklist',
-                                'These class names are not allowed in class attributes.'),
-            'remove_javascript' : ("int",
-                                   'remove_javascript',
-                                   '1 to remove javascript attributes that begin with on (e.g. onClick) ' +
-                                   'and attributes where the value starts with "javascript:" ' +
-                                   '(e.g. <a href="javascript:function()". ' +
-                                   'This does not effect <script> tags. 0 to leave the attributes.'),
-            'disable_transform' : ("int",
-                                   'disable_transform',
-                                   'If 1, nothing is done.')
+                                'These class names are not allowed in ' +
+                                'class attributes.'),
+            'remove_javascript': ("int",
+                                  'remove_javascript',
+                                  '1 to remove javascript attributes that ' +
+                                  'begin with on (e.g. onClick) and ' +
+                                  'attributes where the value starts with ' +
+                                  '"javascript:" (e.g. ' +
+                                  '<a href="javascript:function()". This ' +
+                                  'does not effect <script> tags. 0 to ' +
+                                  'leave the attributes.'),
+            'disable_transform': ("int",
+                                  'disable_transform',
+                                  'If 1, nothing is done.'),
             }
 
         self.config.update(kwargs)
@@ -324,8 +345,9 @@ class SafeHTML:
     def convert(self, orig, data, **kwargs):
         # note if we need an upgrade.
         if not self.config.has_key('disable_transform'):
-            log(logging.ERROR, 'PortalTransforms safe_html transform needs to be '
-                'updated. Please re-install the PortalTransforms product to fix.')
+            log(logging.ERROR, 'PortalTransforms safe_html transform needs '
+                'to be updated. Please re-install the PortalTransforms '
+                'product to fix.')
 
         # if we have a config that we don't want to delete
         # we need a disable option
@@ -339,7 +361,8 @@ class SafeHTML:
                     bodyfinder(orig),
                     valid=self.config.get('valid_tags', {}),
                     nasty=self.config.get('nasty_tags', {}),
-                    remove_javascript=self.config.get('remove_javascript', True),
+                    remove_javascript=self.config.get(
+                        'remove_javascript', True),
                     raise_error=False)
             except IllegalHTML, inst:
                 data.setData(msg_pat % ("Error", str(inst)))
@@ -348,6 +371,7 @@ class SafeHTML:
                 data.setData(safe)
                 orig = safe
         return data
+
 
 def register():
     return SafeHTML()

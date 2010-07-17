@@ -4,6 +4,8 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* PEP8 adjustments for the safe_html transform.
+  [hannosch]
 
 2.0 - 2010-07-16
 ----------------
