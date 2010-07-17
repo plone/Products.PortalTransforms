@@ -4,6 +4,10 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Added `padding-left` to the style whitelist, to let TinyMCE's indent work.
+  This closes http://dev.plone.org/plone/ticket/10557.
+  [hannosch]
+
 * PEP8 adjustments for the safe_html transform.
   [hannosch]
 
