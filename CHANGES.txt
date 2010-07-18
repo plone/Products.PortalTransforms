@@ -4,6 +4,9 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Use the standard libraries doctest module.
+  [hannosch]
+
 * Added `padding-left` to the style whitelist, to let TinyMCE's indent work.
   This closes http://dev.plone.org/plone/ticket/10557.
   [hannosch]

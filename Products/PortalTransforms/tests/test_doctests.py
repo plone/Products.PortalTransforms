@@ -1,5 +1,6 @@
+import doctest
 import unittest
-from zope.testing import doctestunit
+
 
 modules = (
     'Products.PortalTransforms.transforms.safe_html',
@@ -8,5 +9,5 @@ modules = (
 
 def test_suite():
     return unittest.TestSuite(
-        [doctestunit.DocTestSuite(module=module) for module in modules]
+        [doctest.DocTestSuite(module=module) for module in modules]
         )
