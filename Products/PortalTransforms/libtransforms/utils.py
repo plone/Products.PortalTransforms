@@ -91,7 +91,6 @@ VALID_TAGS = { 'a'          : 1
              , 'b'          : 1
              , 'base'       : 0
              , 'blockquote' : 1
-             , 'body'       : 1
              , 'br'         : 0
              , 'caption'    : 1
              , 'cite'       : 1
@@ -107,14 +106,11 @@ VALID_TAGS = { 'a'          : 1
              , 'h4'         : 1
              , 'h5'         : 1
              , 'h6'         : 1
-             , 'head'       : 1
              , 'hr'         : 0
-             , 'html'       : 1
              , 'i'          : 1
              , 'img'        : 0
              , 'kbd'        : 1
              , 'li'         : 1
-             , 'meta'       : 0
              , 'ol'         : 1
              , 'p'          : 1
              , 'pre'        : 1
@@ -126,7 +122,6 @@ VALID_TAGS = { 'a'          : 1
              , 'thead'      : 1
              , 'td'         : 1
              , 'th'         : 1
-             , 'title'      : 1
              , 'tr'         : 1
              , 'tt'         : 1
              , 'u'          : 1
@@ -137,6 +132,11 @@ NASTY_TAGS = { 'script'     : 1
              , 'object'     : 1
              , 'embed'      : 1
              , 'applet'     : 1
+             , 'html'       : 1
+             , 'head'       : 1
+             , 'title'      : 1
+             , 'body'       : 1
+             , 'meta'       : 1
              }
 
 class IllegalHTML( ValueError ):
