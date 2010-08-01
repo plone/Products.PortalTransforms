@@ -4,6 +4,12 @@ Changelog
 2.0.2 - unreleased
 ------------------
 
+* Add HTML5 tags as valid: `article`, `aside`, `audio`, `canvas`, `command`,
+  `datalist`, `details`, `figcaption`, `figure`, `footer`, `header`, `hgroup`,
+  `keygen`, `mark`, `rp`, `rt`, `ruby`, `section`, `source`, `summary`,
+  `time`, `video`.
+  [limi]
+
 * Strip `meta`, `head`, `body`, `title` and `html` tags in the safe HTML
   filter.
   [limi]
