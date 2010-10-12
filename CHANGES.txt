@@ -4,6 +4,9 @@ Changelog
 2.0.2 - unreleased
 ------------------
 
+* close <p> tags properly in configureTransform.zpt (chameleon compatibility)
+  [swampmonkey]
+
 * Add HTML5 tags as valid: `article`, `aside`, `audio`, `canvas`, `command`,
   `datalist`, `details`, `figcaption`, `figure`, `footer`, `header`, `hgroup`,
   `keygen`, `mark`, `rp`, `rt`, `ruby`, `section`, `source`, `summary`,

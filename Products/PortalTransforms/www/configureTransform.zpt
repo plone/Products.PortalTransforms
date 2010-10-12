@@ -11,8 +11,8 @@
       Configure transform
     </div>
     
-    <p>Transform inputs : <b tal:content="python:', '.join(here.inputs)"/>
-    <p>Transform output : <b tal:content="here/output"/>
+    <p>Transform inputs : <b tal:content="python:', '.join(here.inputs)"/></p>
+    <p>Transform output : <b tal:content="here/output"/></p>
     
     <p tal:condition="here/get_documentation" tal:content="here/get_documentation"/>
 
