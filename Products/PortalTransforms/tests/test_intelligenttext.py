@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from Testing import ZopeTestCase
-
-from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
+
 
 class TransformTestCase(ATSiteTestCase):
 
@@ -13,8 +11,11 @@ class TransformTestCase(ATSiteTestCase):
 
 class TestIntelligentTextToHtml(TransformTestCase):
 
-    def performTransform(self, orig, targetMimetype = 'text/html', mimetype='text/x-web-intelligent'):
-        return self.transforms.convertTo(targetMimetype, orig, context=self.portal, mimetype=mimetype).getData()
+    def performTransform(self, orig, targetMimetype='text/html',
+                         mimetype='text/x-web-intelligent'):
+        return self.transforms.convertTo(
+            targetMimetype, orig, context=self.portal,
+            mimetype=mimetype).getData()
 
     def testHyperlinks(self):
         orig = "A test http://test.com"
@@ -48,7 +49,6 @@ URL: http://foo.com"""
                               'Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />' \
                               'URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>')
 
-
     def testIndents(self):
         orig = """A test
   URL: http://test.com
@@ -60,22 +60,24 @@ URL: http://foo.com"""
                               '&nbsp;&nbsp;&nbsp;&nbsp;Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />' \
                               '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>')
 
-
     def testEntities(self):
         orig = "Some & funny < characters"
         new = self.performTransform(orig)
         self.assertEqual(new, "Some &amp; funny &lt; characters")
-
 
     def testAccentuatedCharacters(self):
         orig = "The French use é à ô ù à and ç"
         new = self.performTransform(orig)
         self.assertEqual(new, "The French use &eacute; &agrave; &ocirc; &ugrave; &agrave; and &ccedil;")
 
+
 class TestHtmlToIntelligentText(TransformTestCase):
 
-    def performTransform(self, orig, targetMimetype = 'text/x-web-intelligent', mimetype='text/html'):
-        return self.transforms.convertTo(targetMimetype, orig, context=self.portal, mimetype=mimetype).getData()
+    def performTransform(self, orig, targetMimetype='text/x-web-intelligent',
+                         mimetype='text/html'):
+        return self.transforms.convertTo(
+            targetMimetype, orig, context=self.portal,
+            mimetype=mimetype).getData()
 
     def testStripTags(self):
         orig = "Some <b>bold</b> text."

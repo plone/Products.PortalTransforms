@@ -13,10 +13,11 @@ Original code from active state recipe
  to scan Python source code and re-emit it with no changes to its
  original formatting (which is the hard part).
 """
-__revision__ = '$Id$'
 
 import string
-import keyword, token, tokenize
+import keyword
+import token
+import tokenize
 from cStringIO import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
@@ -26,7 +27,8 @@ from DocumentTemplate.DT_Util import html_quote
 ## Python Source Parser #####################################################
 
 _KEYWORD = token.NT_OFFSET + 1
-_TEXT    = token.NT_OFFSET + 2
+_TEXT = token.NT_OFFSET + 2
+
 
 class Parser:
     """ Send colored python source.
@@ -47,7 +49,8 @@ class Parser:
         pos = 0
         while 1:
             pos = string.find(self.raw, '\n', pos) + 1
-            if not pos: break
+            if not pos:
+                break
             self.lines.append(pos)
         self.lines.append(len(self.raw))
 
@@ -64,7 +67,7 @@ class Parser:
                 msg, self.raw[self.lines[line]:]))
         self.out.write('\n</pre>\n')
 
-    def __call__(self, toktype, toktext, (srow,scol), (erow,ecol), line):
+    def __call__(self, toktype, toktext, (srow, scol), (erow, ecol), line):
         """ Token handler.
         """
         #print "type", toktype, token.tok_name[toktype], "text", toktext,
@@ -106,14 +109,13 @@ class Parser:
         self.out.write(close_tag)
 
 
-
 class PythonTransform:
     """Colorize Python source files
     """
     implements(ITransform)
 
     __name__ = "python_to_html"
-    inputs  = ("text/x-python",)
+    inputs = ("text/x-python",)
     output = "text/html"
 
     config = {

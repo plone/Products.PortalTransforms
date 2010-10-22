@@ -1,7 +1,7 @@
-import re
 import os
 import sys
 from sgmllib import SGMLParser, SGMLParseError
+from htmlentitydefs import entitydefs
 
 try:
     # Need to be imported before win32api to avoid dll loading
@@ -14,7 +14,11 @@ try:
 except ImportError:
     WIN32 = False
 
-class MissingBinary(Exception): pass
+from Products.PortalTransforms.utils import log
+
+
+class MissingBinary(Exception):
+    pass
 
 envPath = os.environ['PATH']
 bin_search_path = [path for path in envPath.split(os.pathsep)
@@ -24,7 +28,7 @@ cygwin = 'c:/cygwin'
 
 # cygwin support
 if sys.platform == 'win32' and os.path.isdir(cygwin):
-    for p in ['/bin', '/usr/bin', '/usr/local/bin' ]:
+    for p in ['/bin', '/usr/bin', '/usr/local/bin']:
         p = os.path.join(cygwin, p)
         if os.path.isdir(p):
             bin_search_path.append(p)
@@ -34,10 +38,11 @@ if sys.platform == 'win32':
 else:
     extensions = ()
 
+
 def bin_search(binary):
     """search the bin_search_path for a given binary returning its fullname or
        raises MissingBinary"""
-    mode   = os.R_OK | os.X_OK
+    mode = os.R_OK | os.X_OK
     for path in bin_search_path:
         for ext in ('', ) + extensions:
             pathbin = os.path.join(path, binary) + ext
@@ -47,6 +52,7 @@ def bin_search(binary):
     raise MissingBinary('Unable to find binary "%s" in %s' %
                         (binary, os.pathsep.join(bin_search_path)))
 
+
 def getShortPathName(binary):
     if WIN32:
         try:
@@ -54,6 +60,7 @@ def getShortPathName(binary):
         except win32api.error:
             log("Failed to GetShortPathName for '%s'" % binary)
     return binary
+
 
 def sansext(path):
     return os.path.splitext(os.path.basename(path))[0]
@@ -105,11 +112,11 @@ VALID_TAGS = { 'a'          : 1
              , 'code'       : 1
              , 'command'    : 1
              , 'datalist'   : 1
+             , 'dd'         : 1
              , 'details'    : 1
              , 'div'        : 1
              , 'dl'         : 1
              , 'dt'         : 1
-             , 'dd'         : 1
              , 'em'         : 1
              , 'figcaption' : 1
              , 'figure'     : 1
@@ -141,15 +148,15 @@ VALID_TAGS = { 'a'          : 1
              , 'section'    : 1
              , 'source'     : 1
              , 'span'       : 1
-             , 'strong'     : 1
              , 'strike'     : 1
+             , 'strong'     : 1
              , 'summary'    : 1
              , 'table'      : 1
              , 'tbody'      : 1
-             , 'thead'      : 1
-             , 'time'       : 1
              , 'td'         : 1
              , 'th'         : 1
+             , 'thead'      : 1
+             , 'time'       : 1
              , 'title'      : 1
              , 'tr'         : 1
              , 'tt'         : 1
@@ -167,31 +174,34 @@ NASTY_TAGS = { 'script'     : 1
              , 'applet'     : 1
              }
 
-class IllegalHTML( ValueError ):
+
+class IllegalHTML(ValueError):
     pass
 
-class StrippingParser( SGMLParser ):
+
+class StrippingParser(SGMLParser):
     """ Pass only allowed tags;  raise exception for known-bad.  """
 
-    from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
+    # This replaces SGMLPaser.entitydefs
+    entitydefs = entitydefs
 
-    def __init__( self ):
+    def __init__(self):
 
-        SGMLParser.__init__( self )
+        SGMLParser.__init__(self)
         self.result = ""
 
-    def handle_data( self, data ):
+    def handle_data(self, data):
 
         if data:
             self.result = self.result + data
 
-    def handle_charref( self, name ):
+    def handle_charref(self, name):
 
-        self.result = "%s&#%s;" % ( self.result, name )
+        self.result = "%s&#%s;" % (self.result, name)
 
     def handle_entityref(self, name):
 
-        if self.entitydefs.has_key(name):
+        if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -203,50 +213,50 @@ class StrippingParser( SGMLParser ):
 
         """ Delete all tags except for legal ones.
         """
-        if VALID_TAGS.has_key(tag):
+        if tag in VALID_TAGS:
 
             self.result = self.result + '<' + tag
 
             for k, v in attrs:
 
-                if k.lower().startswith( 'on' ):
-                    raise IllegalHTML, 'Javascipt event "%s" not allowed.' % k
+                if k.lower().startswith('on'):
+                    raise IllegalHTML('Javascipt event "%s" not allowed.' % k)
 
-                if v.lower().startswith( 'javascript:' ):
-                    raise IllegalHTML, 'Javascipt URI "%s" not allowed.' % v
+                if v.lower().startswith('javascript:'):
+                    raise IllegalHTML('Javascipt URI "%s" not allowed.' % v)
 
                 self.result = '%s %s="%s"' % (self.result, k, v)
 
-            endTag = '</%s>' % tag
+            # endTag = '</%s>' % tag
             if VALID_TAGS.get(tag):
                 self.result = self.result + '>'
             else:
                 self.result = self.result + ' />'
 
-        elif NASTY_TAGS.get( tag ):
-            raise IllegalHTML, 'Dynamic tag "%s" not allowed.' % tag
+        elif NASTY_TAGS.get(tag):
+            raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
 
         else:
-            pass    # omit tag
+            pass  # omit tag
 
     def unknown_endtag(self, tag):
 
-        if VALID_TAGS.get( tag ):
+        if VALID_TAGS.get(tag):
 
             self.result = "%s</%s>" % (self.result, tag)
-            remTag = '</%s>' % tag
+            # remTag = '</%s>' % tag
 
     def parse_declaration(self, i):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
         if self.rawdata[i:i+9] == '<![CDATA[':
-             k = self.rawdata.find(']]>', i)
-             if k == -1:
-                 k = len(self.rawdata)
-             data = self.rawdata[i+9:k]
-             j = k+3
-             self.result.append("<![CDATA[%s]]>" % data)
+            k = self.rawdata.find(']]>', i)
+            if k == -1:
+                k = len(self.rawdata)
+            data = self.rawdata[i+9:k]
+            j = k + 3
+            self.result.append("<![CDATA[%s]]>" % data)
         else:
             try:
                 j = SGMLParser.parse_declaration(self, i)
@@ -256,9 +266,10 @@ class StrippingParser( SGMLParser ):
                 j = i + len(toHandle)
         return j
 
-def scrubHTML( html ):
+
+def scrubHTML(html):
     """ Strip illegal HTML tags from string text.  """
     parser = StrippingParser()
-    parser.feed( html )
+    parser.feed(html)
     parser.close()
     return parser.result

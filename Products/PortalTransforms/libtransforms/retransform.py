@@ -10,7 +10,7 @@ class retransform:
 
     implements(ITransform)
 
-    inputs  = ('text/',)
+    inputs = ('text/',)
 
     def __init__(self, name, *args):
         self.__name__ = name

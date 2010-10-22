@@ -1,11 +1,11 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 
-EXTRACT_BODY  = 1
+EXTRACT_BODY = 1
 EXTRACT_STYLE = 0
 
-FIX_IMAGES    = 1
-IMAGE_PREFIX  = "img_"
+FIX_IMAGES = 1
+IMAGE_PREFIX = "img_"
 
 # disable office_uno because it doesn't support multithread yet
 ENABLE_UNO = False
@@ -28,14 +28,13 @@ else:
     except:
         from office_com import document
 
-import os.path
 
 class word_to_html:
     implements(ITransform)
 
     __name__ = "word_to_html"
-    inputs   = ('application/msword',)
-    output  = 'text/html'
+    inputs = ('application/msword',)
+    output = 'text/html'
     output_encoding = 'utf-8'
 
     tranform_engine = document.__module__
@@ -62,6 +61,7 @@ class word_to_html:
         finally:
             if doc is not None:
                 doc.cleanDir(doc.tmpdir)
+
 
 def register():
     return word_to_html()

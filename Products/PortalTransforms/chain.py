@@ -18,12 +18,13 @@ from Products.PortalTransforms.interfaces import ITransform
 
 from UserList import UserList
 
+
 class chain(UserList):
     """A chain of transforms used to transform data"""
 
     implements(IChain, ITransform)
 
-    def __init__(self, name='',*args):
+    def __init__(self, name='', *args):
         UserList.__init__(self, *args)
         self.__name__ = name
         if args:
@@ -85,6 +86,7 @@ class chain(UserList):
             except:
                 pass
 
+
 class TransformsChain(Implicit, Item, RoleManager, Persistent):
     """ a transforms chain is suite of transforms to apply in order.
     It follows the transform API so that a chain is itself a transform.
@@ -96,12 +98,11 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     meta_types = all_meta_types = ()
 
     manage_options = (
-                      ({'label':'Configure',
-                       'action':'manage_main'},
-                       {'label':'Reload',
-                       'action':'manage_reloadTransform'},) +
-                      Item.manage_options
-                      )
+        ({'label': 'Configure',
+          'action': 'manage_main'},
+         {'label': 'Reload',
+          'action': 'manage_reloadTransform'},) +
+        Item.manage_options)
 
     manage_main = PageTemplateFile('editTransformsChain', _www)
     manage_reloadTransform = PageTemplateFile('reloadTransform', _www)
@@ -153,7 +154,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         self._object_ids.append(id)
         self._chain_init()
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_delObjects')
     def manage_delObjects(self, ids, REQUEST=None):
@@ -162,8 +163,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
             self._object_ids.remove(id)
         self._chain_init()
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
-
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     # transforms order handling #
 
@@ -185,7 +185,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         newpos = self._object_ids.index(id) - 1
         self.move_object_to_position(id, newpos)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManageProperties, 'move_object_down')
     def move_object_down(self, id, REQUEST=None):
@@ -193,8 +193,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         newpos = self._object_ids.index(id) + 1
         self.move_object_to_position(id, newpos)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
-
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     # Z transform interface #
 
@@ -211,7 +210,8 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     def listAddableObjectIds(self):
         """ return a list of addable transform """
         tr_tool = getToolByName(self, 'portal_transforms')
-        return [id for id in tr_tool.objectIds() if not (id == self.id or id in self._object_ids)]
+        return [id for id in tr_tool.objectIds()
+                if not (id == self.id or id in self._object_ids)]
 
     security.declareProtected(ManagePortal, 'objectIds')
     def objectIds(self):

@@ -29,8 +29,9 @@ def import_from_name(module_name):
         raise ImportError(str(e))
     return m
 
+
 def make_config_persistent(kwargs):
-    """ iterates on the given dictionnary and replace list by persistent list,
+    """ iterates on the given dictionary and replace list by persistent list,
     dictionary by persistent mapping.
     """
     for key, value in kwargs.items():
@@ -40,6 +41,7 @@ def make_config_persistent(kwargs):
         elif type(value) in (type(()), type([])):
             p_value = PersistentList(value)
             kwargs[key] = p_value
+
 
 def make_config_nonpersistent(kwargs):
     """ iterates on the given dictionary and replace ListClass by python List,
@@ -54,11 +56,12 @@ def make_config_nonpersistent(kwargs):
             kwargs[key] = p_value
 
 VALIDATORS = {
-    'int' : int,
-    'string' : str,
-    'list' : PersistentList,
-    'dict' : PersistentMapping,
+    'int': int,
+    'string': str,
+    'list': PersistentList,
+    'dict': PersistentMapping,
     }
+
 
 class Transform(SimpleItem):
     """A transform is an external method with
@@ -71,12 +74,12 @@ class Transform(SimpleItem):
     meta_types = all_meta_types = ()
 
     manage_options = (
-                      ({'label':'Configure',
-                       'action':'manage_main'},
-                       {'label':'Reload',
-                       'action':'manage_reloadTransform'},) +
-                      SimpleItem.manage_options
-                      )
+        ({'label': 'Configure',
+          'action': 'manage_main'},
+         {'label': 'Reload',
+          'action': 'manage_reloadTransform'},) +
+        SimpleItem.manage_options,
+        )
 
     manage_main = PageTemplateFile('configureTransform', _www)
     manage_reloadTransform = PageTemplateFile('reloadTransform', _www)
@@ -114,13 +117,18 @@ class Transform(SimpleItem):
             self._v_transform = transform
         # check this is a valid transform
         if not hasattr(transform, '__class__'):
-            raise TransformException('Invalid transform : transform is not a class')
+            raise TransformException(
+                'Invalid transform : transform is not a class')
         if not ITransform.providedBy(transform):
-            raise TransformException('Invalid transform : ITransform is not implemented by %s' % transform.__class__)
+            raise TransformException(
+                'Invalid transform : ITransform is not implemented by %s' %
+                transform.__class__)
         if not hasattr(transform, 'inputs'):
-            raise TransformException('Invalid transform : missing required "inputs" attribute')
+            raise TransformException(
+                'Invalid transform : missing required "inputs" attribute')
         if not hasattr(transform, 'output'):
-            raise TransformException('Invalid transform : missing required "output" attribute')
+            raise TransformException(
+                'Invalid transform : missing required "output" attribute')
         # manage configuration
         if set_conf and hasattr(transform, 'config'):
             conf = dict(transform.config)
@@ -145,18 +153,21 @@ class Transform(SimpleItem):
             m = import_from_name(self.module)
         except ImportError, err:
             transform = BrokenTransform(self.id, self.module, err)
-            msg = "Cannot register transform %s (ImportError), using BrokenTransform: Error\n %s" % (self.id, err)
+            msg = ("Cannot register transform %s (ImportError), using "
+                   "BrokenTransform: Error\n %s" % (self.id, err))
             self.title = 'BROKEN'
             log(msg, severity=ERROR)
             return transform
         if not hasattr(m, 'register'):
-            msg = 'Invalid transform module %s: no register function defined' % self.module
+            msg = ("Invalid transform module %s: no register function "
+                   "defined" % self.module)
             raise TransformException(msg)
         try:
             transform = m.register()
         except Exception, err:
             transform = BrokenTransform(self.id, self.module, err)
-            msg = "Cannot register transform %s, using BrokenTransform: Error\n %s" % (self.id, err)
+            msg = ("Cannot register transform %s, using BrokenTransform: "
+                   "Error\n %s" % (self.id, err))
             self.title = 'BROKEN'
             log(msg, severity=ERROR)
         else:
@@ -246,8 +257,9 @@ class Transform(SimpleItem):
             self._config[param] = VALIDATORS[meta[0]](value)
 
         tr_tool = getToolByName(self, 'portal_transforms')
-        # need to remap transform if necessary (i.e. configurable inputs / output)
-        if kwargs.has_key('inputs') or kwargs.has_key('output'):
+        # need to remap transform if necessary (i.e. configurable
+        # inputs / output)
+        if 'inputs' in kwargs or 'output' in kwargs:
             tr_tool._unmapTransform(self)
             if not hasattr(self, '_v_transform'):
                 self._load_transform()
@@ -255,11 +267,11 @@ class Transform(SimpleItem):
             self.output = kwargs.get('output', self._v_transform.output)
             tr_tool._mapTransform(self)
         # track output encoding
-        if kwargs.has_key('output_encoding'):
+        if 'output_encoding' in kwargs:
             self.output_encoding = kwargs['output_encoding']
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(tr_tool.absolute_url()+'/manage_main')
-
+            REQUEST['RESPONSE'].redirect(
+                tr_tool.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'reload')
     def reload(self):
@@ -270,7 +282,8 @@ class Transform(SimpleItem):
         self._tr_init()
 
     def preprocess_param(self, kwargs):
-        """ preprocess param fetched from an http post to handle optional dictionary
+        """ preprocess param fetched from an http post to handle
+        optional dictionary
         """
         for param in self.get_parameters():
             if self.get_parameter_infos(param)[0] == 'dict':
@@ -293,4 +306,3 @@ class Transform(SimpleItem):
                             dict[key] = value
 
 InitializeClass(Transform)
-

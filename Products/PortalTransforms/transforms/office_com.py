@@ -9,8 +9,10 @@ import win32com.client
 from win32com.client import gencache
 from win32com.client import constants, Dispatch
 
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import \
+    commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML
+
 
 class document(commandtransform):
 
@@ -21,7 +23,8 @@ class document(commandtransform):
         name = self.name()
         if not name.endswith('.doc'):
             name = name + ".doc"
-        self.tmpdir, self.fullname = self.initialize_tmpdir(data, filename=name)
+        self.tmpdir, self.fullname = self.initialize_tmpdir(data,
+                                                            filename=name)
 
     def convert(self):
         try:
@@ -38,14 +41,14 @@ class document(commandtransform):
         # Let's set up some html saving options for this document
         doc.WebOptions.RelyOnCSS = 1
         doc.WebOptions.OptimizeForBrowser = 1
-        doc.WebOptions.BrowserLevel = 0 # constants.wdBrowserLevelV4
+        doc.WebOptions.BrowserLevel = 0  # constants.wdBrowserLevelV4
         doc.WebOptions.OrganizeInFolder = 0
         doc.WebOptions.UseLongFileNames = 1
         doc.WebOptions.RelyOnVML = 0
         doc.WebOptions.AllowPNG = 1
         # And then save the document into HTML
-        doc.SaveAs(FileName = "%s.htm" % (self.fullname),
-                   FileFormat = 8) # constants.wdFormatHTML)
+        doc.SaveAs(FileName="%s.htm" % (self.fullname),
+                   FileFormat=8)  # constants.wdFormatHTML)
 
         # TODO -- Extract Metadata (author, title, keywords) so we
         # can populate the dublin core

@@ -1,7 +1,9 @@
 from zope.interface import Interface
 
+
 class IPortalTransformsTool(Interface):
     """Marker interface for the portal_transforms tool."""
+
 
 class IDataStream(Interface):
     """data stream, is the result of a transform"""
@@ -10,7 +12,7 @@ class IDataStream(Interface):
         """set the main data produced by a transform, i.e. usually a string"""
 
     def getData():
-        """provide access to the transformed data object, i.e. usually a string.
+        """provide access to the transformed data object, i.e. usually a string
         This data may references subobjects.
         """
 
@@ -27,7 +29,7 @@ class IDataStream(Interface):
     def getMetadata():
         """return a dict-like object with any optional metadata from
         the transform
-        You can modify the returned dictionnary to add/change metadata
+        You can modify the returned dictionary to add/change metadata
         """
 
     def isCacheable():
@@ -40,6 +42,7 @@ class IDataStream(Interface):
         """Set cacheable flag to yes or no
         """
 
+
 class ITransform(Interface):
     """A transformation plugin -- tranform data somehow
     must be threadsafe and stateless"""
@@ -50,10 +53,11 @@ class ITransform(Interface):
     def convert(data, idata, filename=None, **kwargs):
         """convert the data, store the result in idata and return that
 
-        optional argument filename may give the original file name of received data
+        optional argument filename may give the original file name of
+        received data
 
-        additional arguments given to engine's convert, convertTo or __call__ are
-        passed back to the transform
+        additional arguments given to engine's convert, convertTo or
+        __call__ are passed back to the transform
 
         The object on which the translation was invoked is available as context
         (default: None)
@@ -79,7 +83,8 @@ class IEngine(Interface):
         name is the name of a registered transform
         """
 
-    def convertTo(mimetype, orig, data=None, object=None, context=None, **kwargs):
+    def convertTo(mimetype, orig, data=None, object=None, context=None,
+                  **kwargs):
         """Convert orig to a given mimetype
 
         * orig is an encoded string

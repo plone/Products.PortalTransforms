@@ -1,5 +1,3 @@
-
-from Testing import ZopeTestCase
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from zope.interface import implements
@@ -8,8 +6,8 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
 import urllib
-import time
 import re
+
 
 class BaseTransform:
     def name(self):
@@ -30,8 +28,10 @@ class HtmlToText(BaseTransform):
         data.setData(orig)
         return data
 
+
 class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
+
 
 class FooToBar(BaseTransform):
     implements(ITransform)
@@ -47,6 +47,7 @@ class FooToBar(BaseTransform):
         data.setData(orig)
         return data
 
+
 class DummyHtmlFilter1(BaseTransform):
     implements(ITransform)
     __name__ = 'dummy_html_filter1'
@@ -56,6 +57,7 @@ class DummyHtmlFilter1(BaseTransform):
     def convert(self, orig, data, **kwargs):
         data.setData("<span class='dummy'>%s</span>" % orig)
         return data
+
 
 class DummyHtmlFilter2(BaseTransform):
     implements(ITransform)
@@ -79,30 +81,36 @@ class QuxToVHost(DummyHtmlFilter1):
 class TransformNoIO(BaseTransform):
     implements(ITransform)
 
+
 class BadTransformMissingImplements(BaseTransform):
     #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
+
 
 class BadTransformBadMIMEType1(BaseTransform):
     implements(ITransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
+
 class BadTransformBadMIMEType2(BaseTransform):
     implements(ITransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
+
 
 class BadTransformNoInput(BaseTransform):
     implements(ITransform)
     inputs = ()
     output = 'text/plain'
 
+
 class BadTransformWildcardOutput(BaseTransform):
     implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
+
 
 class TestEngine(ATSiteTestCase):
 
@@ -121,12 +129,18 @@ class TestEngine(ATSiteTestCase):
 
     def testFailRegister(self):
         register = self.engine.registerTransform
-        self.assertRaises(TransformException, register, TransformNoIO())
-        self.assertRaises(TransformException, register, BadTransformMissingImplements())
-        self.assertRaises(TransformException, register, BadTransformBadMIMEType1())
-        self.assertRaises(TransformException, register, BadTransformBadMIMEType2())
-        self.assertRaises(TransformException, register, BadTransformNoInput())
-        self.assertRaises(TransformException, register, BadTransformWildcardOutput())
+        self.assertRaises(TransformException, register,
+                          TransformNoIO())
+        self.assertRaises(TransformException, register,
+                          BadTransformMissingImplements())
+        self.assertRaises(TransformException, register,
+                          BadTransformBadMIMEType1())
+        self.assertRaises(TransformException, register,
+                          BadTransformBadMIMEType2())
+        self.assertRaises(TransformException, register,
+                          BadTransformNoInput())
+        self.assertRaises(TransformException, register,
+                          BadTransformWildcardOutput())
 
     def testCall(self):
         self.register()
@@ -154,7 +168,8 @@ class TestEngine(ATSiteTestCase):
     def testConvertTo(self):
         self.register()
 
-        data = self.engine.convertTo('text/plain', self.data, mimetype="text/html")
+        data = self.engine.convertTo('text/plain', self.data,
+                                     mimetype="text/html")
         self.failUnlessEqual(data.getData(), "foo")
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
         self.failUnlessEqual(data.getMetadata().get('encoding'), None)
@@ -163,7 +178,8 @@ class TestEngine(ATSiteTestCase):
         self.engine.unregisterTransform('HtmlToText')
         self.engine.unregisterTransform('FooToBar')
         self.engine.registerTransform(HtmlToTextWithEncoding())
-        data = self.engine.convertTo('text/plain', self.data, mimetype="text/html")
+        data = self.engine.convertTo('text/plain', self.data,
+                                     mimetype="text/html")
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'text/plain')
         # HtmlToTextWithEncoding. Now None is the right
         #self.failUnlessEqual(data.getMetadata()['encoding'], 'ascii')
@@ -199,7 +215,9 @@ class TestEngine(ATSiteTestCase):
         self.failUnlessEqual(self.engine.listPolicies(), expected_policy)
 
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
-        self.failUnlessEqual(cache.getData(), '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
+        self.failUnlessEqual(
+            cache.getData(),
+            '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
 
         self.failUnlessEqual(cache.getMetadata()['mimetype'], mt)
         self.failUnlessEqual(cache.name(), mt)

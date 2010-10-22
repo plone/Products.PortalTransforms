@@ -2,7 +2,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from DocumentTemplate.DT_Util import html_quote
 
-__revision__ = '$Id$'
 
 class TextPreToHTML:
     """simple transform which wraps raw text into a <pre> tag"""
@@ -10,12 +9,13 @@ class TextPreToHTML:
     implements(ITransform)
 
     __name__ = "text-pre_to_html"
-    inputs   = ('text/plain-pre',)
+    inputs = ('text/plain-pre',)
     output = "text/html"
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
+            'inputs': ('list', 'Inputs',
+                       'Input(s) MIME type. Change with care.'),
             }
         if name:
             self.__name__ = name
@@ -33,6 +33,7 @@ class TextPreToHTML:
     def convert(self, orig, data, **kwargs):
         data.setData('<pre class="data">%s</pre>' % html_quote(orig))
         return data
+
 
 def register():
     return TextPreToHTML()

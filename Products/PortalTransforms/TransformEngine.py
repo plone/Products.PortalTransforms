@@ -35,7 +35,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
-    isPrincipiaFolderish = 1 # Show up in the ZMI
+    isPrincipiaFolderish = 1  # Show up in the ZMI
 
     implements(IPortalTransformsTool, IEngine)
 
@@ -77,7 +77,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._unmapTransform(getattr(self, name))
         if name in self.objectIds():
             self._delObject(name)
-
 
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
@@ -131,7 +130,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if target_mt:
             target_mt = target_mt[0]
         else:
-            log('Unable to match target mime type %s'% str(target_mimetype),
+            log('Unable to match target mime type %s' % str(target_mimetype),
                 severity=DEBUG)
             return None
 
@@ -185,8 +184,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         """Convert to a given mimetype and return the raw data
         ignoring subobjects. see convertTo for more information
         """
-        data =self.convertTo(target_mimetype, orig, data, object, usedby,
-                       context, **kwargs)
+        data = self.convertTo(target_mimetype, orig, data, object, usedby,
+                              context, **kwargs)
         if data:
             return data.getData()
         return None
@@ -209,7 +208,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._setMetaData(data, transform)
         return data
 
-
     def __call__(self, name, orig, data=None, context=None, **kwargs):
         """run a transform by its name, returning the raw data product
 
@@ -220,7 +218,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         """
         data = self.convert(name, orig, data, context, **kwargs)
         return data.getData()
-
 
     # utilities ###############################################################
 
@@ -330,7 +327,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                             requiredTransform = transform
             # Which of these inputs will be reachable with the
             # shortest path ?
-            shortest = 9999 # big enough, I guess
+            shortest = 9999  # big enough, I guess
             shortestFirstPath = None
             for supportedInput in supportedInputs.keys():
                 # We start from orig
@@ -346,7 +343,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                         shortest = len(firstPath)
                         shortestFirstPath = firstPath
             if shortestFirstPath == None:
-                return None # there is no path leading to this transform
+                return None  # there is no path leading to this transform
             # Then we have to take this transform.
             secondPath = [requiredTransform]
             # From the output of this transform, we then have to
@@ -357,7 +354,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             thirdPath = self._findPath(thirdOrig, thirdTarget,
                                        required_transforms)
             if thirdPath is None:
-                return None # no path
+                return None  # no path
             # Final result is the concatenation of these 3 parts
             return shortestFirstPath + secondPath + thirdPath
 
@@ -371,7 +368,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # this length until one of these paths reaches our target or
         # until all reachable types have been reached.
         currentPathLength = 0
-        pathToType = {orig: []} # all paths we know, by end of path.
+        pathToType = {orig: []}  # all paths we know, by end of path.
+
         def typesWithPathOfLength(length):
             '''Returns the lists of known paths of a given length'''
             result = []
@@ -379,6 +377,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if len(path) == length:
                     result.append(type_)
             return result
+
         # We will start exploring paths which start from types
         # reachable in zero steps. That is paths which start from
         # orig.
@@ -484,7 +483,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._setObject(id, transform)
         self._mapTransform(transform)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
     def manage_addTransformsChain(self, id, description, REQUEST=None):
@@ -493,14 +492,14 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._setObject(id, transform)
         self._mapTransform(transform)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'reloadTransforms')
     def reloadTransforms(self, ids=()):

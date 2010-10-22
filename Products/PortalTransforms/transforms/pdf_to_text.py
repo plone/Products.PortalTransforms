@@ -2,19 +2,21 @@
 Uses the xpdf (www.foolabs.com/xpdf)
 """
 
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 import os
+
+from zope.interface import implements
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import sansext
+from Products.PortalTransforms.libtransforms.commandtransform import (
+    commandtransform, popentransform)
+
 
 class pdf_to_text(popentransform):
     implements(ITransform)
 
     __name__ = "pdf_to_text"
-    inputs   = ('application/pdf',)
-    output  = 'text/plain'
+    inputs = ('application/pdf',)
+    output = 'text/plain'
     output_encoding = 'utf-8'
 
     __version__ = '2004-07-02.01'
@@ -23,12 +25,13 @@ class pdf_to_text(popentransform):
     binaryArgs = "%(infile)s -enc UTF-8 -"
     useStdin = False
 
+
 class old_pdf_to_text(commandtransform):
     implements(ITransform)
 
     __name__ = "pdf_to_text"
-    inputs   = ('application/pdf',)
-    output  = 'text/plain'
+    inputs = ('application/pdf',)
+    output = 'text/plain'
     output_encoding = 'utf-8'
 
     binaryName = "pdftotext"
@@ -64,6 +67,7 @@ class old_pdf_to_text(commandtransform):
             except:
                 return ''
         return text
+
 
 def register():
     return pdf_to_text()

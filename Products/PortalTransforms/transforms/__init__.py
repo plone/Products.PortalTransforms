@@ -7,7 +7,7 @@
 ###    will not be processed/registered
 ### 2) Registration
 ###    A second phase happens when the loaded modules register method
-###    is called and this produces an instance that will used to
+###    is called and this produces an instance that will be used to
 ###    implement the transform, if register needs to fail for now it
 ###    should raise an ImportError as well (dumb, I know)
 
@@ -22,7 +22,7 @@ modules = [
     'html_body',      # extract only the contents of the <body> tag
     'html_to_text',   # re based transform
     'text_to_html',   # wrap text in a verbatim env
-    'text_pre_to_html', # wrap text into a pre
+    'text_pre_to_html',   # wrap text into a pre
     'pdf_to_html',    # sf.net/projects/pdftohtml
     'pdf_to_text',    # www.foolabs.com/xpdf
     'rtf_to_html',    # sf.net/projects/rtf-converter
@@ -37,8 +37,8 @@ modules = [
     'lynx_dump',      # lynx -dump
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
-    'markdown_to_html', # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
-    'textile_to_html',# textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
+    'markdown_to_html',  # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
+    'textile_to_html',  # textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
     'web_intelligent_plain_text_to_html',
     'html_to_web_intelligent_plain_text',
     ]
@@ -58,6 +58,7 @@ for m in modules:
         import traceback
         traceback.print_exc()
         log("Raised error %s for %s" % (e, m), severity=ERROR)
+
 
 def initialize(engine):
     for transform in transforms:

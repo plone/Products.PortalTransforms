@@ -5,6 +5,7 @@ from Acquisition import aq_base
 
 _marker = object()
 
+
 class Cache:
 
     def __init__(self, obj, context=None, _id='_v_transform_cache'):
@@ -13,7 +14,7 @@ class Cache:
             self.context = obj
         else:
             self.context = context
-        self._id =_id
+        self._id = _id
 
     def _genCacheKey(self, identifier, *args):
         key = identifier
@@ -47,7 +48,7 @@ class Cache:
         obj = self.obj
         key = self._genCacheKey(key)
         dict = getattr(obj, self._id, None)
-        if dict is None :
+        if dict is None:
             return None
         try:
             orig_time, value = dict.get(key, None)
@@ -67,5 +68,5 @@ class Cache:
         else:
             cache = getattr(obj, id)
             key = self._genCacheKey(key)
-            if cache.has_key(key):
+            if key in cache:
                 del cache[key]

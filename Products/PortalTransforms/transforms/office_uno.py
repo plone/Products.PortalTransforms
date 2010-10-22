@@ -1,10 +1,12 @@
-import re, os, tempfile
 import uno
 import unohelper
 from com.sun.star.beans import PropertyValue
+from com.sun.star.util import CloseVetoException
 
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import \
+    commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML
+
 
 class document(commandtransform):
 
@@ -14,7 +16,8 @@ class document(commandtransform):
 
         commandtransform.__init__(self, name)
         name = self.name()
-        self.tmpdir, self.fullname = self.initialize_tmpdir(data, filename=name)
+        self.tmpdir, self.fullname = self.initialize_tmpdir(data,
+                                                            filename=name)
         self.outputfile = self.fullname + '.html'
 
     def convert(self):
@@ -22,7 +25,7 @@ class document(commandtransform):
 
         localContext = uno.getComponentContext()
         resolver = localContext.ServiceManager.createInstanceWithContext(
-                       'com.sun.star.bridge.UnoUrlResolver', localContext )
+                       'com.sun.star.bridge.UnoUrlResolver', localContext)
         ctx = resolver.resolve(
                        'uno:socket,host=localhost,port=2002;'
                        'urp;StarOffice.ComponentContext')
@@ -45,7 +48,7 @@ class document(commandtransform):
 
         try:
             doc.close(True)
-        except com.sun.star.util.CloseVetoException:
+        except CloseVetoException:
             pass
 
         # maigic to release some resource

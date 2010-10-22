@@ -2,18 +2,22 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from Products.CMFDefault.utils import bodyfinder
 
+
 class HTMLBody:
     """Simple transform which extracts the content of the body tag"""
 
     implements(ITransform)
 
     __name__ = "html_body"
-    inputs   = ('text/html',)
+    inputs = ('text/html',)
     output = "text/html"
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
+            'inputs':
+                ('list',
+                 'Inputs',
+                 'Input(s) MIME type. Change with care.'),
             }
         if name:
             self.__name__ = name
@@ -32,6 +36,7 @@ class HTMLBody:
         body = bodyfinder(orig)
         data.setData(body)
         return data
+
 
 def register():
     return HTMLBody()

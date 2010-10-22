@@ -3,6 +3,7 @@ from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from utils import input_file_path
 FILE_PATH = input_file_path("demo1.pdf")
 
+
 class TestGraph(ATSiteTestCase):
 
     def afterSetUp(self):
@@ -43,20 +44,20 @@ class TestGraph(ATSiteTestCase):
                 return self._name
 
         dummyMap1 = {
-            '1': { '1': [DT('transform1-1')],
-                   '2': [DT('transform1-2')],
-                   '3': [DT('transform1-3')]},
-            '2': { '1': [DT('transform2-1')],
-                   '3': [DT('transform2-3')],
-                   '4': [DT('transform2-4')]},
-            '3': { '1': [DT('transform3-1')],
-                   '2': [DT('transform3-2')],
-                   '5': [DT('transform3-5')]},
-            '4': { '5': [DT('transform4-5')],
-                   '6': [DT('transform4-6')]},
-            '5': { '3': [DT('transform5-3')]},
-            '7': { '6': [DT('transform7-6')]}
-        }
+            '1': {'1': [DT('transform1-1')],
+                  '2': [DT('transform1-2')],
+                  '3': [DT('transform1-3')]},
+            '2': {'1': [DT('transform2-1')],
+                  '3': [DT('transform2-3')],
+                  '4': [DT('transform2-4')]},
+            '3': {'1': [DT('transform3-1')],
+                  '2': [DT('transform3-2')],
+                  '5': [DT('transform3-5')]},
+            '4': {'5': [DT('transform4-5')],
+                  '6': [DT('transform4-6')]},
+            '5': {'3': [DT('transform5-3')]},
+            '7': {'6': [DT('transform7-6')]},
+            }
         expectedPathes = {
             '1-1': [],
             '1-2': ['transform1-2'],
@@ -69,11 +70,11 @@ class TestGraph(ATSiteTestCase):
             '2-2': [],
             '2-4': ['transform2-4'],
             '4-2': ['transform4-5', 'transform5-3', 'transform3-2'],
-            '5-3': ['transform5-3']
-        }
+            '5-3': ['transform5-3'],
+            }
         self.engine._mtmap = dummyMap1
-        for orig in ['1','2','3','4','5','6','7']:
-            for target in ['1','2','3','4','5','6','7']:
+        for orig in ['1', '2', '3', '4', '5', '6', '7']:
+            for target in ['1', '2', '3', '4', '5', '6', '7']:
                 # build the name of the path
                 pathName = orig + '-' + target
                 # do we have any expectation for this path ?
@@ -81,7 +82,7 @@ class TestGraph(ATSiteTestCase):
                     # we do. Here is the expected shortest path
                     expectedPath = expectedPathes[pathName]
                     # what's the shortest path according to the engine ?
-                    gotPath = self.engine._findPath(orig,target)
+                    gotPath = self.engine._findPath(orig, target)
                     # just keep the name of the transforms, please
                     if gotPath is not None:
                         gotPath = [transform.name() for transform in gotPath]
@@ -95,7 +96,7 @@ class TestGraph(ATSiteTestCase):
         """
         dummyMap = {'1': {'2': []}}
         self.engine._mtmap = dummyMap
-        self.engine._findPath('1','2')
+        self.engine._findPath('1', '2')
 
     def testIdentity(self):
         orig = 'Some text'

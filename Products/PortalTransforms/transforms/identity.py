@@ -2,10 +2,9 @@
 A simple identity transform
 """
 
-__revision__ = '$Id$'
-
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
+
 
 class IdentityTransform:
     """ Identity transform
@@ -18,12 +17,14 @@ class IdentityTransform:
 
     def __init__(self, name=None, **kwargs):
         self.config = {
-            'inputs'       : ('text/x-rst',),
-            'output'      : 'text/plain',
+            'inputs': ('text/x-rst',),
+            'output': 'text/plain',
             }
         self.config_metadata = {
-            'inputs'       : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
-            'output'      : ('string', 'Output', 'Output MIME type. Change with care.'),
+            'inputs':
+                ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
+            'output':
+                ('string', 'Output', 'Output MIME type. Change with care.'),
             }
         self.config.update(kwargs)
 
@@ -40,6 +41,7 @@ class IdentityTransform:
     def convert(self, data, cache, **kwargs):
         cache.setData(data)
         return cache
+
 
 def register():
     return IdentityTransform()

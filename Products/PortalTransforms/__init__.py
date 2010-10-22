@@ -20,6 +20,7 @@ setattr(this_module, 'MimeTypeItem', MimeTypeItem)
 from Products.MimetypesRegistry import MimeTypeItem
 sys.modules['Products.PortalTransforms.zope.MimeTypeItem'] = MimeTypeItem
 
+
 def initialize(context):
     from Products.CMFCore import utils
     utils.ToolInit("%s Tool" % PKG_NAME,

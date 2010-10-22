@@ -28,7 +28,7 @@ class datastream:
         self._data = value
 
     def getData(self):
-        """provide access to the transformed data object, i.e. usually a string.
+        """provide access to the transformed data object, i.e. usually a string
         This data may references subobjects.
         """
         if callable(self._data):

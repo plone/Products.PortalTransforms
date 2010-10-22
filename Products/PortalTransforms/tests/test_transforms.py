@@ -25,6 +25,7 @@ from os.path import exists
 os.environ['LC_ALL'] = 'C'
 logger = logging.getLogger('PortalTransforms')
 
+
 class TransformTest(ATSiteTestCase):
 
     def do_convert(self, filename=None):
@@ -43,8 +44,8 @@ class TransformTest(ATSiteTestCase):
             output = open(output)
         except IOError:
             import sys
-            print >>sys.stderr, 'No output file found.'
-            print >>sys.stderr, 'File %s created, check it !' % self.output
+            print >> sys.stderr, 'No output file found.'
+            print >> sys.stderr, 'File %s created, check it !' % self.output
             output = open(output, 'w')
             output.write(got)
             output.close()
@@ -80,125 +81,137 @@ class TransformTest(ATSiteTestCase):
     def __repr__(self):
         return self.transform.name()
 
+
 class PILTransformsTest(ATSiteTestCase):
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
-        self.mimetypes_registry = getToolByName(self.portal, 'mimetypes_registry')
+        self.mimetypes_registry = getToolByName(self.portal,
+                                                'mimetypes_registry')
 
     def test_image_to_bmp(self):
         self.pt.registerTransform(image_to_bmp())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/jpeg')
-        data = self.pt.convertTo(target_mimetype='image/x-ms-bmp',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/jpeg')
+        data = self.pt.convertTo(target_mimetype='image/x-ms-bmp', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/x-ms-bmp')
 
     def test_image_to_gif(self):
         self.pt.registerTransform(image_to_gif())
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/png')
-        data = self.pt.convertTo(target_mimetype='image/gif',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/png')
+        data = self.pt.convertTo(target_mimetype='image/gif', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/gif')
 
     def test_image_to_jpeg(self):
         self.pt.registerTransform(image_to_jpeg())
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/gif')
-        data = self.pt.convertTo(target_mimetype='image/jpeg',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/gif')
+        data = self.pt.convertTo(target_mimetype='image/jpeg', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/jpeg')
 
     def test_image_to_png(self):
         self.pt.registerTransform(image_to_png())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/jpeg')
-        data = self.pt.convertTo(target_mimetype='image/png',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/jpeg')
+        data = self.pt.convertTo(target_mimetype='image/png', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/png')
 
     def test_image_to_pcx(self):
         self.pt.registerTransform(image_to_pcx())
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/gif')
-        data = self.pt.convertTo(target_mimetype='image/pcx',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/gif')
+        data = self.pt.convertTo(target_mimetype='image/pcx', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/pcx')
 
     def test_image_to_ppm(self):
         self.pt.registerTransform(image_to_ppm())
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/png')
-        data = self.pt.convertTo(target_mimetype='image/x-portable-pixmap',orig=data)
-        self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/x-portable-pixmap')
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/png')
+        data = self.pt.convertTo(target_mimetype='image/x-portable-pixmap',
+                                 orig=data)
+        self.failUnlessEqual(data.getMetadata()['mimetype'],
+                             'image/x-portable-pixmap')
 
     def test_image_to_tiff(self):
         self.pt.registerTransform(image_to_tiff())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
-        self.failUnlessEqual(self.mimetypes_registry.classify(data),'image/jpeg')
-        data = self.pt.convertTo(target_mimetype='image/tiff',orig=data)
+        self.failUnlessEqual(self.mimetypes_registry.classify(data),
+                             'image/jpeg')
+        data = self.pt.convertTo(target_mimetype='image/tiff', orig=data)
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/tiff')
 
 
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',
-     "demo1.pdf", "demo1.html", None, 0
+     "demo1.pdf", "demo1.html", None, 0,
      ),
     ('Products.PortalTransforms.transforms.word_to_html',
-     "test.doc", "test_word.html", normalize_html, 0
+     "test.doc", "test_word.html", normalize_html, 0,
      ),
     ('Products.PortalTransforms.transforms.lynx_dump',
-     "test_lynx.html", "test_lynx.txt", None, 0
+     "test_lynx.html", "test_lynx.txt", None, 0,
      ),
     ('Products.PortalTransforms.transforms.html_to_text',
-     "test_lynx.html", "test_html_to_text.txt", None, 0
+     "test_lynx.html", "test_html_to_text.txt", None, 0,
      ),
     ('Products.PortalTransforms.transforms.identity',
-     "rest1.rst", "rest1.rst", None, 0
+     "rest1.rst", "rest1.rst", None, 0,
      ),
     ('Products.PortalTransforms.transforms.text_to_html',
-     "rest1.rst", "rest1.html", None, 0
+     "rest1.rst", "rest1.html", None, 0,
      ),
     ('Products.PortalTransforms.transforms.safe_html',
-     "test_safehtml.html", "test_safe.html", None, 0
+     "test_safehtml.html", "test_safe.html", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_bmp',
-     "logo.jpg", "logo.bmp", None, 0
+     "logo.jpg", "logo.bmp", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_gif',
-     "logo.bmp", "logo.gif", None, 0
+     "logo.bmp", "logo.gif", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_jpeg',
-     "logo.gif", "logo.jpg", None, 0
+     "logo.gif", "logo.jpg", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_png',
-     "logo.bmp", "logo.png", None, 0
+     "logo.bmp", "logo.png", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_ppm',
-     "logo.gif", "logo.ppm", None, 0
+     "logo.gif", "logo.ppm", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_tiff',
-     "logo.png", "logo.tiff", None, 0
+     "logo.png", "logo.tiff", None, 0,
      ),
     ('Products.PortalTransforms.transforms.image_to_pcx',
-     "logo.png", "logo.pcx", None, 0
+     "logo.png", "logo.pcx", None, 0,
      ),
    )
 if HAS_MARKDOWN:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.markdown_to_html',
-         "markdown.txt", "markdown.html", None, 0
+         "markdown.txt", "markdown.html", None, 0,
          ),
        )
 if HAS_TEXTILE:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.textile_to_html',
-         "input.textile", "textile.html", None, 0
+         "input.textile", "textile.html", None, 0,
         ),
        )
+
 
 def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
@@ -209,13 +222,16 @@ def initialise(transform, normalize, pattern):
 
 
 # ReST test cases
-initialise('Products.PortalTransforms.transforms.rest', normalize_html, "rest*.rst")
+initialise('Products.PortalTransforms.transforms.rest', normalize_html,
+           "rest*.rst")
 # Python test cases
-initialise('Products.PortalTransforms.transforms.python', normalize_html, "*.py")
+initialise('Products.PortalTransforms.transforms.python', normalize_html,
+           "*.py")
 
 # FIXME missing tests for image_to_html, st
 
 TR_NAMES = None
+
 
 def make_tests(test_descr=TRANSFORMS_TESTINFO):
     """generate tests classes from test info

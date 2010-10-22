@@ -2,7 +2,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from DocumentTemplate.DT_Util import html_quote
 
-__revision__ = '$Id$'
 
 class TextToHTML:
     """simple transform which wrap raw text in a verbatim environment"""
@@ -13,9 +12,12 @@ class TextToHTML:
     output = "text/html"
 
     def __init__(self, name=None, inputs=('text/plain',)):
-        self.config = { 'inputs' : inputs, }
+        self.config = {'inputs': inputs, }
         self.config_metadata = {
-            'inputs' : ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
+            'inputs': (
+                'list',
+                'Inputs',
+                'Input(s) MIME type. Change with care.'),
             }
         if name:
             self.__name__ = name
@@ -32,8 +34,10 @@ class TextToHTML:
 
     def convert(self, orig, data, **kwargs):
         # Replaces all line breaks with a br tag, and wraps it in a p tag.
-        data.setData('<p>%s</p>' % html_quote(orig.strip()).replace('\n', '<br />'))
+        data.setData('<p>%s</p>' %
+                     html_quote(orig.strip()).replace('\n', '<br />'))
         return data
+
 
 def register():
     return TextToHTML()

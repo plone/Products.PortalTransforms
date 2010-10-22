@@ -1,5 +1,4 @@
 import os
-import sys
 import tempfile
 import re
 import shutil
@@ -7,8 +6,10 @@ from os.path import join, basename
 
 from zope.interface import implements
 
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
+from Products.PortalTransforms.libtransforms.utils import (
+    bin_search, getShortPathName)
 from Products.PortalTransforms.interfaces import ITransform
+
 
 class commandtransform:
     """abstract class for external command based transform
@@ -33,7 +34,7 @@ class commandtransform:
         os.mkdir(tmpdir)
         filename = kwargs.get("filename", '')
         fullname = join(tmpdir, basename(filename))
-        filedest = open(fullname , "wb").write(data)
+        filedest = open(fullname, "wb").write(data)
         return tmpdir, fullname
 
     def subObjects(self, tmpdir):
@@ -53,6 +54,7 @@ class commandtransform:
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
+
 
 class popentransform:
     """abstract class for external command based transform
@@ -89,10 +91,14 @@ class popentransform:
         tmpname = None
         try:
             if not self.useStdin:
-                tmpfile, tmpname = tempfile.mkstemp(text=False) # create tmp
-                os.write(tmpfile, data) # write data to tmp using a file descriptor
-                os.close(tmpfile)       # close it so the other process can read it
-                command = command % { 'infile' : tmpname } # apply tmp name to command
+                # create tmp
+                tmpfile, tmpname = tempfile.mkstemp(text=False)
+                # write data to tmp using a file descriptor
+                os.write(tmpfile, data)
+                # close it so the other process can read it
+                os.close(tmpfile)
+                # apply tmp name to command
+                command = command % {'infile': tmpname}
 
             cin, couterr = os.popen4(command, 'b')
 

@@ -22,7 +22,7 @@ class markdown:
     implements(ITransform)
 
     __name__ = "markdown_to_html"
-    inputs  = ("text/x-web-markdown",)
+    inputs = ("text/x-web-markdown",)
     output = "text/html"
 
     def name(self):

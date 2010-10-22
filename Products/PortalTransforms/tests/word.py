@@ -1,14 +1,12 @@
 from rigging import transformer
 
-import os
-from stat import ST_MTIME
-
 
 ## BIG BAD FUNCTIONAL TEST OF OOo Word Conversion
 ## The interfaces work, but are not quite what we need
 ## I might have to back fill a chain from source/dest graphing
 
 file = "/tmp/word.doc"
+
 
 class curry:
     def __init__(self, func, *fixed_args):

@@ -3,16 +3,17 @@ Uses lynx -dump
 """
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.PortalTransforms.libtransforms.commandtransform import popentransform
+from Products.PortalTransforms.libtransforms.commandtransform import (
+    commandtransform, popentransform)
 import os
+
 
 class lynx_dump(popentransform):
     implements(ITransform)
 
     __name__ = "lynx_dump"
-    inputs   = ('text/html',)
-    output  = 'text/plain'
+    inputs = ('text/html',)
+    output = 'text/plain'
 
     __version__ = '2004-07-02.1'
 
@@ -21,12 +22,13 @@ class lynx_dump(popentransform):
     binaryArgs = "-dump -stdin -force_html"
     useStdin = True
 
+
 class old_lynx_dump(commandtransform):
     implements(ITransform)
 
     __name__ = "lynx_dump"
-    inputs   = ('text/html',)
-    output  = 'text/plain'
+    inputs = ('text/html',)
+    output = 'text/plain'
 
     binaryName = "lynx"
     binaryArgs = "-dump"
@@ -53,6 +55,7 @@ class old_lynx_dump(commandtransform):
         txt = txtfile.read()
         txtfile.close()
         return txt
+
 
 def register():
     return lynx_dump()

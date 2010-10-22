@@ -1,7 +1,8 @@
 """try to build some usefull transformations with the command and xml
 transforms and the available binaries
 """
-from Products.PortalTransforms.libtransforms.utils import bin_search, MissingBinary
+from Products.PortalTransforms.libtransforms.utils import (
+    bin_search, MissingBinary)
 
 COMMAND_CONFIGS = (
     ('lynx_dump', '.html',
@@ -59,7 +60,7 @@ for tr_name, extension, config in COMMAND_CONFIGS:
 
 XMLPROCS_CONF = {
     'xsltproc' : '--catalogs --xinclude -o %(output)s %(transform)s %(input)s',
-    '4xslt' : ' -o %(output)s %(input)s %(transform)s'
+    '4xslt' : ' -o %(output)s %(input)s %(transform)s',
     }
 
 bin = None
@@ -76,9 +77,11 @@ if bin is not None:
     for output in ('html', 'plain'):
         name = "xml_to_" + output
         command_line = XMLPROCS_CONF[proc]
-        tr = XsltTransform(name=name, inputs=('text/xml',), output='text/'+output,
+        tr = XsltTransform(name=name, inputs=('text/xml',),
+                           output='text/'+output,
                            binary_path=bin, command_line=command_line)
         TRANSFORMS[name] = tr
+
 
 def initialize(engine):
     for transform in TRANSFORMS.values():

@@ -7,7 +7,7 @@ modules = (
     'Products.PortalTransforms.transforms.rest',
     )
 
+
 def test_suite():
     return unittest.TestSuite(
-        [doctest.DocTestSuite(module=module) for module in modules]
-        )
+        [doctest.DocTestSuite(module=module) for module in modules])

@@ -2,9 +2,11 @@ from Products.PortalTransforms.libtransforms.retransform import retransform
 
 import htmlentitydefs
 
+
 class html_to_text(retransform):
-    inputs  = ('text/html',)
+    inputs = ('text/html',)
     output = 'text/plain'
+
 
 def register():
     def sub_func(matchobj):

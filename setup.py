@@ -22,7 +22,7 @@ setup(name='Products.PortalTransforms',
         test=[
             'zope.testing',
             'Products.Archetypes',
-        ]
+        ],
       ),
       install_requires=[
           'setuptools',

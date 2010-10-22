@@ -1,3 +1,4 @@
+from htmlentitydefs import entitydefs
 import logging
 from sgmllib import SGMLParser, SGMLParseError
 import re
@@ -103,7 +104,7 @@ def decode_htmlentity(m):
     entity_value = m.groupdict()['htmlentity']
     if entity_value.lower().startswith('x'):
         try:
-            return chr(int('0'+entity_value, 16))
+            return chr(int('0' + entity_value, 16))
         except ValueError:
             return entity_value
     try:
@@ -119,7 +120,8 @@ class StrippingParser(SGMLParser):
     Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
     """
 
-    from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
+    # This replaces SGMLParser.entitydefs
+    entitydefs = entitydefs
 
     def __init__(self, valid, nasty, remove_javascript, raise_error):
         SGMLParser.__init__(self)
@@ -150,7 +152,7 @@ class StrippingParser(SGMLParser):
     def handle_entityref(self, name):
         if self.suppress:
             return
-        if self.entitydefs.has_key(name):
+        if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -163,7 +165,7 @@ class StrippingParser(SGMLParser):
         if self.suppress:
             return
 
-        if self.valid.has_key(tag):
+        if tag in self.valid:
             self.result.append('<' + tag)
 
             remove_script = getattr(self, 'remove_javascript', True)
@@ -187,7 +189,7 @@ class StrippingParser(SGMLParser):
                 self.result.append('>')
             else:
                 self.result.append(' />')
-        elif self.nasty.has_key(tag):
+        elif tag in self.nasty:
             self.suppress = True
             if self.raise_error:
                 raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
@@ -196,7 +198,7 @@ class StrippingParser(SGMLParser):
             pass
 
     def unknown_endtag(self, tag):
-        if self.nasty.has_key(tag) and not self.valid.has_key(tag):
+        if tag in self.nasty and not tag in self.valid:
             self.suppress = False
         if self.suppress:
             return
@@ -345,7 +347,7 @@ class SafeHTML:
 
     def convert(self, orig, data, **kwargs):
         # note if we need an upgrade.
-        if not self.config.has_key('disable_transform'):
+        if 'disable_transform' not in self.config:
             log(logging.ERROR, 'PortalTransforms safe_html transform needs '
                 'to be updated. Please re-install the PortalTransforms '
                 'product to fix.')
