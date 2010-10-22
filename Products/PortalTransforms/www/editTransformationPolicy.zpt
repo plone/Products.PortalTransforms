@@ -11,7 +11,7 @@
      This page allow you to configure which transforms do you want to be applied
      for a give output MIME type.
    </div>
- 
+
    <hr/>
 
    <form method="POST" action="manage_addPolicy">
@@ -23,7 +23,7 @@
        </tr>
        <tr>
          <td>
-	   <select name="output_mimetype" 
+	   <select name="output_mimetype"
                    tal:define="mimetypes here/mimetypes_registry/list_mimetypes;
                                dummy mimetypes/sort">
 	     <option tal:repeat="mimetype mimetypes"
