@@ -13,9 +13,6 @@ Changelog
   `time`, `video`.
   [limi]
 
-* Strip `meta`, `head`, `body`, `title` and `html` tags in the safe HTML
-  filter.
-  [limi]
 
 2.0.1 - 2010-07-18
 ------------------
