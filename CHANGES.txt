@@ -1,10 +1,10 @@
 Changelog
 =========
 
-2.0.2 - unreleased
+2.0.2 - 2010-10-27
 ------------------
 
-* close <p> tags properly in configureTransform.zpt (chameleon compatibility)
+* Close ``<p>`` tags properly in ``configureTransform.zpt``.
   [swampmonkey]
 
 * Add HTML5 tags as valid: `article`, `aside`, `audio`, `canvas`, `command`,
@@ -12,7 +12,6 @@ Changelog
   `keygen`, `mark`, `rp`, `rt`, `ruby`, `section`, `source`, `summary`,
   `time`, `video`.
   [limi]
-
 
 2.0.1 - 2010-07-18
 ------------------
