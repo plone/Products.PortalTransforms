@@ -78,7 +78,7 @@ class Transform(SimpleItem):
           'action': 'manage_main'},
          {'label': 'Reload',
           'action': 'manage_reloadTransform'},) +
-        SimpleItem.manage_options,
+        SimpleItem.manage_options
         )
 
     manage_main = PageTemplateFile('configureTransform', _www)
