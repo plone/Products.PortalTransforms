@@ -4,6 +4,10 @@ Changelog
 2.0.3 - unreleased
 ------------------
 
+- Fix manage_options which accidentally got turned into a tuple in some
+  refactoring.
+  [swampmonkey]
+
 - Added missing `url` metadata.
   [hannosch]
 
