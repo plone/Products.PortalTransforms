@@ -190,9 +190,9 @@ class Transform(SimpleItem):
             self._load_transform()
         return self._v_transform.__doc__
 
-    security.declarePublic('get_documentation')
+    security.declarePublic('convert')
     def convert(self, *args, **kwargs):
-        """ return apply the transform and return the result """
+        # return apply the transform and return the result
         if not hasattr(self, '_v_transform'):
             self._load_transform()
         return self._v_transform.convert(*args, **kwargs)

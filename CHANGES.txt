@@ -4,6 +4,8 @@ Changelog
 2.0.4 - unreleased
 ------------------
 
+- Fix missing security declarations.
+  [davisagli]
 
 2.0.3 - 2010-11-24
 ------------------

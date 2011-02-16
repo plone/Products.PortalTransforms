@@ -70,6 +70,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
+    security.declarePrivate('unregisterTransform')
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -78,6 +79,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if name in self.objectIds():
             self._delObject(name)
 
+    security.declarePrivate('convertTo')
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -181,9 +183,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     security.declarePublic('convertToData')
     def convertToData(self, target_mimetype, orig, data=None, object=None,
                       usedby=None, context=None, **kwargs):
-        """Convert to a given mimetype and return the raw data
-        ignoring subobjects. see convertTo for more information
-        """
+        # Convert to a given mimetype and return the raw data
+        # ignoring subobjects. see convertTo for more information
         data = self.convertTo(target_mimetype, orig, data, object, usedby,
                               context, **kwargs)
         if data:
@@ -192,12 +193,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     security.declarePublic('convert')
     def convert(self, name, orig, data=None, context=None, **kwargs):
-        """run a tranform of a given name on data
+        # run a tranform of a given name on data
+        
+        # * name is the name of a registered transform
 
-        * name is the name of a registered transform
+        # see convertTo docstring for more info
 
-        see convertTo docstring for more info
-        """
         if not data:
             data = self._wrap(name)
         try:
@@ -209,13 +210,13 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         return data
 
     def __call__(self, name, orig, data=None, context=None, **kwargs):
-        """run a transform by its name, returning the raw data product
+        # run a transform by its name, returning the raw data product
 
-        * name is the name of a registered transform.
+        # * name is the name of a registered transform.
 
-        return an encoded string.
-        see convert docstring for more info on additional arguments.
-        """
+        # return an encoded string.
+        # see convert docstring for more info on additional arguments.
+
         data = self.convert(name, orig, data, context, **kwargs)
         return data.getData()
 
@@ -556,6 +557,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
+    security.declarePrivate('registerTransform')
     def registerTransform(self, transform):
         """register a new transform
 
