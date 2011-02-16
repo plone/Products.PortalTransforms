@@ -4,6 +4,8 @@ Changelog
 1.6.13 - Unreleased
 -------------------
 
+* Fix missing security declarations.
+  [davisagli]
 
 1.6.12 - 2010-07-02
 -------------------
