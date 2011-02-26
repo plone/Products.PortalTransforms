@@ -88,7 +88,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if name in self.objectIds():
             self._delObject(name)
 
-    security.declarePrivate('convertTo')
+    security.declarePublic('convertTo')
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -190,6 +190,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         # return idatastream object
         return result
+    # make sure it's not publishable (XSS risk)
+    del convertTo.__doc__
 
     security.declarePublic('convertToData')
     def convertToData(self, target_mimetype, orig, data=None, object=None,
