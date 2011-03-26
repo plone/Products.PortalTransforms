@@ -5,7 +5,6 @@ from Persistence import Persistent
 from App.class_init import InitializeClass
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
-from AccessControl.Role import RoleManager
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.permissions import ManagePortal, ManageProperties
@@ -18,6 +17,11 @@ from Products.PortalTransforms.interfaces import ITransform
 
 from UserList import UserList
 
+try:
+    from OFS.role import RoleManager
+except ImportError:
+    # Zope <=2.12
+    from AccessControl.Role import RoleManager
 
 class chain(UserList):
     """A chain of transforms used to transform data"""
