@@ -12,10 +12,11 @@ class TestGraph(ATSiteTestCase):
         self.engine = self.portal.portal_transforms
 
     def testGraph(self):
-        ### XXX Local file and expected output
         data = open(FILE_PATH, 'r').read()
-        out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
-        assert(out.getData())
+        requirements = self.engine._policies.get('text/plain', [])
+        if requirements:
+            out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
+            self.failUnless(out.getData())
 
     def testFindPath(self):
         originalMap = self.engine._mtmap
