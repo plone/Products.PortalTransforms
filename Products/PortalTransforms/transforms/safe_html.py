@@ -41,19 +41,26 @@ msg_pat = """
 %s</d>
 """
 
+CSS_COMMENT = re.compile(r'/\*.*\*/')
 def hasScript(s):
     """Dig out evil Java/VB script inside an HTML attribute.
  
+    >>> hasScript('data:text/html;base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==')
+    True
     >>> hasScript('script:evil(1);')
     True
     >>> hasScript('expression:evil(1);')
+    True
+    >>> hasScript('expression/**/:evil(1);')
     True
     >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
     False
     """
     s = decode_htmlentities(s)
+    s = s.replace('\x00', '')
+    s = CSS_COMMENT.sub('', s)
     s = ''.join(s.split()).lower()
-    for t in ('script:', 'expression:', 'expression('):
+    for t in ('script:', 'expression:', 'expression(', 'data:'):
         if t in s:
             return True
     return False
@@ -61,7 +68,7 @@ def hasScript(s):
 def decode_htmlentities(s):
     """ XSS code can be hidden with htmlentities """
 
-    entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+    entity_pattern = re.compile("&(amp;)?#(?P<htmlentity>x?\w+)?;?")
     s = entity_pattern.sub(decode_htmlentity,s)
     return s
 
@@ -177,9 +184,7 @@ class StrippingParser(SGMLParser):
             try:
                 j = SGMLParser.parse_declaration(self, i)
             except SGMLParseError:
-                toHandle = self.rawdata[i:]
-                self.result.append(toHandle)
-                j = i + len(toHandle)
+                j = len(self.rawdata)
         return j
 
     def getResult(self):

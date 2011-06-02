@@ -4,7 +4,21 @@ Changelog
 1.6.13 - Unreleased
 -------------------
 
-* Fix missing security declarations.
+The following three changes collectively fix
+http://plone.org/products/plone/security/advisories/CVE-2011-1949
+
+* In the safe_html transform, abort parsing if a broken declaration is found.
+  [evilbungle, davisagli]
+
+* In the safe_html transform, remove data URIs.
+  [davisagli]
+
+* In the safe_html transform, ignore null bytes when checking for unsafe
+  attributes with scripts.
+  [davisagli]
+
+* Fix missing security declarations. This fixes part of
+  http://plone.org/products/plone/security/advisories/cve-2011-0720/
   [davisagli]
 
 1.6.12 - 2010-07-02

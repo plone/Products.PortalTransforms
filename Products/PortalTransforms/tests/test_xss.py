@@ -143,6 +143,26 @@ class TestXSSFilter(ATSiteTestCase):
         data_in = '<<frame></frame>script>alert("XSS");<<frame></frame>/script>'
         data_out = '&lt;script&gt;alert("XSS");&lt;/script&gt;'
         self.doTest(data_in, data_out)
+    
+    def test_23(self):
+        data_in = """<a href="javascript&amp;#0:alert('1');">click me</a>"""
+        data_out = """<a>click me</a>"""
+        self.doTest(data_in, data_out)
+    
+    def test_24(self):
+        data_in = """<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==">click me</a>"""
+        data_out = """<a>click me</a>"""
+        self.doTest(data_in, data_out)
+
+    def test_25(self):
+        data_in = """ <![<a href="javascript:alert('1');">click me</a>"""
+        data_out = " "
+        self.doTest(data_in, data_out)
+
+    def test_26(self):
+        data_in = """<a style="width: expression/**/(alert('xss'))">click me</a>"""
+        data_out = """<a>click me</a>"""
+        self.doTest(data_in, data_out)
 
 def test_suite():
     from unittest import TestSuite, makeSuite
