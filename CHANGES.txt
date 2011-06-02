@@ -4,6 +4,18 @@ Changelog
 2.0.7 - unreleased
 ------------------
 
+The following three changes collectively fix
+http://plone.org/products/plone/security/advisories/CVE-2011-1949
+
+- In the safe_html transform, abort parsing if a broken declaration is found.
+  [evilbungle, davisagli]
+
+- In the safe_html transform, remove data URIs.
+  [davisagli]
+
+- In the safe_html transform, ignore null bytes when checking for unsafe
+  attributes with scripts.
+  [davisagli]
 
 2.0.6 - 2011-04-03
 ------------------
