@@ -42,40 +42,40 @@ msg_pat = """
 """
 
 def hasScript(s):
-   """Dig out evil Java/VB script inside an HTML attribute.
-
-   >>> hasScript('script:evil(1);')
-   True
-   >>> hasScript('expression:evil(1);')
-   True
-   >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
-   False
-   """
-   s = decode_htmlentities(s)
-   s = ''.join(s.split()).lower()
-   for t in ('script:', 'expression:', 'expression('):
-      if t in s:
-         return True
-   return False
+    """Dig out evil Java/VB script inside an HTML attribute.
+ 
+    >>> hasScript('script:evil(1);')
+    True
+    >>> hasScript('expression:evil(1);')
+    True
+    >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
+    False
+    """
+    s = decode_htmlentities(s)
+    s = ''.join(s.split()).lower()
+    for t in ('script:', 'expression:', 'expression('):
+        if t in s:
+            return True
+    return False
 
 def decode_htmlentities(s):
-   """ XSS code can be hidden with htmlentities """
+    """ XSS code can be hidden with htmlentities """
 
-   entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
-   s = entity_pattern.sub(decode_htmlentity,s)
-   return s
+    entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+    s = entity_pattern.sub(decode_htmlentity,s)
+    return s
 
 def decode_htmlentity(m):
-   entity_value = m.groupdict()['htmlentity']
-   if entity_value.lower().startswith('x'):
-      try:
-          return chr(int('0'+entity_value,16))
-      except ValueError:
-          return entity_value
-   try:
-      return chr(int(entity_value))
-   except ValueError:
-      return entity_value
+    entity_value = m.groupdict()['htmlentity']
+    if entity_value.lower().startswith('x'):
+        try:
+            return chr(int('0'+entity_value,16))
+        except ValueError:
+            return entity_value
+    try:
+        return chr(int(entity_value))
+    except ValueError:
+        return entity_value
 
 class StrippingParser(SGMLParser):
     """Pass only allowed tags;  raise exception for known-bad.
