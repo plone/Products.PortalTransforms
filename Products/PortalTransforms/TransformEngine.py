@@ -196,7 +196,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     security.declarePublic('convert')
     def convert(self, name, orig, data=None, context=None, **kwargs):
         # run a tranform of a given name on data
-        
+
         # * name is the name of a registered transform
 
         # see convertTo docstring for more info
