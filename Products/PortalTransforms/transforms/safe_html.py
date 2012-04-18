@@ -128,6 +128,10 @@ class StrippingParser(SGMLParser):
 
     # This replaces SGMLParser.entitydefs
     entitydefs = entitydefs
+    
+    # This replaces SGMLParser.entity_or_charref
+    # Never match anything - don't convert entities inside attributes
+    entity_or_charref = re.compile(r'$.')
 
     def __init__(self, valid, nasty, remove_javascript, raise_error):
         SGMLParser.__init__(self)
