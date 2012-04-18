@@ -4,6 +4,10 @@ Changelog
 2.0.8 - unreleased
 ------------------
 
+- In the safe_html transform, don't attempt to convert entities within
+  attributes to their normative values, but leave them encoded.
+  [mitchellrj]
+
 
 2.0.7 - 2011-07-04
 ------------------
