@@ -101,7 +101,7 @@ def hasScript(s):
 def decode_htmlentities(s):
     """ XSS code can be hidden with htmlentities """
 
-    entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+    entity_pattern = re.compile("&(amp;)?#(?P<htmlentity>x?\w+)?;?")
     s = entity_pattern.sub(decode_htmlentity, s)
     return s
 
@@ -147,7 +147,7 @@ class StrippingParser(SGMLParser):
     def handle_charref(self, name):
         if self.suppress:
             return
-        self.result.append('&#%s;' % name)
+        self.result.append(self.convert_charref(name))
 
     def handle_comment(self, comment):
         pass
@@ -158,12 +158,18 @@ class StrippingParser(SGMLParser):
     def handle_entityref(self, name):
         if self.suppress:
             return
+        self.result.append(self.convert_entityref(name))
+
+    def convert_entityref(self, name):
         if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
             x = ''
-        self.result.append('&%s%s' % (name, x))
+        return '&%s%s' % (name, x)
+
+    def convert_charref(self, name):
+        return '&#%s;' % name
 
     def unknown_starttag(self, tag, attrs):
         """ Delete all tags except for legal ones.

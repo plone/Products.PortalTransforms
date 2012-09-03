@@ -17,6 +17,8 @@ from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
 
+from Products.PortalTransforms.transforms.safe_html  import SafeHTML
+
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 
@@ -155,6 +157,37 @@ class PILTransformsTest(ATSiteTestCase):
         self.failUnlessEqual(data.getMetadata()['mimetype'], 'image/tiff')
 
 
+class SafeHtmlTransformsTest(ATSiteTestCase):
+
+    def afterSetUp(self):
+        ATSiteTestCase.afterSetUp(self)
+        self.pt = self.portal.portal_transforms
+        self.pt.registerTransform(SafeHTML())
+
+    def beforeTearDown(self):
+        self.pt.unregisterTransform('safe_html')
+
+    def test_entityiref_attributes(self):
+        orig = '<a href="&uuml;">foo</a>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_charref_attributes(self):
+        orig = '<a href="&#0109;">foo</a>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_entityiref_data(self):
+        orig = '<p>foo &uuml; bar</p>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_charref_data(self):
+        orig = '<p>bar &#0109; foo</p>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',
      "demo1.pdf", "demo1.html", None, 0,
@@ -266,6 +299,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
         tests.append(TransformTestSubclass)
 
     tests.append(PILTransformsTest)
+    tests.append(SafeHtmlTransformsTest)
     return tests
 
 
