@@ -187,6 +187,24 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
+    def test_unicode_entityref_data(self):
+        orig = '<p><img src="" alt="Fond d&#8217;&eacute;cran 4 saisons (mini)" /></p>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_unicodetranslited_entityref_data(self):
+        tests = [
+            # in ascii 128 range, can be translited
+            ('<p alt="&amp;"></p>', '<p alt="&"></p>'),
+            # charref can be translited
+            ('<p alt="&delta;"></p>', '<p alt="&#948;"></p>'),
+            # unicode++, not translited
+            # ord('\xa1') 161
+            ('<p alt="&iexcl;"></p>', '<p alt="&iexcl;"></p>'),
+        ]
+        for orig, dest in tests:
+            data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+            self.assertEqual(data.getData(), dest)
 
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',

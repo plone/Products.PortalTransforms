@@ -7,6 +7,9 @@ Changelog
 - Handle charrefs & entityrefs in data and attributes equaly (unchanged)
   if converting to safe_html
   [tom_gross]
+- In the safe_html transform, make love to entityrefs not to be translited if they are not 'latin-1'.
+  This makes the rest of Archetypes machinery like plone.app.linkintegrity happy.
+  [kiorky]
 
 2.0.7 - 2011-07-04
 ------------------
