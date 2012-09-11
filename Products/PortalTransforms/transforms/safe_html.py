@@ -161,12 +161,21 @@ class StrippingParser(SGMLParser):
         self.result.append(self.convert_entityref(name))
 
     def convert_entityref(self, name):
-        if name in self.entitydefs:
-            x = ';'
+        """Convert entity references.
+        If the char is not in the ASCII 128 first chars
+        We do not translit the char.
+        """
+        table = self.entitydefs
+        if name in table:
+            # do not convert if there are unicode chars
+            translited = table[name]
+            for char in translited:
+                if ord(char) > 128:
+                    translited = '&%s;' % name
+                    break
+            return translited
         else:
-            # this breaks unstandard entities that end with ';'
-            x = ''
-        return '&%s%s' % (name, x)
+            return
 
     def convert_charref(self, name):
         return '&#%s;' % name
