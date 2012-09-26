@@ -4,6 +4,10 @@ Changelog
 2.0.8 - unreleased
 ------------------
 
+- Avoid throwing exceptions on js attrs and invalid tags in word_to_html
+  transform
+  [gotcha]
+
 - Handle charrefs & entityrefs in data and attributes equaly (unchanged)
   if converting to safe_html
   [tom_gross]
