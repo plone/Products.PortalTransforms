@@ -218,14 +218,7 @@ class StrippingParser(SGMLParser):
             self.result = self.result + '<' + tag
 
             for k, v in attrs:
-
-                if k.lower().startswith('on'):
-                    raise IllegalHTML('Javascript event "%s" not allowed.' % k)
-
-                if v.lower().startswith('javascript:'):
-                    raise IllegalHTML('Javascript URI "%s" not allowed.' % v)
-
-                self.result = '%s %s="%s"' % (self.result, k, v)
+                self.handle_javascript_attr(k, v)
 
             # endTag = '</%s>' % tag
             if VALID_TAGS.get(tag):
@@ -234,10 +227,22 @@ class StrippingParser(SGMLParser):
                 self.result = self.result + ' />'
 
         elif NASTY_TAGS.get(tag):
-            raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
+            self.handle_invalid_tag(tag)
 
         else:
             pass  # omit tag
+
+    def handle_javascript_attr(self, k, v):
+        if k.lower().startswith('on'):
+            raise IllegalHTML('Javascript event "%s" not allowed.' % k)
+
+        if v.lower().startswith('javascript:'):
+            raise IllegalHTML('Javascript URI "%s" not allowed.' % v)
+
+        self.result = '%s %s="%s"' % (self.result, k, v)
+
+    def handle_invalid_tag(self, tag):
+        raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
 
     def unknown_endtag(self, tag):
 
@@ -250,11 +255,11 @@ class StrippingParser(SGMLParser):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
-        if self.rawdata[i:i+9] == '<![CDATA[':
+        if self.rawdata[i:i + 9] == '<![CDATA[':
             k = self.rawdata.find(']]>', i)
             if k == -1:
                 k = len(self.rawdata)
-            data = self.rawdata[i+9:k]
+            data = self.rawdata[i + 9:k]
             j = k + 3
             self.result.append("<![CDATA[%s]]>" % data)
         else:
