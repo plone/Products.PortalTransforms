@@ -1,5 +1,6 @@
 import os
-from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 from Products.PortalTransforms.libtransforms.commandtransform import \
     commandtransform
 
@@ -34,6 +35,6 @@ class document(commandtransform):
         htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTML(html)
+        html = scrubHTMLNoRaise(html)
         body = bodyfinder(html)
         return body

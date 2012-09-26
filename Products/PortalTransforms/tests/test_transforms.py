@@ -1,5 +1,6 @@
 import os
 import logging
+import unittest
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
 
@@ -16,6 +17,8 @@ from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
+
+from Products.PortalTransforms.transforms.word_to_html import word_to_html
 
 from Products.PortalTransforms.transforms.safe_html  import SafeHTML
 
@@ -188,6 +191,58 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         self.assertEqual(data.getData(), orig)
 
 
+class WordTransformsTest(ATSiteTestCase):
+
+    def afterSetUp(self):
+        ATSiteTestCase.afterSetUp(self)
+        self.pt = self.portal.portal_transforms
+        self.pt.registerTransform(word_to_html())
+
+    def test_ignore_javascript_attrs(self):
+        wordFile = open(input_file_path('test_js.doc'), 'rb')
+        data = wordFile.read()
+        # should not throw exception even though it holds javascript link
+        data = self.pt.convertTo(target_mimetype='text/html',
+                                 orig=data)
+
+
+class ParsersTestCase(unittest.TestCase):
+
+    def test_javascript_on_attr(self):
+        from Products.PortalTransforms.libtransforms.utils import (
+                scrubHTMLNoRaise, scrubHTML)
+        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
+
+        htmlFile = open(input_file_path('test_js_on.html'), 'rb')
+        data = htmlFile.read()
+        self.assertRaises(IllegalHTML, scrubHTML, data)
+        result = scrubHTMLNoRaise(data)
+        self.assertTrue('link' in result)
+
+    def test_javascript_uri(self):
+        from Products.PortalTransforms.libtransforms.utils import (
+                scrubHTMLNoRaise, scrubHTML)
+        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
+
+        htmlFile = open(input_file_path('test_js_uri.html'), 'rb')
+        data = htmlFile.read()
+        self.assertRaises(IllegalHTML, scrubHTML, data)
+        result = scrubHTMLNoRaise(data)
+        self.assertTrue('link' in result)
+
+    def test_invalid_tags(self):
+        from Products.PortalTransforms.libtransforms.utils import (
+                scrubHTMLNoRaise, scrubHTML)
+        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
+
+        htmlFile = open(input_file_path('test_invalid_tags.html'), 'rb')
+        data = htmlFile.read()
+        self.assertRaises(IllegalHTML, scrubHTML, data)
+        result = scrubHTMLNoRaise(data)
+        self.assertTrue('link' in result)
+        self.assertTrue('object' not in result)
+
+
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',
      "demo1.pdf", "demo1.html", None, 0,
@@ -300,6 +355,8 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
 
     tests.append(PILTransformsTest)
     tests.append(SafeHtmlTransformsTest)
+    tests.append(WordTransformsTest)
+    tests.append(ParsersTestCase)
     return tests
 
 

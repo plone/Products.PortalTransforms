@@ -5,7 +5,8 @@ from com.sun.star.util import CloseVetoException
 
 from Products.PortalTransforms.libtransforms.commandtransform import \
     commandtransform
-from Products.PortalTransforms.libtransforms.utils import bodyfinder, scrubHTML
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 
 
 class document(commandtransform):
@@ -58,6 +59,6 @@ class document(commandtransform):
         htmlfile = open(self.outputfile, 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTML(html)
+        html = scrubHTMLNoRaise(html)
         body = bodyfinder(html)
         return body

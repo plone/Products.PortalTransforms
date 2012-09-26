@@ -218,7 +218,8 @@ class StrippingParser(SGMLParser):
             self.result = self.result + '<' + tag
 
             for k, v in attrs:
-                self.handle_javascript_attr(k, v)
+                self.result = '%s %s' % (self.result,
+                        self.handle_javascript_attr(k, v))
 
             # endTag = '</%s>' % tag
             if VALID_TAGS.get(tag):
@@ -272,9 +273,32 @@ class StrippingParser(SGMLParser):
         return j
 
 
+class NoRaiseStrippingParser(StrippingParser):
+
+    def handle_javascript_attr(self, k, v):
+        if k.lower().startswith('on'):
+            return ''
+
+        if v.lower().startswith('javascript:'):
+            return ''
+
+        return '%s="%s"' % (k, v)
+
+    def handle_invalid_tag(self, tag):
+        pass
+
+
 def scrubHTML(html):
     """ Strip illegal HTML tags from string text.  """
     parser = StrippingParser()
+    parser.feed(html)
+    parser.close()
+    return parser.result
+
+
+def scrubHTMLNoRaise(html):
+    """ Strip illegal HTML tags from string text.  """
+    parser = NoRaiseStrippingParser()
     parser.feed(html)
     parser.close()
     return parser.result
