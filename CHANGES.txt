@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.0.8 - unreleased
-------------------
+2.1 (2012-10-05)
+----------------
 
 - Avoid throwing exceptions on js attrs and invalid tags in word_to_html
   transform
