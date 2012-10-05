@@ -241,6 +241,13 @@ class ParsersTestCase(unittest.TestCase):
         result = scrubHTMLNoRaise(data)
         self.assertTrue('link' in result)
         self.assertTrue('object' not in result)
+        self.assertTrue('invalid' not in result)
+        self.assertTrue('valid' in result)
+        self.assertTrue('script' not in result)
+        self.assertTrue('javascript' not in result)
+        self.assertTrue('applet' not in result)
+        self.assertTrue('java' not in result)
+        self.assertTrue('embed' not in result)
 
 
 TRANSFORMS_TESTINFO = (

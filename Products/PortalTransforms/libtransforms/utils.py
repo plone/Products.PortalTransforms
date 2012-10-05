@@ -214,22 +214,9 @@ class StrippingParser(SGMLParser):
         """ Delete all tags except for legal ones.
         """
         if tag in VALID_TAGS:
-
-            self.result = self.result + '<' + tag
-
-            for k, v in attrs:
-                self.result = '%s %s' % (self.result,
-                        self.handle_javascript_attr(k, v))
-
-            # endTag = '</%s>' % tag
-            if VALID_TAGS.get(tag):
-                self.result = self.result + '>'
-            else:
-                self.result = self.result + ' />'
-
+            self.handle_valid_tag(tag, attrs)
         elif NASTY_TAGS.get(tag):
-            self.handle_invalid_tag(tag)
-
+            self.handle_invalid_tag(tag, attrs)
         else:
             pass  # omit tag
 
@@ -242,7 +229,20 @@ class StrippingParser(SGMLParser):
 
         self.result = '%s %s="%s"' % (self.result, k, v)
 
-    def handle_invalid_tag(self, tag):
+    def handle_valid_tag(self, tag, attrs):
+        self.result = self.result + '<' + tag
+
+        for k, v in attrs:
+            self.result = '%s %s' % (self.result,
+                    self.handle_javascript_attr(k, v))
+
+        # endTag = '</%s>' % tag
+        if VALID_TAGS.get(tag):
+            self.result = self.result + '>'
+        else:
+            self.result = self.result + ' />'
+
+    def handle_invalid_tag(self, tag, attrs):
         raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
 
     def unknown_endtag(self, tag):
@@ -275,6 +275,14 @@ class StrippingParser(SGMLParser):
 
 class NoRaiseStrippingParser(StrippingParser):
 
+    def __init__(self):
+        StrippingParser.__init__(self)
+        self.tag_stack = []
+
+    def handle_data(self, data):
+        if self.is_current_tag_valid():
+            return StrippingParser.handle_data(self, data)
+
     def handle_javascript_attr(self, k, v):
         if k.lower().startswith('on'):
             return ''
@@ -284,8 +292,26 @@ class NoRaiseStrippingParser(StrippingParser):
 
         return '%s="%s"' % (k, v)
 
-    def handle_invalid_tag(self, tag):
-        pass
+    def handle_valid_tag(self, tag, attrs):
+        self.push_tag(tag, is_valid=True)
+        return StrippingParser.handle_valid_tag(self, tag, attrs)
+
+    def handle_invalid_tag(self, tag, attrs):
+        self.push_tag(tag, is_valid=False)
+        #import pdb; pdb.set_trace()
+
+    def push_tag(self, tag, is_valid=True):
+        self.tag_stack.append((tag, is_valid))
+
+    def is_current_tag_valid(self):
+        if not len(self.tag_stack):
+            return True
+        tag, is_valid = self.tag_stack[-1]
+        return is_valid
+
+    def unknown_endtag(self, tag):
+        self.tag_stack.pop()
+        return StrippingParser.unknown_endtag(self, tag)
 
 
 def scrubHTML(html):
