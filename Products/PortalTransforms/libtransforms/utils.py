@@ -298,7 +298,6 @@ class NoRaiseStrippingParser(StrippingParser):
 
     def handle_invalid_tag(self, tag, attrs):
         self.push_tag(tag, is_valid=False)
-        #import pdb; pdb.set_trace()
 
     def push_tag(self, tag, is_valid=True):
         self.tag_stack.append((tag, is_valid))
