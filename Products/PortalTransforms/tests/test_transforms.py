@@ -238,16 +238,7 @@ class ParsersTestCase(unittest.TestCase):
         htmlFile = open(input_file_path('test_invalid_tags.html'), 'rb')
         data = htmlFile.read()
         self.assertRaises(IllegalHTML, scrubHTML, data)
-        result = scrubHTMLNoRaise(data)
-        self.assertTrue('link' in result)
-        self.assertTrue('object' not in result)
-        self.assertTrue('invalid' not in result)
-        self.assertTrue('valid' in result)
-        self.assertTrue('script' not in result)
-        self.assertTrue('javascript' not in result)
-        self.assertTrue('applet' not in result)
-        self.assertTrue('java' not in result)
-        self.assertTrue('embed' not in result)
+        self.assertRaises(IllegalHTML, scrubHTMLNoRaise, data)
 
 
 TRANSFORMS_TESTINFO = (

@@ -275,14 +275,6 @@ class StrippingParser(SGMLParser):
 
 class NoRaiseStrippingParser(StrippingParser):
 
-    def __init__(self):
-        StrippingParser.__init__(self)
-        self.tag_stack = []
-
-    def handle_data(self, data):
-        if self.is_current_tag_valid():
-            return StrippingParser.handle_data(self, data)
-
     def handle_javascript_attr(self, k, v):
         if k.lower().startswith('on'):
             return ''
@@ -291,26 +283,6 @@ class NoRaiseStrippingParser(StrippingParser):
             return ''
 
         return '%s="%s"' % (k, v)
-
-    def handle_valid_tag(self, tag, attrs):
-        self.push_tag(tag, is_valid=True)
-        return StrippingParser.handle_valid_tag(self, tag, attrs)
-
-    def handle_invalid_tag(self, tag, attrs):
-        self.push_tag(tag, is_valid=False)
-
-    def push_tag(self, tag, is_valid=True):
-        self.tag_stack.append((tag, is_valid))
-
-    def is_current_tag_valid(self):
-        if not len(self.tag_stack):
-            return True
-        tag, is_valid = self.tag_stack[-1]
-        return is_valid
-
-    def unknown_endtag(self, tag):
-        self.tag_stack.pop()
-        return StrippingParser.unknown_endtag(self, tag)
 
 
 def scrubHTML(html):

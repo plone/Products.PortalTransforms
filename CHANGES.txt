@@ -4,7 +4,8 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not try to handle invalid tags : we take for granted that html coming out
+  of converters do not hold any of embed, script, object or applet tags.
 
 
 2.1 (2012-10-05)
