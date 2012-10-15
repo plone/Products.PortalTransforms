@@ -61,8 +61,8 @@ class TransformTest(ATSiteTestCase):
             got = self.normalize(got)
         output.close()
 
-        got_start = got.strip()[:30]
-        expected_start = expected.strip()[:30]
+        got_start = got.strip()[:20]
+        expected_start = expected.strip()[:20]
         self.assertEquals(got_start, expected_start,
                           '[%s]\n\n!=\n\n[%s]\n\nIN %s(%s)' % (
             got_start, expected_start, self.transform.name(), self.input))
