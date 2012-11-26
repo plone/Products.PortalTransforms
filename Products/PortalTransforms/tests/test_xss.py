@@ -156,6 +156,70 @@ class TestXSSFilter(ATSiteTestCase):
         data_out = """<a>click me</a>"""
         self.doTest(data_in, data_out)
 
+    def test_27(self):
+        data_in = """<a href=javascript&colon;alert(1)>click me</a>"""
+        data_out = """<a>click me</a>"""
+        self.doTest(data_in, data_out)
+
+    def test_28(self):
+        data_in = """<a x="d&#00065;ta&colon&#59;image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxzY3JpcHQ%2BYWxlcnQoMSk8L3NjcmlwdD48L3N2Zz4NCg==" style="-o-link:attr(x);-o-link-source:current">hey</a>"""
+        data_out = """<a style="-o-link:attr(x);-o-link-source:current">hey</a>"""
+        self.doTest(data_in, data_out)
+
+    def test_29(self):
+        data_in = """<meta name="Description" content="0;url=data&colon;,xss" HTTP-EQUIV="refresh">"""
+        data_out = """<meta name="Description" http-equiv="refresh" />"""
+        self.doTest(data_in, data_out)
+
+    def test_30(self):
+        data_in = """<meta name="Description" content="0;url=javascript&colon;alert(1)" HTTP-EQUIV="refresh">"""
+        data_out = """<meta name="Description" http-equiv="refresh" />"""
+        self.doTest(data_in, data_out)
+
+    def test_31(self):
+        data_in = r"""<div style="width: expression\28write(1)\29;">aasddsa</div>"""
+        data_out = """<div>aasddsa</div>"""
+        self.doTest(data_in, data_out)
+
+    def test_32(self):
+        data_in = r"""<div style="width: expr\65 ss/*???*/ion(URL=0);">hey</div>"""
+        data_out = """<div>hey</div>"""
+        self.doTest(data_in, data_out)
+
+    def test_33(self):
+        data_in = r"""<a href="java&Tab;scr&NewLine;ipt:alert(1)">asd</a>"""
+        data_out = """<a>asd</a>"""
+        self.doTest(data_in, data_out)
+
+    def test_34(self):
+        data_in = r"""<a href="javasc&baz;ript:alert(1)">asdf</a>"""
+        data_out = """<a>asdf</a>"""
+        self.doTest(data_in, data_out)
+
+    def test_35(self):
+        data_in = r"""<![CDATA[><script>alert(1);</script>]]>"""
+        data_out = """"""
+        self.doTest(data_in, data_out)
+
+    def test_36(self):
+        data_in = r"""Normal text&mdash;whew."""
+        data_out = """Normal text&mdash;whew."""
+        self.doTest(data_in, data_out)
+
+    def test_37(self):
+        data_in = r"""Normal text&amp;mdash;whew."""
+        data_out = """Normal text&amp;mdash;whew."""
+        self.doTest(data_in, data_out)
+
+    def test_38(self):
+        data_in = """' <p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>' """
+        self.doTest(data_in, data_in)
+
+    def test_39(self):
+        data_in = """<a href="&#42;&Ascr;\xa9"></a>"""
+        self.doTest(data_in, data_in)
+
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()

@@ -4,7 +4,9 @@ Changelog
 2.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Adjust safe_html transform to block various XSS vulnerabilities. This fixes
+  https://plone.org/products/plone/security/advisories/20121106/18
+  [davisagli]
 
 
 2.1.1 (2012-10-05)
