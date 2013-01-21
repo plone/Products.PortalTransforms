@@ -12,6 +12,12 @@ from Products.CMFDefault.utils import VALID_TAGS
 from Products.CMFDefault.utils import NASTY_TAGS
 from Products.PortalTransforms.utils import safeToInt
 
+# Escape tag attributes for python > 2.4
+import sys
+ESCAPE_ATTRS = False
+if sys.version_info[0] == 2 and sys.version_info[1] > 4:
+    ESCAPE_ATTRS = True
+
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
 NASTY_TAGS = NASTY_TAGS.copy()
@@ -2458,6 +2464,8 @@ class StrippingParser(SGMLParser):
                     else:
                         raise IllegalHTML('Script URI "%s" not allowed.' % v)
                 else:
+                    if ESCAPE_ATTRS:
+                        v = escape(v)
                     self.result.append(' %s="%s"' % (k, v))
 
             #UNUSED endTag = '</%s>' % tag
