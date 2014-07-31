@@ -3,6 +3,7 @@ import tempfile
 import re
 import shutil
 from os.path import join, basename
+from subprocess import Popen, PIPE
 
 from zope.interface import implements
 
@@ -100,7 +101,10 @@ class popentransform:
                 # apply tmp name to command
                 command = command % {'infile': tmpname}
 
-            cin, couterr = os.popen4(command, 'b')
+            p = Popen(command, shell=True, stdin=PIPE, stdout=PIPE,
+                      stderr=PIPE, close_fds=True)
+            cin = p.stdin
+            couterr = p.stdout
 
             if self.useStdin:
                 cin.write(data)

@@ -4,7 +4,9 @@ Changelog
 2.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use subprocess.Popen instead of os.popen4.  Close the file
+  descriptors.  This may avoid some MemoryErrors.
+  [maurits]
 
 
 2.1.3 (2014-01-27)
