@@ -31,7 +31,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_4(self):
         data_in = """<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>"""
-        data_out = """<img />"""
+        data_out = """<img src="">"""
 
         self.doTest(data_in, data_out)
 
@@ -39,17 +39,17 @@ class TestXSSFilter(ATSiteTestCase):
         data_in = """<img src="jav
         asc
         ript:Alert('XSS');" />"""
-        data_out = """<img />"""
+        data_out = """<img src="">"""
         self.doTest(data_in, data_out)
 
     def test_6(self):
         data_in = """<img src="jav asc ript:Alert('XSS');"/>"""
-        data_out = """<img />"""
+        data_out = """<img src="">"""
         self.doTest(data_in, data_out)
 
     def test_7(self):
         data_in = """<a href=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>test med a-tag</a>"""
-        data_out = """<a>test med a-tag</a>"""
+        data_out = """<a href="">test med a-tag</a>"""
         self.doTest(data_in, data_out)
 
     def test_8(self):
