@@ -5,8 +5,8 @@ version = '2.1.4.dev0'
 setup(name='Products.PortalTransforms',
       version=version,
       description="MIME based content transformations",
-      long_description=open("README.txt").read() + "\n" + \
-                       open("CHANGES.txt").read(),
+      long_description=open("README.rst").read() + "\n" + \
+                       open("CHANGES.rst").read(),
       classifiers=[
         "Framework :: Zope2",
         "Operating System :: OS Independent",
