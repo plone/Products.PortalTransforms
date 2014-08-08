@@ -23,7 +23,6 @@ setup(name='Products.PortalTransforms',
         test=[
             'zope.testing',
             'Products.Archetypes',
-            'Products.CMFTestCase',
             'Pillow',
         ],
       ),
