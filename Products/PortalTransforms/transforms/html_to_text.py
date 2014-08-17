@@ -15,11 +15,16 @@ def register():
         result = htmlentitydefs.name2codepoint.get(ent)
         if result is None:
             if ent.startswith('#'):
-                return unichr(int(ent[1:])).encode('utf-8')
+                res = unichr(int(ent[1:]))
             else:
-                return full
+                res = full
         else:
-            return unichr(result).encode('utf-8')
+            res = unichr(result)
+
+        if type(full) is unicode:
+            return res
+        return res.encode('utf-8')
+
 
     return html_to_text("html_to_text",
                        ('<script [^>]>.*</script>(?im)', ' '),
