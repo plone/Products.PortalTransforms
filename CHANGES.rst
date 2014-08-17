@@ -4,8 +4,10 @@ Changelog
 2.1.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Don't force utf-8 when sub is run on a unicode string. This fixes 
+  unicodedecodeerror when we have a match in a unicode string containing 
+  non ascii chars.
+  [tmog]
 
 2.1.3 (2014-01-27)
 ------------------
