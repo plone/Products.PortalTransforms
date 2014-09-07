@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.4 (unreleased)
+2.1.4 (2014-09-07)
 ------------------
 
 - Don't force utf-8 when sub is run on a unicode string. This fixes 
