@@ -2625,7 +2625,32 @@ class SafeHTML:
             return self.config['output']
         raise AttributeError(attr)
 
+    def _get_config_from_registry(self):
+        from zope.component import getUtility
+        from plone.registry.interfaces import IRegistry
+        registry = getUtility(IRegistry)
+        disable_transform = 'disable_filtering'
+        config = {
+            'inputs': self.inputs,
+            'output': self.output,
+            'valid_tags': VALID_TAGS,
+            'nasty_tags': NASTY_TAGS,
+            'stripped_attributes': [
+                'lang', 'valign', 'halign', 'border', 'frame', 'rules',
+                'cellspacing', 'cellpadding', 'bgcolor'],
+            'stripped_combinations': {'table th td': 'width height'},
+            'style_whitelist': ['text-align', 'list-style-type', 'float',
+                                'padding-left', ],
+            'class_blacklist': [],
+            'remove_javascript': 1,
+            'disable_transform': 0,
+        }
+        return config
+
+
     def convert(self, orig, data, **kwargs):
+        self.config = self._get_config_from_registry()
+
         # note if we need an upgrade.
         if 'disable_transform' not in self.config:
             log(logging.ERROR, 'PortalTransforms safe_html transform needs '
