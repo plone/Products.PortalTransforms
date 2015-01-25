@@ -83,7 +83,7 @@ class TransformNoIO(BaseTransform):
 
 
 class BadTransformMissingImplements(BaseTransform):
-    #__implements__ = None
+    # __implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -120,7 +120,7 @@ class TestEngine(ATSiteTestCase):
         self.data = '<b>foo</b>'
 
     def register(self):
-        #A default set of transforms to prove the interfaces work
+        # A default set of transforms to prove the interfaces work
         self.engine.registerTransform(HtmlToText())
         self.engine.registerTransform(FooToBar())
 
@@ -182,7 +182,7 @@ class TestEngine(ATSiteTestCase):
                                      mimetype="text/html")
         self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
         # HtmlToTextWithEncoding. Now None is the right
-        #self.assertEqual(data.getMetadata()['encoding'], 'ascii')
+        # self.assertEqual(data.getMetadata()['encoding'], 'ascii')
         # XXX the new algorithm is choosing html_to_text instead of
         self.assertEqual(data.getMetadata()['encoding'], None)
         self.assertEqual(data.name(), "text/plain")
@@ -217,16 +217,17 @@ class TestEngine(ATSiteTestCase):
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
         self.assertEqual(
             cache.getData(),
-            '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
+            '<div class="dummy"><span class="dummy">'
+            '<p>this is safe</p></span></div>')
 
         self.assertEqual(cache.getMetadata()['mimetype'], mt)
         self.assertEqual(cache.name(), mt)
 
         path = self.engine._findPath('text/html', mt, required)
         self.assertEqual(str(path),
-                             "[<Transform at dummy_html_filter1>, "
-                             "<Transform at dummy_html_filter2>, "
-                             "<Transform at safe_html>]")
+                         "[<Transform at dummy_html_filter1>, "
+                         "<Transform at dummy_html_filter2>, "
+                         "<Transform at safe_html>]")
 
     def testSame(self):
         data = "This is a test"
