@@ -1,6 +1,14 @@
 Changelog
 =========
 
+3.0 (unreleased)
+----------------
+
+- Use settings from plone.app.registry.
+  This is a part of https://github.com/plone/Products.CMFPlone/issues/211
+  [khink]
+
+
 2.1.5 (unreleased)
 ------------------
 
