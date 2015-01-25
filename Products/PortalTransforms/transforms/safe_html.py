@@ -1,16 +1,17 @@
-import logging
-from sgmllib import SGMLParser, SGMLParseError
-import re
 from cgi import escape
-
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.utils import log
 from Products.CMFDefault.utils import bodyfinder
 from Products.CMFDefault.utils import IllegalHTML
-from Products.CMFDefault.utils import VALID_TAGS
 from Products.CMFDefault.utils import NASTY_TAGS
+from Products.CMFDefault.utils import VALID_TAGS
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import safeToInt
+from sgmllib import SGMLParser, SGMLParseError
+from zope.interface import implements
+
+import logging
+import re
+
 
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
