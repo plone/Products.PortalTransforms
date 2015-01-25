@@ -10,8 +10,8 @@ Changelog
 2.1.4 (2014-09-07)
 ------------------
 
-- Don't force utf-8 when sub is run on a unicode string. This fixes 
-  unicodedecodeerror when we have a match in a unicode string containing 
+- Don't force utf-8 when sub is run on a unicode string. This fixes
+  unicodedecodeerror when we have a match in a unicode string containing
   non ascii chars.
   [tmog]
 
@@ -129,7 +129,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 2.0b6 - 2010-06-13
 ------------------
 
-* Repeat safe_html transform to block a malicious HTML injection vector. 
+* Repeat safe_html transform to block a malicious HTML injection vector.
   Thanks to evilbungle for the report.
   [MatthewWilkes]
 
