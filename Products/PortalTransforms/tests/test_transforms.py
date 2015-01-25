@@ -1,9 +1,20 @@
-import os
-import logging
-import unittest
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
-
+from Products.PortalTransforms.data import datastream
+from Products.PortalTransforms.interfaces import IDataStream
+from Products.PortalTransforms.libtransforms.utils import MissingBinary
+from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
+from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
+from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
+from Products.PortalTransforms.transforms.image_to_pcx import image_to_pcx
+from Products.PortalTransforms.transforms.image_to_png import image_to_png
+from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
+from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
+from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
+from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
+from Products.PortalTransforms.transforms.word_to_html import word_to_html
+from os.path import exists
 from utils import (
     input_file_path,
     output_file_path,
@@ -11,26 +22,11 @@ from utils import (
     load,
     matching_inputs,
 )
-from Products.PortalTransforms.data import datastream
-from Products.PortalTransforms.interfaces import IDataStream
 
-from Products.PortalTransforms.libtransforms.utils import MissingBinary
-from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
-from Products.PortalTransforms.transforms.image_to_png import image_to_png
-from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
-from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
-from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
-from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
-from Products.PortalTransforms.transforms.image_to_pcx import image_to_pcx
+import logging
+import os
+import unittest
 
-from Products.PortalTransforms.transforms.word_to_html import word_to_html
-
-from Products.PortalTransforms.transforms.safe_html import SafeHTML
-
-from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
-from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
-
-from os.path import exists
 # we have to set locale because lynx output is locale sensitive !
 os.environ['LC_ALL'] = 'C'
 logger = logging.getLogger('PortalTransforms')
