@@ -29,6 +29,7 @@ setup(name='Products.PortalTransforms',
       install_requires=[
           'setuptools',
           'plone.intelligenttext',
+          'plone.app.registry',
           'zope.interface',
           'zope.structuredtext',
           'Products.CMFCore',
