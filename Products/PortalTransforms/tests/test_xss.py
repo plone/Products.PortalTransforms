@@ -7,6 +7,12 @@ class TestXSSFilter(ATSiteTestCase):
 
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
+
+        import plone.app.registry
+        from Products.Five import zcml
+        zcml.load_config('configure.zcml', plone.app.registry)
+        self.addProfile('plone.app.registry:default')
+
         self.engine = self.portal.portal_transforms
 
     def doTest(self, data_in, data_out):
