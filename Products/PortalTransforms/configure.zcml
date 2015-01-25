@@ -4,6 +4,8 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   i18n_domain="Products.PortalTransforms">
 
+  <include package="z3c.autoinclude" file="meta.zcml" />
+
   <five:deprecatedManageAddDelete
       class=".TransformEngine.TransformTool" />
 
