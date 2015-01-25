@@ -2629,7 +2629,13 @@ class SafeHTML:
         from zope.component import getUtility
         from plone.registry.interfaces import IRegistry
         registry = getUtility(IRegistry)
-        disable_transform = 'disable_filtering'
+
+        record = registry.records.get('plone.disable_filtering')
+        if record:
+            disable_transform = record.value
+        else:
+            disable_transform = False
+
         config = {
             'inputs': self.inputs,
             'output': self.output,
@@ -2643,10 +2649,9 @@ class SafeHTML:
                                 'padding-left', ],
             'class_blacklist': [],
             'remove_javascript': 1,
-            'disable_transform': 0,
+            'disable_transform': disable_transform,
         }
         return config
-
 
     def convert(self, orig, data, **kwargs):
         self.config = self._get_config_from_registry()
