@@ -34,6 +34,13 @@ logger = logging.getLogger('PortalTransforms')
 
 class TransformTest(ATSiteTestCase):
 
+    def afterSetUp(self):
+        ATSiteTestCase.afterSetUp(self)
+        import plone.app.registry
+        from Products.Five import zcml
+        zcml.load_config('configure.zcml', plone.app.registry)
+        self.addProfile('plone.app.registry:default')
+
     def do_convert(self, filename=None):
         if filename is None and exists(self.output + '.nofilename'):
             output = self.output + '.nofilename'
@@ -166,6 +173,12 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
 
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
+
+        import plone.app.registry
+        from Products.Five import zcml
+        zcml.load_config('configure.zcml', plone.app.registry)
+        self.addProfile('plone.app.registry:default')
+
         self.pt = self.portal.portal_transforms
         self.pt.registerTransform(SafeHTML())
 
