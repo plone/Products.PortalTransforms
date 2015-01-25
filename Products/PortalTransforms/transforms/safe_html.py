@@ -73,10 +73,13 @@ msg_pat = """
 """
 
 CSS_COMMENT = re.compile(r'/\*.*\*/')
-def hasScript(s):
+
+
+def hasScript(s):  # NOQA
     """Dig out evil Java/VB script inside an HTML attribute.
 
-    >>> hasScript('data:text/html;base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==')
+    >>> hasScript(
+    ... 'data:text/html;base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==')
     True
     >>> hasScript('script:evil(1);')
     True
@@ -98,6 +101,8 @@ def hasScript(s):
 
 
 CHR_RE = re.compile(r'\\(\d+)')
+
+
 def unescape_chr(matchobj):
     try:
         return chr(int(matchobj.group(1), 16))
@@ -117,7 +122,7 @@ def decode_charref(s):
             c = c.encode('utf8')
         return c
     except ValueError:
-        return '&#'+s+';'
+        return '&#' + s + ';'
 
 
 def decode_entityref(s):
@@ -138,6 +143,7 @@ def decode_entityref(s):
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")
 ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
 
+
 def decode_htmlentities(s):
     # Decode HTML5 entities (numeric or named).
     s = CHR_RE.sub(unescape_chr, s)
@@ -147,7 +153,8 @@ def decode_htmlentities(s):
     return ENTITYREF_RE.sub(decode_entityref, s)
 
 
-# maps the HTML5 named character references to the equivalent Unicode character(s)
+# maps the HTML5 named character references to the equivalent Unicode
+# character(s)
 # (taken from http://hg.python.org/cpython/rev/2b54e25d6ecb)
 html5entities = {
     'Aacute;': u'\xc1',
@@ -1316,7 +1323,7 @@ html5entities = {
     'nesim;': u'\u2242\u0338',
     'NestedGreaterGreater;': u'\u226b',
     'NestedLessLess;': u'\u226a',
-    'NewLine;': u'\n', # should be \u240a but Chrome treats it as whitespace so...
+    'NewLine;': u'\n',  # should be \u240a but Chrome treats it as whitespace
     'nexist;': u'\u2204',
     'nexists;': u'\u2204',
     'Nfr;': u'\U0001d511',
@@ -2055,7 +2062,7 @@ html5entities = {
     'swnwar;': u'\u292a',
     'szlig;': u'\xdf',
     'szlig': u'\xdf',
-    'Tab;': u'\t', # should be \u2409 but Chrome treats it as whitespace so...
+    'Tab;': u'\t',  # should be \u2409 but Chrome treats it as whitespace so...
     'target;': u'\u2316',
     'Tau;': u'\u03a4',
     'tau;': u'\u03c4',
@@ -2460,7 +2467,7 @@ class StrippingParser(SGMLParser):
                 else:
                     self.result.append(' %s="%s"' % (k, v))
 
-            #UNUSED endTag = '</%s>' % tag
+            # UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):
                 self.result.append('>')
             else:
@@ -2474,7 +2481,7 @@ class StrippingParser(SGMLParser):
             pass
 
     def unknown_endtag(self, tag):
-        if tag in self.nasty and not tag in self.valid:
+        if tag in self.nasty and tag not in self.valid:
             self.suppress = False
         if self.suppress:
             return
@@ -2485,23 +2492,23 @@ class StrippingParser(SGMLParser):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
-        if self.rawdata[i:i+9] == '<![CDATA[':
+        if self.rawdata[i:i + 9] == '<![CDATA[':
             k = self.rawdata.find(']]>', i)
             if k == -1:
                 k = len(self.rawdata)
-            j = k+3
+            j = k + 3
         else:
             try:
                 j = SGMLParser.parse_declaration(self, i)
             except SGMLParseError:
                 j = len(self.rawdata)
-        return j  
+        return j
 
-    def getResult(self):
+    def getResult(self):  # NOQA
         return ''.join(self.result)
 
 
-def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
+def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,  # NOQA
               remove_javascript=True, raise_error=True):
 
     """ Strip illegal HTML tags from string text.
@@ -2552,7 +2559,7 @@ class SafeHTML:
             'class_blacklist': [],
             'remove_javascript': 1,
             'disable_transform': 0,
-            }
+        }
 
         self.config_metadata = {
             'inputs': ('list',
@@ -2600,7 +2607,7 @@ class SafeHTML:
             'disable_transform': ("int",
                                   'disable_transform',
                                   'If 1, nothing is done.'),
-            }
+        }
 
         self.config.update(kwargs)
 
