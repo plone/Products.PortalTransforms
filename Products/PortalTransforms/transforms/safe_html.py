@@ -418,6 +418,16 @@ class SafeHTML:
         if disable_filtering:
             config['disable_transform'] = disable_filtering.value
 
+        nasty_tags_record = registry.records.get('plone.nasty_tags')
+        if nasty_tags_record:
+            # self.config should contain a dict with tags as values
+            nasty_tags = nasty_tags_record.value
+            config['nasty_tags'] = dict.fromkeys(nasty_tags, 1)
+            # remove nasty tags from valid_tags
+            for tag in nasty_tags:
+                if tag in config['valid_tags']:
+                    del config['valid_tags'][tag]
+
         return config
 
     def convert(self, orig, data, **kwargs):
