@@ -80,7 +80,7 @@ DEFAULT_CONFIG = {
                         'padding-left', ],
     'class_blacklist': [],
     'remove_javascript': 1,
-    'disable_transform': True,
+    'disable_transform': False,
 }
 
 msg_pat = """
