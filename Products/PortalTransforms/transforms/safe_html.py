@@ -414,9 +414,9 @@ class SafeHTML:
 
         registry = getUtility(IRegistry)
 
-        record = registry.records.get('plone.disable_filtering')
-        if record:
-            config['disable_transform'] = record.value
+        disable_filtering = registry.records.get('plone.disable_filtering')
+        if disable_filtering:
+            config['disable_transform'] = disable_filtering.value
 
         return config
 
