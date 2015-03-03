@@ -209,6 +209,7 @@ class TestEngine(ATSiteTestCase):
         self.engine.registerTransform(DummyHtmlFilter2())
         required = ['dummy_html_filter1', 'dummy_html_filter2']
 
+        self.engine.manage_delPolicies([mt])
         self.engine.manage_addPolicy(mt, required)
         expected_policy = [('text/x-html-safe',
                             ('dummy_html_filter1', 'dummy_html_filter2'))]
@@ -259,6 +260,8 @@ class TestEngine(ATSiteTestCase):
         mt = 'text/x-html-safe'
         self.engine.registerTransform(QuxToVHost())
         required = ['qux_to_vhost']
+
+        self.engine.manage_delPolicies([mt])
         self.engine.manage_addPolicy(mt, required)
 
         data = '<a href="qux">vhost link</a>'
