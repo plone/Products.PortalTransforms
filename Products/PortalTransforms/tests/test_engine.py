@@ -209,8 +209,9 @@ class TestEngine(ATSiteTestCase):
         self.engine.registerTransform(DummyHtmlFilter2())
         required = ['dummy_html_filter1', 'dummy_html_filter2']
 
-        if mt not in [x for x in self.engine._policies.keys()]:
-            self.engine.manage_addPolicy(mt, required)
+        if mt in [x for x in self.engine._policies.keys()]:
+            self.engine.manage_delPolicies([mt])
+        self.engine.manage_addPolicy(mt, required)
         expected_policy = [('text/x-html-safe',
                             ('dummy_html_filter1', 'dummy_html_filter2'))]
         self.assertEqual(self.engine.listPolicies(), expected_policy)
@@ -260,8 +261,9 @@ class TestEngine(ATSiteTestCase):
         mt = 'text/x-html-safe'
         self.engine.registerTransform(QuxToVHost())
         required = ['qux_to_vhost']
-        if mt not in [x for x in self.engine._policies.keys()]:
-            self.engine.manage_addPolicy(mt, required)
+        if mt in [x for x in self.engine._policies.keys()]:
+            self.engine.manage_delPolicies([mt])
+        self.engine.manage_addPolicy(mt, required)
 
         data = '<a href="qux">vhost link</a>'
 
