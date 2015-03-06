@@ -4,7 +4,8 @@ Changelog
 2.1.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not fail tests if a mimetype already has been registered in the tests. 
+  [timo]
 
 
 2.1.4 (2014-09-07)
