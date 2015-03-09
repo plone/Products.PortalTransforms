@@ -118,6 +118,8 @@ class TestEngine(ATSiteTestCase):
         ATSiteTestCase.afterSetUp(self)
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'
+        for mt in self.engine._policies.keys():
+            self.engine.manage_delPolicies([mt])
 
     def register(self):
         #A default set of transforms to prove the interfaces work
@@ -209,8 +211,7 @@ class TestEngine(ATSiteTestCase):
         self.engine.registerTransform(DummyHtmlFilter2())
         required = ['dummy_html_filter1', 'dummy_html_filter2']
 
-        if mt not in [x for x in self.engine._policies.keys()]:
-            self.engine.manage_addPolicy(mt, required)
+        self.engine.manage_addPolicy(mt, required)
         expected_policy = [('text/x-html-safe',
                             ('dummy_html_filter1', 'dummy_html_filter2'))]
         self.assertEqual(self.engine.listPolicies(), expected_policy)
@@ -260,17 +261,18 @@ class TestEngine(ATSiteTestCase):
         mt = 'text/x-html-safe'
         self.engine.registerTransform(QuxToVHost())
         required = ['qux_to_vhost']
-        if mt not in [x for x in self.engine._policies.keys()]:
-            self.engine.manage_addPolicy(mt, required)
+        self.engine.manage_addPolicy(mt, required)
 
         data = '<a href="qux">vhost link</a>'
 
         out = self.engine.convertTo(
             mt, data, mimetype='text/html', object=self.folder,
             context=self.folder)
+
         self.assertEqual(
             out.getData(), '<a href="http://nohost">vhost link</a>',
-            out.getData())
+            out.getData()
+        )
 
         # Test when object is not a context
         out = self.engine.convertTo(
