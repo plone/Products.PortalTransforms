@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.5 (unreleased)
+2.1.5 (2015-03-13)
 ------------------
 
 - Do not fail tests if a mimetype already has been registered in the tests. 
