@@ -7,6 +7,9 @@ Changelog
 - Do not fail tests if a mimetype already has been registered in the tests. 
   [timo]
 
+- Update output gif; Pillow 2.7.0 no longer optimizes the palette of gifs in RGB mode.
+  [davisagli]
+
 
 2.1.4 (2014-09-07)
 ------------------
@@ -16,8 +19,11 @@ Changelog
   non ascii chars.
   [tmog]
 
+
 2.1.3 (2014-01-27)
 ------------------
+
+- Nothing changed.
 
 
 2.1.2 (2012-12-09)
@@ -46,6 +52,7 @@ Changelog
   if converting to safe_html
   [tom_gross]
 
+
 2.0.7 - 2011-07-04
 ------------------
 
@@ -61,6 +68,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 - In the safe_html transform, ignore null bytes when checking for unsafe
   attributes with scripts.
   [davisagli]
+
 
 2.0.6 - 2011-04-03
 ------------------
