@@ -154,7 +154,7 @@ Configurable transformation
 ```````````````````````````
 
 You can make your transformation configurable through the ZMI by setting a
-*config* dictionnary on your transform instance or class. Keys are parameter's
+*config* dictionary on your transform instance or class. Keys are parameter's
 name and values parameter's value. Another dictionnary *config_metadata*
 describes each parameter. In this mapping, keys are also parameter's name but
 values are a tree-uple : (<parameter's type>, <parameter's label>, <parameter's
