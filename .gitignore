@@ -6,3 +6,4 @@ include
 parts
 eggs
 develop-eggs
+.installed.cfg
