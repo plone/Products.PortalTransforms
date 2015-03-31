@@ -4,7 +4,8 @@ Changelog
 2.1.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not escape <, >, and & inside script tag when it is not suppressed.
+  [gotcha]
 
 
 2.1.5 (2015-03-13)
