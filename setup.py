@@ -22,7 +22,7 @@ setup(name='Products.PortalTransforms',
       extras_require=dict(
         test=[
             'zope.testing',
-            'Products.Archetypes',
+            'Products.Archetypes [test]',
             'Pillow',
         ],
       ),
