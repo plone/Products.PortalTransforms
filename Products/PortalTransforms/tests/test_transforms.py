@@ -1,4 +1,5 @@
 import os
+import copy
 import logging
 import unittest
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
@@ -21,6 +22,8 @@ from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
 from Products.PortalTransforms.transforms.word_to_html import word_to_html
 
 from Products.PortalTransforms.transforms.safe_html  import SafeHTML
+from Products.PortalTransforms.transforms.safe_html  import VALID_TAGS
+from Products.PortalTransforms.transforms.safe_html  import NASTY_TAGS
 
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
@@ -190,6 +193,32 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
+class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
+
+    def afterSetUp(self):
+        ATSiteTestCase.afterSetUp(self)
+        self.pt = self.portal.portal_transforms
+        valid_tags = copy.deepcopy(VALID_TAGS)
+        valid_tags['script'] = 1
+        nasty_tags = copy.deepcopy(NASTY_TAGS)
+        del nasty_tags['script']
+        self.pt.unregisterTransform('safe_html')
+        self.pt.registerTransform(SafeHTML(nasty_tags=nasty_tags,
+            valid_tags=valid_tags))
+
+    def beforeTearDown(self):
+        self.pt.unregisterTransform('safe_html')
+
+    def test_script(self):
+        orig = '<script type="text/javascript">$("h1 > ul").hide();</script>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_entities(self):
+        orig = "<code>a > 0 && b < 1</code>"
+        escaped = "<code>a &gt; 0 &amp;&amp; b &lt; 1</code>"
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), escaped)
 
 class WordTransformsTest(ATSiteTestCase):
 
@@ -353,6 +382,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
 
     tests.append(PILTransformsTest)
     tests.append(SafeHtmlTransformsTest)
+    tests.append(SafeHtmlTransformsWithScriptTest)
     tests.append(WordTransformsTest)
     tests.append(ParsersTestCase)
     return tests

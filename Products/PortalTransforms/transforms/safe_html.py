@@ -2400,6 +2400,7 @@ class StrippingParser(SGMLParser):
         self.remove_javascript = remove_javascript
         self.raise_error = raise_error
         self.suppress = False
+        self.inside_script = False
 
     def handle_data(self, data):
         if self.suppress:
@@ -2421,7 +2422,10 @@ class StrippingParser(SGMLParser):
     def handle_entityref(self, name):
         if self.suppress:
             return
-        self.result.append(self.convert_entityref(name))
+        if self.inside_script:
+            self.result.append(self.entitydefs.get(name, ''))
+        else:
+            self.result.append(self.convert_entityref(name))
 
     def convert_entityref(self, name):
         if name + ';' in self.entitydefs:
@@ -2442,6 +2446,8 @@ class StrippingParser(SGMLParser):
             return
 
         if tag in self.valid:
+            if tag == "script":
+                self.inside_script = True
             self.result.append('<' + tag)
 
             remove_script = getattr(self, 'remove_javascript', True)
@@ -2476,6 +2482,7 @@ class StrippingParser(SGMLParser):
     def unknown_endtag(self, tag):
         if tag in self.nasty and not tag in self.valid:
             self.suppress = False
+            self.inside_script = False
         if self.suppress:
             return
         if safeToInt(self.valid.get(tag)):
