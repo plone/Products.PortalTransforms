@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.6 (unreleased)
+2.1.6 (2015-04-22)
 ------------------
 
 - Do not escape <, >, and & inside script tag when it is not suppressed.
