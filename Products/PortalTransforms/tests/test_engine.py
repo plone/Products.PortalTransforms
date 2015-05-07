@@ -205,7 +205,7 @@ class TestEngine(ATSiteTestCase):
         data = '<script>this_is_unsafe();</script><p>this is safe</p>'
 
         cache = self.engine.convertTo(mt, data, mimetype='text/html')
-        self.assertEqual(cache.getData(), '<p>this is safe</p>')
+        self.assertEqual(cache.getData(), '<div><p>this is safe</p></div>')
 
         self.engine.registerTransform(DummyHtmlFilter1())
         self.engine.registerTransform(DummyHtmlFilter2())

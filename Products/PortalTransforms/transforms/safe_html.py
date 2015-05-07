@@ -8,6 +8,10 @@ from zope.interface import implements
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.utils import safeToInt
+from lxml.html.defs import tags as VALID_TAGS
+
+# add some tags to nasty.
+NASTY_TAGS = frozenset(['style', 'script', 'object', 'applet', 'meta', 'embed'])  # noqa
 
 # tag mapping: tag -> short or long tag
 # These are the HTML tags that we will leave intact
@@ -2574,13 +2578,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
 
 
 class SafeHTML:
-    """Simple transform which uses CMFDefault functions to
-    clean potentially bad tags.
-
-    Tags must explicit be allowed in valid_tags to pass. Only
-    the tags themself are removed, not their contents. If tags
-    are removed and in nasty_tags, they are removed with
-    all of their contents.
+    """ Clean HTML from potentially malicious HTML elements
 
     Objects will not be transformed again with changed settings.
     You need to clear the cache by e.g.
@@ -2692,9 +2690,9 @@ class SafeHTML:
         from lxml.html.clean import Cleaner
         from lxml.html import fragment_fromstring
         from lxml.etree import tostring
-        cleaner = Cleaner()
+        cleaner = Cleaner(kill_tags=NASTY_TAGS)
         safe_html = tostring(fragment_fromstring(cleaner.clean_html(orig)))
-        data.setData(cleaner.clean_html(safe_html))
+        data.setData(safe_html)
         return data
 
 

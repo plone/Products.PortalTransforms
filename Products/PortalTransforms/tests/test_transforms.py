@@ -198,10 +198,10 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
-        valid_tags = copy.deepcopy(VALID_TAGS)
-        valid_tags['script'] = 1
-        nasty_tags = copy.deepcopy(NASTY_TAGS)
-        del nasty_tags['script']
+        valid_tags = list(VALID_TAGS)
+        valid_tags.append('script')
+        nasty_tags = list(NASTY_TAGS)
+        nasty_tags.remove('script')
         self.pt.unregisterTransform('safe_html')
         self.pt.registerTransform(SafeHTML(nasty_tags=nasty_tags,
             valid_tags=valid_tags))
