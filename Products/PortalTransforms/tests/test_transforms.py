@@ -2,6 +2,7 @@ import os
 import copy
 import logging
 import unittest
+import HTMLParser
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
 
@@ -33,6 +34,9 @@ from os.path import exists
 os.environ['LC_ALL'] = 'C'
 logger = logging.getLogger('PortalTransforms')
 
+def unescape(s):
+    h = HTMLParser.HTMLParser()
+    return h.unescape(s)
 
 class TransformTest(ATSiteTestCase):
 
@@ -181,7 +185,7 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
     def test_charref_attributes(self):
         orig = '<a href="&#0109;">foo</a>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), unescape(orig))
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
@@ -191,7 +195,7 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
     def test_charref_data(self):
         orig = '<p>bar &#0109; foo</p>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), unescape(orig))
 
 class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
 
