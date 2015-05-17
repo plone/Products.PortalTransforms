@@ -7,7 +7,7 @@ from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.libtransforms.commandtransform import (
     commandtransform, popentransform)
-from Products.CMFDefault.utils import bodyfinder
+from Products.PortalTransforms.utils import bodyfinder
 import os
 
 
