@@ -6,64 +6,11 @@ from cgi import escape
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from Products.PortalTransforms.utils import log
-from Products.CMFDefault.utils import bodyfinder
-from Products.CMFDefault.utils import IllegalHTML
-from Products.CMFDefault.utils import VALID_TAGS
-from Products.CMFDefault.utils import NASTY_TAGS
+from Products.PortalTransforms.utils import bodyfinder
+from Products.PortalTransforms.utils import IllegalHTML
+from Products.PortalTransforms.utils import VALID_TAGS
+from Products.PortalTransforms.utils import NASTY_TAGS
 from Products.PortalTransforms.utils import safeToInt
-
-# tag mapping: tag -> short or long tag
-VALID_TAGS = VALID_TAGS.copy()
-NASTY_TAGS = NASTY_TAGS.copy()
-
-# add some tags to allowed types. These should be backported to CMFDefault.
-VALID_TAGS['ins'] = 1
-VALID_TAGS['del'] = 1
-VALID_TAGS['q'] = 1
-VALID_TAGS['map'] = 1
-VALID_TAGS['area'] = 0
-VALID_TAGS['abbr'] = 1
-VALID_TAGS['acronym'] = 1
-VALID_TAGS['var'] = 1
-VALID_TAGS['dfn'] = 1
-VALID_TAGS['samp'] = 1
-VALID_TAGS['address'] = 1
-VALID_TAGS['bdo'] = 1
-VALID_TAGS['thead'] = 1
-VALID_TAGS['tfoot'] = 1
-VALID_TAGS['col'] = 1
-VALID_TAGS['colgroup'] = 1
-
-# HTML5 tags that should be allowed:
-VALID_TAGS['article'] = 1
-VALID_TAGS['aside'] = 1
-VALID_TAGS['audio'] = 1
-VALID_TAGS['canvas'] = 1
-VALID_TAGS['command'] = 1
-VALID_TAGS['datalist'] = 1
-VALID_TAGS['details'] = 1
-VALID_TAGS['dialog'] = 1
-VALID_TAGS['figure'] = 1
-VALID_TAGS['footer'] = 1
-VALID_TAGS['header'] = 1
-VALID_TAGS['hgroup'] = 1
-VALID_TAGS['keygen'] = 1
-VALID_TAGS['mark'] = 1
-VALID_TAGS['meter'] = 1
-VALID_TAGS['nav'] = 1
-VALID_TAGS['output'] = 1
-VALID_TAGS['progress'] = 1
-VALID_TAGS['rp'] = 1
-VALID_TAGS['rt'] = 1
-VALID_TAGS['ruby'] = 1
-VALID_TAGS['section'] = 1
-VALID_TAGS['source'] = 1
-VALID_TAGS['time'] = 1
-VALID_TAGS['video'] = 1
-
-# add some tags to nasty.
-NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
-NASTY_TAGS['meta'] = 1  # allowed by parsers, but can cause unexpected behavior
 
 
 msg_pat = """
