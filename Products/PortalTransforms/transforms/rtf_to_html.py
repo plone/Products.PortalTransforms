@@ -5,9 +5,9 @@ Uses the http://freshmeat.net/projects/rtfconverter/ bin to do its handy work
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import sansext
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.commandtransform import \
     commandtransform
-from Products.CMFDefault.utils import bodyfinder
 import os
 
 
