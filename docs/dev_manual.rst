@@ -1,25 +1,23 @@
 ===================================
-Portal Transforms'Developper manual
+Portal Transforms' Developer manual
 ===================================
 
 :Author: Sylvain Thenault
 :Contact: syt@logilab.fr
-:Date: $Date$
-:Version: $Revision: 1.5 $
-:Web site: http://sourceforge.net/projects/archetypes
 
 .. contents::
 
 
 Tools interfaces
-----------------
+================
 
 The MIME types registry
-```````````````````````
+-----------------------
+::
 
     class isourceAdapter(Interface):
 
-	def __call__(data, \**kwargs):
+	def __call__(data, **kwargs):
 	    """convert data to unicode, may take optional kwargs to aid in conversion"""
 
     class imimetypes_registry(isourceAdapter):
@@ -55,7 +53,8 @@ The MIME types registry
 
 
 The tranformation tool
-``````````````````````
+----------------------
+::
 
     class IEngine(Interface):
 
@@ -69,19 +68,19 @@ The tranformation tool
 	    name is the name of a registered transform
 	    """
 
-	def convertTo(mimetype, orig, idata=None, \**kwargs):
+	def convertTo(mimetype, orig, idata=None, **kwargs):
 	    """Convert orig to a given mimetype
 	    return an object implementing idatastream or None if not path has been
 	    found
 	    """
 
-	def convert(name, orig, idata=None, \**kwargs):
+	def convert(name, orig, idata=None, **kwargs):
 	    """run a tranform of a given name on data
 	    name is the name of a registered transform
 	    return an object implementing idatastream
 	    """
 
-	def __call__(name, orig, idata=None, \**kwargs):
+	def __call__(name, orig, idata=None, **kwargs):
 	    """run a transform returning the raw data product
 	    name is the name of a registered transform
 	    return an object implementing idatastream
@@ -90,15 +89,15 @@ The tranformation tool
 
 
 Writing a new transformation
-----------------------------
-
+============================
 Writing a new transform should be an easy task. You only have to follow a
 simple interface to do it, but knowing some advanced features and provided
 utilities may help to do it quicker... 
 
 
 Related interfaces
-``````````````````
+------------------
+::
 
     class ITransform(Interface):
 	"""A transformation plugin -- tranform data somehow must be threadsafe and stateless"""
@@ -111,7 +110,7 @@ Related interfaces
 	def name(self):
 	    """return the name of the transform instance"""
 
-	def convert(data, idata, \**kwargs):
+	def convert(data, idata, **kwargs):
 	    """convert the data, store the result in idata and return that"""
 
     class IDataStream(Interface):
@@ -141,7 +140,7 @@ Related interfaces
 
 
 Important note about encoding
-`````````````````````````````
+-----------------------------
 
 A transform receive data as an encoded string. A priori, no assumption can be
 made about the used encoding. Data returned by a transform must use the same
@@ -151,8 +150,7 @@ XSLT based transforms).
 
 
 Configurable transformation
-```````````````````````````
-
+---------------------------
 You can make your transformation configurable through the ZMI by setting a
 *config* dictionary on your transform instance or class. Keys are parameter's
 name and values parameter's value. Another dictionnary *config_metadata*
@@ -160,31 +158,26 @@ describes each parameter. In this mapping, keys are also parameter's name but
 values are a tree-uple : (<parameter's type>, <parameter's label>, <parameter's
 description>).
 
-Possible types for parameters are :
+Possible types for parameters are:
 
-  :int: field is an integer
-
-  :string: field is a string
-
-  :list: field is a list
-
-  :dict: field is a dictionnary
+:int: field is an integer
+:string: field is a string
+:list: field is a list
+:dict: field is a dictionnary
 
 You can look at the **command** and **xml** transforms for an example of
 configurable transform.
 
 
 Images / sub-objects  management
-````````````````````````````````
-
+--------------------------------
 A transformation may produce some sub-objects, for instance when you convert a
 PDF document to HTML. That's the purpose of the setObjects method of
 the idatastream interface.
 
 
 Some utilities
-``````````````
-
+--------------
 Transform utilities may be found in the libtransforms subpackage. You'll find
 there the following modules :
 
@@ -201,13 +194,12 @@ there the following modules :
   provides some utilities functions. 
 
 
-Write a test your transform !
-`````````````````````````````
-
+Write a test your transform!
+----------------------------
 Every transform should have its test... And it's easy to write a test for your
 transform ! Imagine you have made a transform named "colabeer" which transforms
 cola into beer (I let you find MIME type for these content types ;). Basically,
-your test file should be :
+your test file should be::
 
     from test_transforms import make_tests
     
@@ -221,7 +213,7 @@ your test file should be :
 
 
 
-In this example :
+In this example:
 
 - "Products.MyTransforms.colabeer" is the module defining your transform (you
   can also give directly the transform instance).  
