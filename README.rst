@@ -21,7 +21,7 @@ This product is an off-spring of the Archetypes project.
 Authors
 -------
 
-Benjamin Saller <bcsaller@yahoo.com>
-Sidnei da Silva  <sidnei@x3ng.com>
-Sylvain Thenault <sylvain.thenault@logilab.fr>
+- Benjamin Saller <bcsaller@yahoo.com>
+- Sidnei da Silva  <sidnei@x3ng.com>
+- Sylvain Thenault <sylvain.thenault@logilab.fr>
 
