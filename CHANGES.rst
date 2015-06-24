@@ -4,6 +4,9 @@ Changelog
 2.1.7 (unreleased)
 ------------------
 
+- fix safe_html with entities after a <script> tag
+  [gotcha]
+
 - Remove CMFDefault dependency
   [tomgross]
 

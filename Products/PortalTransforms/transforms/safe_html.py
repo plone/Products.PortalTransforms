@@ -2534,9 +2534,9 @@ class StrippingParser(SGMLParser):
             pass
 
     def unknown_endtag(self, tag):
+        self.inside_script = False
         if tag in self.nasty and not tag in self.valid:
             self.suppress = False
-            self.inside_script = False
         if self.suppress:
             return
         if safeToInt(self.valid.get(tag)):

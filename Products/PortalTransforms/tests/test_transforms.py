@@ -1,3 +1,4 @@
+# -*- coding: utf8  -*-
 import os
 import copy
 import logging
@@ -214,11 +215,62 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
+    def test_unicode_in_script(self):
+        orig = ('<script type="text/javascript">'
+                '  $("h1 > ul").attr("alt", "Officiële");'
+                '</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
     def test_entities(self):
         orig = "<code>a > 0 && b < 1</code>"
         escaped = "<code>a &gt; 0 &amp;&amp; b &lt; 1</code>"
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), escaped)
+
+    def test_script_with_entities_and_unicode(self):
+        orig = ('<script type="text/javascript">'
+                '  var el = "test";'
+                '</script>'
+                '<p>(KU&nbsp;Loket) Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_entities(self):
+        orig = ('<script type="text/javascript">'
+                '  var el = "test";'
+                '</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_entities_with_script(self):
+        orig = ('<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">'
+                '  var el = "test";'
+                '</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_unicode(self):
+        orig = ('<script type="text/javascript">'
+                '  var el = "test";'
+                '</script>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_entities_and_unicode(self):
+        orig = '<p>(KU&nbsp;Loket) Officiële inschrijvingen </p>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+
 
 class WordTransformsTest(ATSiteTestCase):
 
