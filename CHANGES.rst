@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.7 (unreleased)
+2.1.7 (2015-06-24)
 ------------------
 
 - fix safe_html with entities after a <script> tag
