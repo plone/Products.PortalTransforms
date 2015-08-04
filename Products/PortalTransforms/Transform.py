@@ -218,8 +218,9 @@ class Transform(SimpleItem):
         type = self.get_parameter_infos(key)[0]
         if type == 'dict':
             result = {}
-            for key, val in value.items():
-                result[key] = val
+            if value:
+                for key, val in value.items():
+                    result[key] = val
         elif type == 'list':
             result = list(value)
         else:
