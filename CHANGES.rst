@@ -4,7 +4,9 @@ Changelog
 2.1.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- fix error mis-configured transforms would cause:
+  "AttributeError: 'NoneType' object has no attribute 'items'"
+  [vangheem]
 
 
 2.1.7 (2015-06-24)
