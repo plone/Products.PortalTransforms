@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.8'
+version = '2.1.9.dev0'
 
 setup(name='Products.PortalTransforms',
       version=version,
