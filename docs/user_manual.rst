@@ -87,12 +87,12 @@ located in portal_skins/mimetypes_icons.
 The tranformation tool
 ``````````````````````
 
-It's a MIME type based transformation engine. It's has been designed to
+It's a MIME type based transformation engine. It has been designed to
 transform portal content from a given MIME type to another. You can add / delete
 transformations by going to the *portal_transforms* object at the root of your
 CMF site, using the ZMI. Some transformations are configurable, but not all. A
 transform is a Python object implementing a special interface. See the
-developper documentation if you're interested in writing a new
+developer documentation if you're interested in writing a new
 transformation.
 
 
