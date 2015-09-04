@@ -2477,7 +2477,7 @@ class StrippingParser(SGMLParser):
         if self.suppress:
             return
         if self.inside_script:
-            self.result.append(self.entitydefs.get(name, ''))
+            self.result.append(self.entitydefs.get(name, u'').encode('utf8'))
         else:
             self.result.append(self.convert_entityref(name))
 
