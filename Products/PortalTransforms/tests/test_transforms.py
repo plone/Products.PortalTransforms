@@ -204,18 +204,30 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
         nasty_tags = copy.deepcopy(NASTY_TAGS)
         del nasty_tags['script']
         self.pt.unregisterTransform('safe_html')
-        self.pt.registerTransform(SafeHTML(nasty_tags=nasty_tags,
-            valid_tags=valid_tags))
+        self.pt.registerTransform(
+            SafeHTML(nasty_tags=nasty_tags, valid_tags=valid_tags)
+        )
 
     def beforeTearDown(self):
         self.pt.unregisterTransform('safe_html')
 
-    def test_script(self):
+    def test_entities_outside_script(self):
+        orig = "<code>a > 0 && b < 1</code>"
+        escaped = "<code>a &gt; 0 &amp;&amp; b &lt; 1</code>"
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), escaped)
+
+    def test_entities_and_unicode_outside_script(self):
+        orig = '<p>(KU&nbsp;Loket) Officiële inschrijvingen </p>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_not_converted_entities(self):
         orig = '<script type="text/javascript">$("h1 > ul").hide();</script>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
-    def test_unicode_in_script(self):
+    def test_script_with_unicode_and_not_converted_entities(self):
         orig = ('<script type="text/javascript">'
                 '  $("h1 > ul").attr("alt", "Officiële");'
                 '</script>'
@@ -223,53 +235,177 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
-    def test_entities(self):
-        orig = "<code>a > 0 && b < 1</code>"
-        escaped = "<code>a &gt; 0 &amp;&amp; b &lt; 1</code>"
+    def test_script_and_entities(self):
+        orig = (''
+                '<script type="text/javascript">var el = "test";</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), escaped)
-
-    def test_script_with_entities_and_unicode(self):
-        orig = ('<script type="text/javascript">'
-                '  var el = "test";'
-                '</script>'
-                '<p>(KU&nbsp;Loket) Officiële inschrijvingen </p>'
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">var el = "test";</script>'
                 )
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
-    def test_script_with_entities(self):
-        orig = ('<script type="text/javascript">'
-                '  var el = "test";'
-                '</script>'
+    def test_script_and_unicode(self):
+        orig = (''
+                '<script type="text/javascript">var el = "test";</script>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">var el = "test";</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_and_entities_and_unicode(self):
+        orig = (''
+                '<script type="text/javascript">var el = "test";</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">var el = "test";</script>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">var el = "test";</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>(KU&nbsp;Loket)</p>'
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">var el = "test";</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_not_converted_entities_and_entities(self):
+        orig = (''
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_not_converted_entities_and_unicode(self):
+        orig = (''
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+
+    def test_script_with_not_converted_entities_and_entities_and_unicode(self):
+        orig = (''
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), orig)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">$("h1 > ul").hide();</script>'
                 '<p>(KU&nbsp;Loket)</p>'
                 )
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
 
-    def test_entities_with_script(self):
-        orig = ('<p>(KU&nbsp;Loket)</p>'
+    def test_script_with_all_entities_and_unicode(self):
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
                 '<script type="text/javascript">'
-                '  var el = "test";'
+                '$("h1 > ul").hide();'
+                'entities = "&copy;";'
+                '</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
+        escd = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "©";'
+                '</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                )
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), escd)
+        orig = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "&copy;";'
+                '</script>'
+                )
+        escd = (''
+                '<p>Officiële inschrijvingen </p>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "©";'
                 '</script>'
                 )
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
-
-    def test_script_with_unicode(self):
-        orig = ('<script type="text/javascript">'
-                '  var el = "test";'
+        self.assertEqual(data.getData(), escd)
+        orig = (''
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "&copy;";'
                 '</script>'
+                '<p>(KU&nbsp;Loket)</p>'
+                '<p>Officiële inschrijvingen </p>'
+                )
+        escd = (''
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "©";'
+                '</script>'
+                '<p>(KU&nbsp;Loket)</p>'
                 '<p>Officiële inschrijvingen </p>'
                 )
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
-
-    def test_entities_and_unicode(self):
-        orig = '<p>(KU&nbsp;Loket) Officiële inschrijvingen </p>'
-        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
-
+        self.assertEqual(data.getData(), escd)
 
 
 class WordTransformsTest(ATSiteTestCase):
