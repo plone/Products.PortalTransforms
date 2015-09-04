@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.9 (unreleased)
+2.1.9 (2015-09-04)
 ------------------
 
 - fix unicode issue in safe_html when there is entity in script tag
