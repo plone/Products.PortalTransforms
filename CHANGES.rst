@@ -4,7 +4,8 @@ Changelog
 2.1.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- fix unicode issue in safe_html when there is entity in script tag
+  [gotcha]
 
 
 2.1.8 (2015-08-20)
