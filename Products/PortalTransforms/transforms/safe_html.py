@@ -62,6 +62,7 @@ VALID_TAGS = { 'a'          : 1
              , 'tt'         : 1
              , 'u'          : 1
              , 'ul'         : 1
+             , 'iframe'     : 1
              }
 
 NASTY_TAGS = { 'script'     : 1
@@ -2609,7 +2610,7 @@ class SafeHTML:
                 'cellspacing', 'cellpadding', 'bgcolor'],
             'stripped_combinations': {'table th td': 'width height'},
             'style_whitelist': ['text-align', 'list-style-type', 'float',
-                                'padding-left', ],
+                                'padding-left', 'text-decoration'],
             'class_blacklist': [],
             'remove_javascript': 1,
             'disable_transform': 0,

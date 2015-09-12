@@ -4,7 +4,8 @@ Changelog
 2.1.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add iframe as a valid tag
+  [vangheem]
 
 
 2.1.9 (2015-09-04)
