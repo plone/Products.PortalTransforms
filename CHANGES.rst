@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.10 (unreleased)
+2.1.10 (2015-09-15)
 -------------------
 
 - Add iframe as a valid tag
