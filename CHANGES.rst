@@ -4,7 +4,13 @@ Changelog
 2.1.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+New:
+
+- *add item here*
+
+Fixes:
+
+- *add item here*
 
 
 2.1.10 (2015-09-15)
@@ -49,7 +55,7 @@ Changelog
 2.1.5 (2015-03-13)
 ------------------
 
-- Do not fail tests if a mimetype already has been registered in the tests. 
+- Do not fail tests if a mimetype already has been registered in the tests.
   [timo]
 
 - Update output gif; Pillow 2.7.0 no longer optimizes the palette of gifs in RGB mode.
@@ -59,8 +65,8 @@ Changelog
 2.1.4 (2014-09-07)
 ------------------
 
-- Don't force utf-8 when sub is run on a unicode string. This fixes 
-  unicodedecodeerror when we have a match in a unicode string containing 
+- Don't force utf-8 when sub is run on a unicode string. This fixes
+  unicodedecodeerror when we have a match in a unicode string containing
   non ascii chars.
   [tmog]
 
@@ -183,7 +189,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 2.0b6 - 2010-06-13
 ------------------
 
-* Repeat safe_html transform to block a malicious HTML injection vector. 
+* Repeat safe_html transform to block a malicious HTML injection vector.
   Thanks to evilbungle for the report.
   [MatthewWilkes]
 
@@ -702,4 +708,3 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 --------------------
 
 * Added workaround for [ 997998 ] PT breaks ZMI/Find [tiran]
-
