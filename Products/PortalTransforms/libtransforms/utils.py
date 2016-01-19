@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from htmlentitydefs import entitydefs
 from Products.PortalTransforms.utils import log
 from sgmllib import SGMLParseError
@@ -99,8 +100,74 @@ def bodyfinder(text):
 # value of 0 means it is an empty tag, like '<br />'.  Also note that
 # there currently is a separate list in the safe_html transform, which
 # itself is a copy from CMFDefault, with some changes done on the fly.
-VALID_TAGS = {'a': 1, 'article': 1, 'aside': 1, 'audio': 1, 'b': 1, 'base': 0, 'blockquote': 1, 'body': 1, 'br': 0, 'canvas': 1, 'caption': 1, 'cite': 1, 'code': 1, 'command': 1, 'datalist': 1, 'dd': 1, 'details': 1, 'div': 1, 'dl': 1, 'dt': 1, 'em': 1, 'figcaption': 1, 'figure': 1, 'footer': 1, 'h1': 1, 'h2': 1, 'h3': 1, 'h4': 1, 'h5': 1, 'h6': 1, 'head': 1, 'header': 1, 'hgroup': 1, 'hr': 0, 'html': 1, 'i': 1, 'img': 0, 'kbd': 1, 'keygen': 1, 'li': 1, 'mark': 1, 'meta': 0, 'ol': 1, 'p': 1, 'pre': 1, 'rp': 1, 'rt': 1, 'ruby': 1, 'section': 1, 'source': 1, 'span': 1, 'strike': 1, 'strong': 1, 'summary': 1, 'table': 1, 'tbody': 1, 'td': 1, 'th': 1, 'thead': 1, 'time': 1, 'title': 1, 'tr': 1, 'tt': 1, 'u': 1, 'ul': 1, 'video': 1
-              }
+VALID_TAGS = {
+    'a': 1,
+    'article': 1,
+    'aside': 1,
+    'audio': 1,
+    'b': 1,
+    'base': 0,
+    'blockquote': 1,
+    'body': 1,
+    'br': 0,
+    'canvas': 1,
+    'caption': 1,
+    'cite': 1,
+    'code': 1,
+    'command': 1,
+    'datalist': 1,
+    'dd': 1,
+    'details': 1,
+    'div': 1,
+    'dl': 1,
+    'dt': 1,
+    'em': 1,
+    'figcaption': 1,
+    'figure': 1,
+    'footer': 1,
+    'h1': 1,
+    'h2': 1,
+    'h3': 1,
+    'h4': 1,
+    'h5': 1,
+    'h6': 1,
+    'head': 1,
+    'header': 1,
+    'hgroup': 1,
+    'hr': 0,
+    'html': 1,
+    'i': 1,
+    'img': 0,
+    'kbd': 1,
+    'keygen': 1,
+    'li': 1,
+    'mark': 1,
+    'meta': 0,
+    'ol': 1,
+    'p': 1,
+    'pre': 1,
+    'rp': 1,
+    'rt': 1,
+    'ruby': 1,
+    'section': 1,
+    'source': 1,
+    'span': 1,
+    'strike': 1,
+    'strong': 1,
+    'summary': 1,
+    'table': 1,
+    'tbody': 1,
+    'td': 1,
+    'th': 1,
+    'thead': 1,
+    'time': 1,
+    'title': 1,
+    'tr': 1,
+    'tt': 1,
+    'u': 1,
+    'ul': 1,
+    'video': 1
+}
 
 # These tags and their complete contents should be removed.  Note that
 # parsers may choose to raise an Exception when finding such a nasty

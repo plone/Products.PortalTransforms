@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from reStructuredText import HTML
 from zope.interface import implements
@@ -20,7 +21,8 @@ class rest:
     default:
 
       >>> try:
-      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
+      ...     out = transform.convert(
+      ..          '.. raw:: html\n  :file: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:

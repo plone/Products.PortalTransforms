@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
 
 from os import popen3
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.utils import log
 from zope.interface import implements
 

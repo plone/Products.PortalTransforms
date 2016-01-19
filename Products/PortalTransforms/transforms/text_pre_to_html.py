@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements

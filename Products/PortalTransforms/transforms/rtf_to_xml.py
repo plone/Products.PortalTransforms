@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 Uses the http://sf.net/projects/rtf2xml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implements
 

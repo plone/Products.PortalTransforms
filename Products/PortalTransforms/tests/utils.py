@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os.path import abspath
 from os.path import basename
 from os.path import dirname

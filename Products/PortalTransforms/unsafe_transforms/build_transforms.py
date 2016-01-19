@@ -1,4 +1,5 @@
-"""try to build some usefull transformations with the command and xml
+# -*- coding: utf-8 -*-
+"""try to build some useful transformations with the command and xml
 transforms and the available binaries
 """
 from command import ExternalCommandTransform

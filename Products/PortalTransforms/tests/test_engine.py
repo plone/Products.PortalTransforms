@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform

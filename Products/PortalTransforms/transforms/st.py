@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from zope.structuredtext import stx2html

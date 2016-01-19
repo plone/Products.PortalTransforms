@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
@@ -8,7 +9,7 @@ from os.path import dirname
 from os.path import exists
 from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.utils import log
@@ -40,7 +41,8 @@ class XsltTransform(commandtransform):
             'output_encoding': 'UTF-8',
             'dtds': {
                 '-//OASIS//DTD DocBook V4.1//EN':
-                    '/usr/share/sgml/docbook/xsl-stylesheets-1.29/html/docbook.xsl',
+                    '/usr/share/sgml/docbook/xsl-stylesheets-1.29/html/'
+                    'docbook.xsl',
             },
             'default_transform': '',
         }
@@ -77,7 +79,9 @@ printed on stdout.
             'default_transform': (
                 'string',
                 'Default xslt',
-                'Default xslt, used when no specific transformation is found.'),
+                'Default xslt, used when no specific transformation is '
+                'found.'
+            ),
         }
         self.config.update(kwargs)
         if name:

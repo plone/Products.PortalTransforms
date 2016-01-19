@@ -1,4 +1,6 @@
-from plone.intelligenttext.transforms import convertHtmlToWebIntelligentPlainText
+# -*- coding: utf-8 -*-
+from plone.intelligenttext.transforms import \
+    convertHtmlToWebIntelligentPlainText
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 

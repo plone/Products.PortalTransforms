@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Register Transforms
 # This is interesting because we don't expect all transforms to be
 # available on all platforms. To do this we allow things to fail at

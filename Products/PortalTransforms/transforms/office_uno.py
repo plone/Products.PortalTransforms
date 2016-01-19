@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import CloseVetoException
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 

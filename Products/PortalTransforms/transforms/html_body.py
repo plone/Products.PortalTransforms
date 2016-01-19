@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from zope.interface import implements

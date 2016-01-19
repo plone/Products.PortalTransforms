@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from App.class_init import InitializeClass

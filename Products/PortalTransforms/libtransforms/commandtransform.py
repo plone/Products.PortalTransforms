@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os.path import basename
 from os.path import join
 from Products.PortalTransforms.interfaces import ITransform

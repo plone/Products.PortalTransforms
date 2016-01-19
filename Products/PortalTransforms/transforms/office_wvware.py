@@ -1,4 +1,5 @@
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+# -*- coding: utf-8 -*-
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 

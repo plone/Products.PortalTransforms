@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Uses Roberto A. F. De Almeida's http://dealmeida.net/ module to do its
 handy work

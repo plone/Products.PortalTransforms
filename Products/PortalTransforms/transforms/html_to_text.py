@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.retransform import retransform
 
 import htmlentitydefs

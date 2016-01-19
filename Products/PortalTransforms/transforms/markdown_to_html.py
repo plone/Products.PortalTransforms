@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Uses the http://www.freewisdom.org/projects/python-markdown/ module
 

@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
 # Need to be imported first to avoid dll loading problems.
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+import pywintypes
+import pythoncom
+
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 from win32com.client import constants
@@ -8,8 +12,6 @@ from win32com.client import gencache
 
 import os
 import os.path
-import pythoncom
-import pywintypes
 import re
 import string
 import sys

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from StringIO import StringIO
 from zope.interface import implements

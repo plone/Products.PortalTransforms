@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Original code from active state recipe
         'Colorize Python source using the built-in tokenizer'
