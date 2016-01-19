@@ -10,7 +10,8 @@ New:
 
 Fixes:
 
-- *add item here*
+- cleanup: autopep8, isort sorted imports, utf8 header, minor manual edits.
+  [jensens]
 
 
 2.1.10 (2015-09-15)
