@@ -15,8 +15,8 @@ class curry:
         self.fixed_args = fixed_args
 
     def __call__(self, *variable_args):
-        return apply(self.func, self.fixed_args +
-                     variable_args)
+        return self.func(*self.fixed_args +
+                         variable_args)
 
 data = open("/tmp/word.doc", "r").read()
 

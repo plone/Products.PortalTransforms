@@ -21,7 +21,7 @@ def register():
         else:
             res = unichr(result)
 
-        if type(full) is unicode:
+        if isinstance(full, unicode):
             return res
         return res.encode('utf-8')
 

@@ -2656,7 +2656,7 @@ class SafeHTML:
                     remove_javascript=self.config.get(
                         'remove_javascript', True),
                     raise_error=False)
-            except IllegalHTML, inst:
+            except IllegalHTML as inst:
                 data.setData(msg_pat % ("Error", str(inst)))
                 break
             else:

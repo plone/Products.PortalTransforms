@@ -24,7 +24,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from DocumentTemplate.DT_Util import html_quote
 
-## Python Source Parser #####################################################
+# Python Source Parser #####################################################
 
 _KEYWORD = token.NT_OFFSET + 1
 _TEXT = token.NT_OFFSET + 2
@@ -47,7 +47,7 @@ class Parser:
         # store line offsets in self.lines
         self.lines = [0, 0]
         pos = 0
-        while 1:
+        while True:
             pos = string.find(self.raw, '\n', pos) + 1
             if not pos:
                 break
@@ -60,20 +60,18 @@ class Parser:
         self.out.write('<pre class="python">\n')
         try:
             tokenize.tokenize(text.readline, self)
-        except tokenize.TokenError, ex:
+        except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
             self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
         self.out.write('\n</pre>\n')
 
-    def __call__(self, toktype, toktext, (srow, scol), (erow, ecol), line):
+    def __call__(self, toktype, toktext, sx, ex, line):
         """ Token handler.
         """
-        # print "type", toktype, token.tok_name[toktype], "text", toktext,
-        # print "start", srow,scol, "end", erow,ecol, "<br>"
-
-        # calculate new positions
+        (srow, scol) = sx
+        (erow, ecol) = ex
         oldpos = self.pos
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)
@@ -119,22 +117,22 @@ class PythonTransform:
     output = "text/html"
 
     config = {
-        'OPEN_NUMBER':       '<span style="color: #0080C0;">',
-        'CLOSE_NUMBER':      '</span>',
-        'OPEN_OP':           '<span style="color: #0000C0;">',
-        'CLOSE_OP':          '</span>',
-        'OPEN_STRING':       '<span style="color: #004080;">',
-        'CLOSE_STRING':      '</span>',
-        'OPEN_COMMENT':      '<span style="color: #008000;">',
-        'CLOSE_COMMENT':      '</span>',
-        'OPEN_NAME':         '<span style="color: #000000;">',
-        'CLOSE_NAME':        '</span>',
-        'OPEN_ERRORTOKEN':   '<span style="color: #FF8080;">',
-        'CLOSE_ERRORTOKEN':  '</span>',
-        'OPEN_KEYWORD':      '<span style="color: #C00000;">',
-        'CLOSE_KEYWORD':     '</span>',
-        'OPEN_TEXT':         '',
-        'CLOSE_TEXT':        '',
+        'OPEN_NUMBER': '<span style="color: #0080C0;">',
+        'CLOSE_NUMBER': '</span>',
+        'OPEN_OP': '<span style="color: #0000C0;">',
+        'CLOSE_OP': '</span>',
+        'OPEN_STRING': '<span style="color: #004080;">',
+        'CLOSE_STRING': '</span>',
+        'OPEN_COMMENT': '<span style="color: #008000;">',
+        'CLOSE_COMMENT': '</span>',
+        'OPEN_NAME': '<span style="color: #000000;">',
+        'CLOSE_NAME': '</span>',
+        'OPEN_ERRORTOKEN': '<span style="color: #FF8080;">',
+        'CLOSE_ERRORTOKEN': '</span>',
+        'OPEN_KEYWORD': '<span style="color: #C00000;">',
+        'CLOSE_KEYWORD': '</span>',
+        'OPEN_TEXT': '',
+        'CLOSE_TEXT': '',
     }
 
     def name(self):

@@ -405,7 +405,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
     tests = []
     for _transform, tr_input, tr_output, _normalize, _subobjects in test_descr:
         # load transform if necessary
-        if type(_transform) is type(''):
+        if isinstance(_transform, type('')):
             try:
                 _transform = load(_transform).register()
             except MissingBinary:

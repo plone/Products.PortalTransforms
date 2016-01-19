@@ -25,7 +25,7 @@ def import_from_name(module_name):
     try:
         for sub in module_name.split('.')[1:]:
             m = getattr(m, sub)
-    except AttributeError, e:
+    except AttributeError as e:
         raise ImportError(str(e))
     return m
 
@@ -35,7 +35,7 @@ def make_config_persistent(kwargs):
     dictionary by persistent mapping.
     """
     for key, value in kwargs.items():
-        if type(value) == type({}):
+        if isinstance(value, type({})):
             p_value = PersistentMapping(value)
             kwargs[key] = p_value
         elif type(value) in (type(()), type([])):
@@ -151,7 +151,7 @@ class Transform(SimpleItem):
     def _load_transform(self):
         try:
             m = import_from_name(self.module)
-        except ImportError, err:
+        except ImportError as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = ("Cannot register transform %s (ImportError), using "
                    "BrokenTransform: Error\n %s" % (self.id, err))
@@ -164,7 +164,7 @@ class Transform(SimpleItem):
             raise TransformException(msg)
         try:
             transform = m.register()
-        except Exception, err:
+        except Exception as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = ("Cannot register transform %s, using BrokenTransform: "
                    "Error\n %s" % (self.id, err))
@@ -212,8 +212,7 @@ class Transform(SimpleItem):
         """ get transform's parameters names """
         if not hasattr(self, '_v_transform'):
             self._load_transform()
-        keys = self._v_transform.config.keys()
-        keys.sort()
+        keys = sorted(self._v_transform.config.keys())
         return keys
 
     security.declareProtected(ManagePortal, 'get_parameter_value')

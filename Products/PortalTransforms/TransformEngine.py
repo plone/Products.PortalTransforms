@@ -349,7 +349,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                         # which also reach the required transform.
                         shortest = len(firstPath)
                         shortestFirstPath = firstPath
-            if shortestFirstPath == None:
+            if shortestFirstPath is None:
                 return None  # there is no path leading to this transform
             # Then we have to take this transform.
             secondPath = [requiredTransform]
