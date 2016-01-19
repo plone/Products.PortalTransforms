@@ -5,7 +5,7 @@ import unittest
 modules = (
     'Products.PortalTransforms.transforms.safe_html',
     'Products.PortalTransforms.transforms.rest',
-    )
+)
 
 
 def test_suite():

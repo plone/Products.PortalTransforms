@@ -8,7 +8,7 @@ from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
 
 from utils import input_file_path, output_file_path, normalize_html,\
-     load, matching_inputs
+    load, matching_inputs
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 
@@ -18,14 +18,14 @@ from Products.PortalTransforms.transforms.image_to_png import image_to_png
 from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
 from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
-from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
-from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
+from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
+from Products.PortalTransforms.transforms.image_to_pcx import image_to_pcx
 
 from Products.PortalTransforms.transforms.word_to_html import word_to_html
 
-from Products.PortalTransforms.transforms.safe_html  import SafeHTML
-from Products.PortalTransforms.transforms.safe_html  import VALID_TAGS
-from Products.PortalTransforms.transforms.safe_html  import NASTY_TAGS
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
+from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
+from Products.PortalTransforms.transforms.safe_html import NASTY_TAGS
 
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
@@ -69,10 +69,10 @@ class TransformTest(ATSiteTestCase):
         got_start = got.strip()[:20]
         expected_start = expected.strip()[:20]
         self.assertEqual(got_start, expected_start,
-                          '[%s]\n\n!=\n\n[%s]\n\nIN %s(%s)' % (
-            got_start, expected_start, self.transform.name(), self.input))
+                         '[%s]\n\n!=\n\n[%s]\n\nIN %s(%s)' % (
+                             got_start, expected_start, self.transform.name(), self.input))
         self.assertEqual(self.subobjects, len(res_data.getSubObjects()),
-                          '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
+                         '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
             self.subobjects, len(res_data.getSubObjects()),
             self.transform.name(), self.input))
 
@@ -93,6 +93,7 @@ class TransformTest(ATSiteTestCase):
 
 
 class PILTransformsTest(ATSiteTestCase):
+
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
@@ -104,7 +105,7 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/jpeg')
+                         'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/x-ms-bmp', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/x-ms-bmp')
 
@@ -113,7 +114,7 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/png')
+                         'image/png')
         data = self.pt.convertTo(target_mimetype='image/gif', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/gif')
 
@@ -122,7 +123,7 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/gif')
+                         'image/gif')
         data = self.pt.convertTo(target_mimetype='image/jpeg', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/jpeg')
 
@@ -131,7 +132,7 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/jpeg')
+                         'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/png', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/png')
 
@@ -140,7 +141,7 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.gif'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/gif')
+                         'image/gif')
         data = self.pt.convertTo(target_mimetype='image/pcx', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/pcx')
 
@@ -149,18 +150,18 @@ class PILTransformsTest(ATSiteTestCase):
         imgFile = open(input_file_path('logo.png'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/png')
+                         'image/png')
         data = self.pt.convertTo(target_mimetype='image/x-portable-pixmap',
                                  orig=data)
         self.assertEqual(data.getMetadata()['mimetype'],
-                             'image/x-portable-pixmap')
+                         'image/x-portable-pixmap')
 
     def test_image_to_tiff(self):
         self.pt.registerTransform(image_to_tiff())
         imgFile = open(input_file_path('logo.jpg'), 'rb')
         data = imgFile.read()
         self.assertEqual(self.mimetypes_registry.classify(data),
-                             'image/jpeg')
+                         'image/jpeg')
         data = self.pt.convertTo(target_mimetype='image/tiff', orig=data)
         self.assertEqual(data.getMetadata()['mimetype'], 'image/tiff')
 
@@ -194,6 +195,7 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         orig = '<p>bar &#0109; foo</p>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), orig)
+
 
 class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
 
@@ -286,7 +288,7 @@ class ParsersTestCase(unittest.TestCase):
 
     def test_javascript_on_attr(self):
         from Products.PortalTransforms.libtransforms.utils import (
-                scrubHTMLNoRaise, scrubHTML)
+            scrubHTMLNoRaise, scrubHTML)
         from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 
         htmlFile = open(input_file_path('test_js_on.html'), 'rb')
@@ -297,7 +299,7 @@ class ParsersTestCase(unittest.TestCase):
 
     def test_javascript_uri(self):
         from Products.PortalTransforms.libtransforms.utils import (
-                scrubHTMLNoRaise, scrubHTML)
+            scrubHTMLNoRaise, scrubHTML)
         from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 
         htmlFile = open(input_file_path('test_js_uri.html'), 'rb')
@@ -308,7 +310,7 @@ class ParsersTestCase(unittest.TestCase):
 
     def test_invalid_tags(self):
         from Products.PortalTransforms.libtransforms.utils import (
-                scrubHTMLNoRaise, scrubHTML)
+            scrubHTMLNoRaise, scrubHTML)
         from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 
         htmlFile = open(input_file_path('test_invalid_tags.html'), 'rb')
@@ -360,26 +362,26 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.image_to_pcx',
      "logo.png", "logo.pcx", None, 0,
      ),
-   )
+)
 if HAS_MARKDOWN:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.markdown_to_html',
          "markdown.txt", "markdown.html", None, 0,
          ),
-       )
+    )
 if HAS_TEXTILE:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.textile_to_html',
          "input.textile", "textile.html", None, 0,
-        ),
-       )
+         ),
+    )
 
 
 def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
     for fname in matching_inputs(pattern):
         outname = '%s.out' % fname.split('.')[0]
-        #print transform, fname, outname
+        # print transform, fname, outname
         TRANSFORMS_TESTINFO += ((transform, fname, outname, normalize, 0),)
 
 

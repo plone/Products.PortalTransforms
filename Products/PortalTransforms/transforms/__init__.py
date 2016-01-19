@@ -1,15 +1,15 @@
-### Register Transforms
-### This is interesting because we don't expect all transforms to be
-### available on all platforms. To do this we allow things to fail at
-### two levels
-### 1) Imports
-###    If the import fails the module is removed from the list and
-###    will not be processed/registered
-### 2) Registration
-###    A second phase happens when the loaded modules register method
-###    is called and this produces an instance that will be used to
-###    implement the transform, if register needs to fail for now it
-###    should raise an ImportError as well (dumb, I know)
+# Register Transforms
+# This is interesting because we don't expect all transforms to be
+# available on all platforms. To do this we allow things to fail at
+# two levels
+# 1) Imports
+# If the import fails the module is removed from the list and
+# will not be processed/registered
+# 2) Registration
+# A second phase happens when the loaded modules register method
+# is called and this produces an instance that will be used to
+# implement the transform, if register needs to fail for now it
+# should raise an ImportError as well (dumb, I know)
 
 from logging import DEBUG, ERROR
 from Products.PortalTransforms.utils import log
@@ -37,11 +37,15 @@ modules = [
     'lynx_dump',      # lynx -dump
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
-    'markdown_to_html',  # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
-    'textile_to_html',  # textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
+    # markdown, depends on
+    # http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
+    'markdown_to_html',
+    # textile, depends on PyTextile
+    # http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
+    'textile_to_html',
     'web_intelligent_plain_text_to_html',
     'html_to_web_intelligent_plain_text',
-    ]
+]
 
 g = globals()
 transforms = []

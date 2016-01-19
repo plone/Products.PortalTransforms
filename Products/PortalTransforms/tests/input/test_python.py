@@ -1,11 +1,15 @@
 """ nice docstring """
 
-class A : pass
+
+class A:
+    pass
 
 # comment
 
+
 def inc(i):
-    return i+1
+    return i + 1
+
 
 def greater(a, b):
     """foo <html />"""

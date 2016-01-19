@@ -29,7 +29,7 @@ class document(commandtransform):
 
         if os.name == 'posix':
             os.system('cd "%s" && %s --charset=utf-8 "%s" "%s.html"' % (
-                    tmpdir, self.binary, self.fullname, self.__name__))
+                tmpdir, self.binary, self.fullname, self.__name__))
 
     def html(self):
         htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')

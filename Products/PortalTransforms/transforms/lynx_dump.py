@@ -47,8 +47,8 @@ class old_lynx_dump(commandtransform):
         return cache
 
     def invokeCommand(self, tmpdir, inputname, outname):
-        os.system('cd "%s" && %s %s "%s" 1>"%s" 2>/dev/null' % \
-               (tmpdir, self.binary, self.binaryArgs, inputname, outname))
+        os.system('cd "%s" && %s %s "%s" 1>"%s" 2>/dev/null' %
+                  (tmpdir, self.binary, self.binaryArgs, inputname, outname))
 
     def astext(self, outname):
         txtfile = open("%s" % (outname), 'r')

@@ -26,13 +26,13 @@ class document(commandtransform):
 
         localContext = uno.getComponentContext()
         resolver = localContext.ServiceManager.createInstanceWithContext(
-                       'com.sun.star.bridge.UnoUrlResolver', localContext)
+            'com.sun.star.bridge.UnoUrlResolver', localContext)
         ctx = resolver.resolve(
-                       'uno:socket,host=localhost,port=2002;'
-                       'urp;StarOffice.ComponentContext')
+            'uno:socket,host=localhost,port=2002;'
+            'urp;StarOffice.ComponentContext')
         smgr = ctx.ServiceManager
         desktop = smgr.createInstanceWithContext(
-                       'com.sun.star.frame.Desktop', ctx)
+            'com.sun.star.frame.Desktop', ctx)
 
         # load the document
         url = unohelper.systemPathToFileUrl(self.fullname)
@@ -40,8 +40,8 @@ class document(commandtransform):
 
         filterName = 'swriter: HTML (StarWriter)'
         storeProps = (
-                       PropertyValue('FilterName', 0, filterName, 0),
-                      )
+            PropertyValue('FilterName', 0, filterName, 0),
+        )
 
         # pre-create a empty file for security reason
         url = unohelper.systemPathToFileUrl(self.outputfile)

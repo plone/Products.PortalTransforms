@@ -30,7 +30,7 @@ class ExternalCommandTransform(commandtransform):
             'command_line': '',
             'inputs': ('text/plain',),
             'output': 'text/plain',
-            }
+        }
         self.config_metadata = {
             'binary_path': (
                 'string',
@@ -51,7 +51,7 @@ The transformation\'s result must be printed on stdout.
                 'string',
                 'Output',
                 'Output MIME type. Change with care.'),
-            }
+        }
         self.config.update(kwargs)
         commandtransform.__init__(self, name=name,
                                   binary=self.config['binary_path'], **kwargs)

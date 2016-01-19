@@ -39,9 +39,9 @@ class XsltTransform(commandtransform):
             'dtds': {
                 '-//OASIS//DTD DocBook V4.1//EN':
                     '/usr/share/sgml/docbook/xsl-stylesheets-1.29/html/docbook.xsl',
-                },
+            },
             'default_transform': '',
-            }
+        }
         self.config_metadata = {
             'binary_path': (
                 'string',
@@ -76,7 +76,7 @@ printed on stdout.
                 'string',
                 'Default xslt',
                 'Default xslt, used when no specific transformation is found.'),
-            }
+        }
         self.config.update(kwargs)
         if name:
             self.__name__ = name

@@ -60,7 +60,7 @@ class pdf_to_html(commandtransform):
     def invokeCommand(self, tmpdir, fullname):
         if os.name == 'posix':
             cmd = 'cd "%s" && %s %s "%s" 2>error_log 1>/dev/null' % (
-                   tmpdir, self.binary, self.binaryArgs, fullname)
+                tmpdir, self.binary, self.binaryArgs, fullname)
         else:
             cmd = 'cd "%s" && %s %s "%s"' % (
                   tmpdir, self.binary, self.binaryArgs, fullname)

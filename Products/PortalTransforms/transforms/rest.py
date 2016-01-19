@@ -56,7 +56,7 @@ class rest:
             'output': self.output,
             'report_level': 2,
             'initial_header_level': 2,
-            }
+        }
 
         self.config_metadata = {
             'inputs':
@@ -69,7 +69,7 @@ class rest:
                 ('int', 'Report Level',
                  'Level of error reporting. Set to "1" will display all '
                  'messages. Setting it to "5" will display no messages.'),
-            }
+        }
 
         self.config.update(kwargs)
 

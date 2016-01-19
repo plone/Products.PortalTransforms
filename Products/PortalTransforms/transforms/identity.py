@@ -19,13 +19,13 @@ class IdentityTransform:
         self.config = {
             'inputs': ('text/x-rst',),
             'output': 'text/plain',
-            }
+        }
         self.config_metadata = {
             'inputs':
                 ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
             'output':
                 ('string', 'Output', 'Output MIME type. Change with care.'),
-            }
+        }
         self.config.update(kwargs)
 
     def __getattr__(self, attr):

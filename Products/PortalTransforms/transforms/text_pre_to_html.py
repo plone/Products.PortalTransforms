@@ -16,7 +16,7 @@ class TextPreToHTML:
         self.config_metadata = {
             'inputs': ('list', 'Inputs',
                        'Input(s) MIME type. Change with care.'),
-            }
+        }
         if name:
             self.__name__ = name
 

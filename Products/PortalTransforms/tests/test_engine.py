@@ -10,6 +10,7 @@ import re
 
 
 class BaseTransform:
+
     def name(self):
         return getattr(self, '__name__', self.__class__.__name__)
 
@@ -122,7 +123,7 @@ class TestEngine(ATSiteTestCase):
             self.engine.manage_delPolicies([mt])
 
     def register(self):
-        #A default set of transforms to prove the interfaces work
+        # A default set of transforms to prove the interfaces work
         self.engine.registerTransform(HtmlToText())
         self.engine.registerTransform(FooToBar())
 
@@ -226,9 +227,9 @@ class TestEngine(ATSiteTestCase):
 
         path = self.engine._findPath('text/html', mt, required)
         self.assertEqual(str(path),
-                             "[<Transform at dummy_html_filter1>, "
-                             "<Transform at dummy_html_filter2>, "
-                             "<Transform at safe_html>]")
+                         "[<Transform at dummy_html_filter1>, "
+                         "<Transform at dummy_html_filter2>, "
+                         "<Transform at safe_html>]")
 
     def testSame(self):
         data = "This is a test"

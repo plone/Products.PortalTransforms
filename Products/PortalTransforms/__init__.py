@@ -4,7 +4,7 @@ PKG_NAME = 'PortalTransforms'
 
 tools = (
     TransformTool,
-    )
+)
 
 # XXX backward compatibility tricks to make old PortalTransform based Mimetypes
 # running (required)

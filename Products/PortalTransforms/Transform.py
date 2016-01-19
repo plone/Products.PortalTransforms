@@ -60,7 +60,7 @@ VALIDATORS = {
     'string': str,
     'list': PersistentList,
     'dict': PersistentMapping,
-    }
+}
 
 
 class Transform(SimpleItem):
@@ -79,7 +79,7 @@ class Transform(SimpleItem):
          {'label': 'Reload',
           'action': 'manage_reloadTransform'},) +
         SimpleItem.manage_options
-        )
+    )
 
     manage_main = PageTemplateFile('configureTransform', _www)
     manage_reloadTransform = PageTemplateFile('reloadTransform', _www)
@@ -176,6 +176,7 @@ class Transform(SimpleItem):
         return transform
 
     security.declarePrivate('manage_beforeDelete')
+
     def manage_beforeDelete(self, item, container):
         SimpleItem.manage_beforeDelete(self, item, container)
         if self is item:
@@ -184,6 +185,7 @@ class Transform(SimpleItem):
             tr_tool._unmapTransform(self)
 
     security.declarePublic('get_documentation')
+
     def get_documentation(self):
         """ return transform documentation """
         if not hasattr(self, '_v_transform'):
@@ -191,6 +193,7 @@ class Transform(SimpleItem):
         return self._v_transform.__doc__
 
     security.declarePublic('convert')
+
     def convert(self, *args, **kwargs):
         # return apply the transform and return the result
         if not hasattr(self, '_v_transform'):
@@ -198,11 +201,13 @@ class Transform(SimpleItem):
         return self._v_transform.convert(*args, **kwargs)
 
     security.declarePublic('name')
+
     def name(self):
         """return the name of the transform instance"""
         return self.id
 
     security.declareProtected(ManagePortal, 'get_parameters')
+
     def get_parameters(self):
         """ get transform's parameters names """
         if not hasattr(self, '_v_transform'):
@@ -212,6 +217,7 @@ class Transform(SimpleItem):
         return keys
 
     security.declareProtected(ManagePortal, 'get_parameter_value')
+
     def get_parameter_value(self, key):
         """ get value of a transform's parameter """
         value = self._config[key]
@@ -228,6 +234,7 @@ class Transform(SimpleItem):
         return result
 
     security.declareProtected(ManagePortal, 'get_parameter_infos')
+
     def get_parameter_infos(self, key):
         """ get informations about a parameter
 
@@ -243,6 +250,7 @@ class Transform(SimpleItem):
             return 'string', '', ''
 
     security.declareProtected(ManagePortal, 'set_parameters')
+
     def set_parameters(self, REQUEST=None, **kwargs):
         """ set transform's parameters """
         if not kwargs:
@@ -275,6 +283,7 @@ class Transform(SimpleItem):
                 tr_tool.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'reload')
+
     def reload(self):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)

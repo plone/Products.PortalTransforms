@@ -23,6 +23,7 @@ except ImportError:
     # Zope <=2.12
     from AccessControl.Role import RoleManager
 
+
 class chain(UserList):
     """A chain of transforms used to transform data"""
 
@@ -81,8 +82,8 @@ class chain(UserList):
         self.inputs = self[0].inputs
         self.output = self[-1].output
         for i in range(len(self)):
-            if hasattr(self[-i-1], 'output_encoding'):
-                self.output_encoding = self[-i-1].output_encoding
+            if hasattr(self[-i - 1], 'output_encoding'):
+                self.output_encoding = self[-i - 1].output_encoding
                 break
         else:
             try:
@@ -132,6 +133,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         self.output = c.output or 'application/octet-stream'
 
     security.declarePublic('convert')
+
     def convert(self, *args, **kwargs):
         """ return apply the transform and return the result """
         if self._chain is None:
@@ -139,11 +141,13 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         return self._chain.convert(*args, **kwargs)
 
     security.declarePublic('name')
+
     def name(self):
         """return the name of the transform instance"""
         return self.id
 
     security.declarePrivate('manage_beforeDelete')
+
     def manage_beforeDelete(self, item, container):
         Item.manage_beforeDelete(self, item, container)
         if self is item:
@@ -152,6 +156,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
             tr_tool.unregisterTransform(self.id)
 
     security.declareProtected(ManagePortal, 'manage_addObject')
+
     def manage_addObject(self, id, REQUEST=None):
         """ add a new transform or chain to the chain """
         assert id not in self._object_ids
@@ -161,6 +166,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_delObjects')
+
     def manage_delObjects(self, ids, REQUEST=None):
         """ delete the selected mime types """
         for id in ids:
@@ -172,6 +178,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     # transforms order handling #
 
     security.declareProtected(ManagePortal, 'move_object_to_position')
+
     def move_object_to_position(self, id, newpos):
         """ overriden from OrderedFolder to store id instead of objects
         """
@@ -184,6 +191,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         return 1
 
     security.declareProtected(ManageProperties, 'move_object_up')
+
     def move_object_up(self, id, REQUEST=None):
         """  move object with the given id up in the list """
         newpos = self._object_ids.index(id) - 1
@@ -192,6 +200,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManageProperties, 'move_object_down')
+
     def move_object_down(self, id, REQUEST=None):
         """  move object with the given id down in the list """
         newpos = self._object_ids.index(id) + 1
@@ -202,6 +211,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     # Z transform interface #
 
     security.declareProtected(ManagePortal, 'reload')
+
     def reload(self):
         """ reload the module where the transformation class is defined """
         for tr in self.objectValues():
@@ -211,6 +221,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
     # utilities #
 
     security.declareProtected(ManagePortal, 'listAddableObjectIds')
+
     def listAddableObjectIds(self):
         """ return a list of addable transform """
         tr_tool = getToolByName(self, 'portal_transforms')
@@ -218,11 +229,13 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
                 if not (id == self.id or id in self._object_ids)]
 
     security.declareProtected(ManagePortal, 'objectIds')
+
     def objectIds(self):
         """ return a list of addable transform """
         return tuple(self._object_ids)
 
     security.declareProtected(ManagePortal, 'objectValues')
+
     def objectValues(self):
         """ return a list of addable transform """
         tr_tool = getToolByName(self, 'portal_transforms')

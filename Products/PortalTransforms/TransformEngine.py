@@ -42,7 +42,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     meta_types = all_meta_types = (
         {'name': 'Transform', 'action': 'manage_addTransformForm'},
         {'name': 'TransformsChain', 'action': 'manage_addTransformsChainForm'},
-        )
+    )
 
     manage_addTransformForm = PageTemplateFile('addTransform', _www)
     manage_addTransformsChainForm = PageTemplateFile(
@@ -58,7 +58,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
          {'label': 'Policy', 'action': 'manage_editTransformationPolicyForm'},
          {'label': 'Reload transforms',
           'action': 'manage_reloadAllTransforms'},
-        ))
+         ))
 
     security = ClassSecurityInfo()
 
@@ -71,6 +71,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     # mimetype oriented conversions (iengine interface)
 
     security.declarePrivate('unregisterTransform')
+
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -80,6 +81,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._delObject(name)
 
     security.declarePublic('convertTo')
+
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -136,7 +138,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 severity=DEBUG)
             return None
 
-        ## fastpath
+        # fastpath
         # If orig_mt and target_mt are the same, we only allow
         # a one-hop transform, a.k.a. filter.
         # XXX disabled filtering for now
@@ -148,7 +150,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 cache.setCache(str(target_mimetype), data)
             return data
 
-        ## get a path to output mime type
+        # get a path to output mime type
         requirements = self._policies.get(str(target_mt), [])
         path = self._findPath(orig_mt, target_mt, list(requirements))
         if not path and requirements:
@@ -162,7 +164,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return None
 
         if len(path) > 1:
-            ## create a chain on the fly (sly)
+            # create a chain on the fly (sly)
             transform = chain()
             for t in path:
                 transform.registerTransform(t)
@@ -183,6 +185,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     del convertTo.__doc__
 
     security.declarePublic('convertToData')
+
     def convertToData(self, target_mimetype, orig, data=None, object=None,
                       usedby=None, context=None, **kwargs):
         # Convert to a given mimetype and return the raw data
@@ -194,6 +197,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         return None
 
     security.declarePublic('convert')
+
     def convert(self, name, orig, data=None, context=None, **kwargs):
         # run a tranform of a given name on data
 
@@ -468,6 +472,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         return result
 
     security.declarePrivate('manage_afterAdd')
+
     def manage_afterAdd(self, item, container):
         """ overload manage_afterAdd to finish initialization when the
         transform tool is added
@@ -480,6 +485,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             pass
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
+
     def manage_addTransform(self, id, module, REQUEST=None):
         """ add a new transform to the tool """
         transform = Transform(id, module)
@@ -489,6 +495,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
+
     def manage_addTransformsChain(self, id, description, REQUEST=None):
         """ add a new transform to the tool """
         transform = TransformsChain(id, description)
@@ -498,6 +505,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'manage_addTransform')
+
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
@@ -505,6 +513,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
     security.declareProtected(ManagePortal, 'reloadTransforms')
+
     def reloadTransforms(self, ids=()):
         """ reload transforms with the given ids
         if no ids, reload all registered transforms
@@ -537,7 +546,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._policies[output_mimetype] = required_transforms
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                '/manage_editTransformationPolicyForm')
+                                         '/manage_editTransformationPolicyForm')
 
     def manage_delPolicies(self, outputs, REQUEST=None):
         """ remove policies for given output mime types"""
@@ -545,7 +554,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             del self._policies[mimetype]
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                '/manage_editTransformationPolicyForm')
+                                         '/manage_editTransformationPolicyForm')
 
     def listPolicies(self):
         """ return the list of defined policies
@@ -560,6 +569,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     # mimetype oriented conversions (iengine interface)
 
     security.declarePrivate('registerTransform')
+
     def registerTransform(self, transform):
         """register a new transform
 
@@ -580,6 +590,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._mapTransform(transform)
 
     security.declareProtected(ManagePortal, 'ZopeFind')
+
     def ZopeFind(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """
@@ -589,6 +600,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             log('ZopeFind: catched MissingBinary exception')
 
     security.declareProtected(View, 'objectItems')
+
     def objectItems(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """

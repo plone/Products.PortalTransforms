@@ -18,7 +18,7 @@ class HTMLBody:
                 ('list',
                  'Inputs',
                  'Input(s) MIME type. Change with care.'),
-            }
+        }
         if name:
             self.__name__ = name
 

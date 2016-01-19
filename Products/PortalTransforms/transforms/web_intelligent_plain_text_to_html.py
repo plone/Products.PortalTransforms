@@ -24,7 +24,7 @@ class WebIntelligentPlainTextToHtml:
                 'string',
                 'Tab width',
                 'Number of spaces for a tab in the input'),
-            }
+        }
         if name:
             self.__name__ = name
 

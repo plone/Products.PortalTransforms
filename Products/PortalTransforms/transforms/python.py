@@ -70,29 +70,29 @@ class Parser:
     def __call__(self, toktype, toktext, (srow, scol), (erow, ecol), line):
         """ Token handler.
         """
-        #print "type", toktype, token.tok_name[toktype], "text", toktext,
-        #print "start", srow,scol, "end", erow,ecol, "<br>"
+        # print "type", toktype, token.tok_name[toktype], "text", toktext,
+        # print "start", srow,scol, "end", erow,ecol, "<br>"
 
-        ## calculate new positions
+        # calculate new positions
         oldpos = self.pos
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)
 
-        ## handle newlines
+        # handle newlines
         if toktype in [token.NEWLINE, tokenize.NL]:
             self.out.write('\n')
             return
 
-        ## send the original whitespace, if needed
+        # send the original whitespace, if needed
         if newpos > oldpos:
             self.out.write(self.raw[oldpos:newpos])
 
-        ## skip indenting tokens
+        # skip indenting tokens
         if toktype in [token.INDENT, token.DEDENT]:
             self.pos = newpos
             return
 
-        ## map token type to a group
+        # map token type to a group
         if token.LPAR <= toktype and toktype <= token.OP:
             toktype = 'OP'
         elif toktype == token.NAME and keyword.iskeyword(toktext):
@@ -100,10 +100,10 @@ class Parser:
         else:
             toktype = tokenize.tok_name[toktype]
 
-        open_tag = self.tags.get('OPEN_'+toktype, self.tags['OPEN_TEXT'])
-        close_tag = self.tags.get('CLOSE_'+toktype, self.tags['CLOSE_TEXT'])
+        open_tag = self.tags.get('OPEN_' + toktype, self.tags['OPEN_TEXT'])
+        close_tag = self.tags.get('CLOSE_' + toktype, self.tags['CLOSE_TEXT'])
 
-        ## send text
+        # send text
         self.out.write(open_tag)
         self.out.write(html_quote(toktext))
         self.out.write(close_tag)
@@ -135,7 +135,7 @@ class PythonTransform:
         'CLOSE_KEYWORD':     '</span>',
         'OPEN_TEXT':         '',
         'CLOSE_TEXT':        '',
-        }
+    }
 
     def name(self):
         return self.__name__

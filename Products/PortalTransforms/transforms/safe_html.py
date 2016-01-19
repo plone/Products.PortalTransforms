@@ -9,69 +9,20 @@ from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.utils import safeToInt
 
+
 class IllegalHTML(ValueError):
     """ Illegal HTML error.
     """
 
 
 # These are the HTML tags that we will leave intact
-VALID_TAGS = { 'a'          : 1
-             , 'b'          : 1
-             , 'base'       : 0
-             , 'big'        : 1
-             , 'blockquote' : 1
-             , 'body'       : 1
-             , 'br'         : 0
-             , 'caption'    : 1
-             , 'cite'       : 1
-             , 'code'       : 1
-             , 'dd'         : 1
-             , 'div'        : 1
-             , 'dl'         : 1
-             , 'dt'         : 1
-             , 'em'         : 1
-             , 'h1'         : 1
-             , 'h2'         : 1
-             , 'h3'         : 1
-             , 'h4'         : 1
-             , 'h5'         : 1
-             , 'h6'         : 1
-             , 'head'       : 1
-             , 'hr'         : 0
-             , 'html'       : 1
-             , 'i'          : 1
-             , 'img'        : 0
-             , 'kbd'        : 1
-             , 'li'         : 1
-           # , 'link'       : 1 type="script" hoses us
-             , 'meta'       : 0
-             , 'ol'         : 1
-             , 'p'          : 1
-             , 'pre'        : 1
-             , 'small'      : 1
-             , 'span'       : 1
-             , 'strong'     : 1
-             , 'sub'        : 1
-             , 'sup'        : 1
-             , 'table'      : 1
-             , 'tbody'      : 1
-             , 'td'         : 1
-             , 'th'         : 1
-             , 'title'      : 1
-             , 'tr'         : 1
-             , 'tt'         : 1
-             , 'u'          : 1
-             , 'ul'         : 1
-             , 'iframe'     : 1
-             }
+VALID_TAGS = {'a': 1, 'b': 1, 'base': 0, 'big': 1, 'blockquote': 1, 'body': 1, 'br': 0, 'caption': 1, 'cite': 1, 'code': 1, 'dd': 1, 'div': 1, 'dl': 1, 'dt': 1, 'em': 1, 'h1': 1, 'h2': 1, 'h3': 1, 'h4': 1, 'h5': 1, 'h6': 1, 'head': 1, 'hr': 0, 'html': 1, 'i': 1, 'img': 0, 'kbd': 1, 'li': 1              # , 'link'       : 1 type="script" hoses us
+              , 'meta': 0, 'ol': 1, 'p': 1, 'pre': 1, 'small': 1, 'span': 1, 'strong': 1, 'sub': 1, 'sup': 1, 'table': 1, 'tbody': 1, 'td': 1, 'th': 1, 'title': 1, 'tr': 1, 'tt': 1, 'u': 1, 'ul': 1, 'iframe': 1
+              }
 
-NASTY_TAGS = { 'script'     : 1
-             , 'object'     : 1
-             , 'embed'      : 1
-             , 'applet'     : 1
-             , 'style'      : 1  # this helps improve Word HTML cleanup.
-             , 'meta'       : 1  # allowed by parsers, but can cause unexpected behavior
-             }
+NASTY_TAGS = {'script': 1, 'object': 1, 'embed': 1, 'applet': 1, 'style': 1  # this helps improve Word HTML cleanup.
+              , 'meta': 1  # allowed by parsers, but can cause unexpected behavior
+              }
 
 
 # add some tags to allowed types.
@@ -120,7 +71,6 @@ VALID_TAGS['time'] = 1
 VALID_TAGS['video'] = 1
 
 
-
 msg_pat = """
 <div class="system-message">
 <p class="system-message-title">System message: %s</p>
@@ -128,6 +78,8 @@ msg_pat = """
 """
 
 CSS_COMMENT = re.compile(r'/\*.*\*/')
+
+
 def hasScript(s):
     """Dig out evil Java/VB script inside an HTML attribute.
 
@@ -153,6 +105,8 @@ def hasScript(s):
 
 
 CHR_RE = re.compile(r'\\(\d+)')
+
+
 def unescape_chr(matchobj):
     try:
         return chr(int(matchobj.group(1), 16))
@@ -172,7 +126,7 @@ def decode_charref(s):
             c = c.encode('utf8')
         return c
     except ValueError:
-        return '&#'+s+';'
+        return '&#' + s + ';'
 
 
 def decode_entityref(s):
@@ -192,6 +146,7 @@ def decode_entityref(s):
 
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")
 ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
+
 
 def decode_htmlentities(s):
     # Decode HTML5 entities (numeric or named).
@@ -1371,7 +1326,8 @@ html5entities = {
     'nesim;': u'\u2242\u0338',
     'NestedGreaterGreater;': u'\u226b',
     'NestedLessLess;': u'\u226a',
-    'NewLine;': u'\n', # should be \u240a but Chrome treats it as whitespace so...
+    # should be \u240a but Chrome treats it as whitespace so...
+    'NewLine;': u'\n',
     'nexist;': u'\u2204',
     'nexists;': u'\u2204',
     'Nfr;': u'\U0001d511',
@@ -2110,7 +2066,7 @@ html5entities = {
     'swnwar;': u'\u292a',
     'szlig;': u'\xdf',
     'szlig': u'\xdf',
-    'Tab;': u'\t', # should be \u2409 but Chrome treats it as whitespace so...
+    'Tab;': u'\t',  # should be \u2409 but Chrome treats it as whitespace so...
     'target;': u'\u2316',
     'Tau;': u'\u03a4',
     'tau;': u'\u03c4',
@@ -2521,7 +2477,7 @@ class StrippingParser(SGMLParser):
                 else:
                     self.result.append(' %s="%s"' % (k, v))
 
-            #UNUSED endTag = '</%s>' % tag
+            # UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):
                 self.result.append('>')
             else:
@@ -2547,17 +2503,17 @@ class StrippingParser(SGMLParser):
         """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
         """
         j = None
-        if self.rawdata[i:i+9] == '<![CDATA[':
+        if self.rawdata[i:i + 9] == '<![CDATA[':
             k = self.rawdata.find(']]>', i)
             if k == -1:
                 k = len(self.rawdata)
-            j = k+3
+            j = k + 3
         else:
             try:
                 j = SGMLParser.parse_declaration(self, i)
             except SGMLParseError:
                 j = len(self.rawdata)
-        return j  
+        return j
 
     def getResult(self):
         return ''.join(self.result)
@@ -2565,7 +2521,6 @@ class StrippingParser(SGMLParser):
 
 def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
               remove_javascript=True, raise_error=True):
-
     """ Strip illegal HTML tags from string text.
     """
     parser = StrippingParser(valid=valid, nasty=nasty,
@@ -2614,7 +2569,7 @@ class SafeHTML:
             'class_blacklist': [],
             'remove_javascript': 1,
             'disable_transform': 0,
-            }
+        }
 
         self.config_metadata = {
             'inputs': ('list',
@@ -2662,7 +2617,7 @@ class SafeHTML:
             'disable_transform': ("int",
                                   'disable_transform',
                                   'If 1, nothing is done.'),
-            }
+        }
 
         self.config.update(kwargs)
 
