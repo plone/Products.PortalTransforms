@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from StringIO import StringIO
-from zope.interface import implements
+from zope.interface import implementer
 
 import PIL.Image
 
 
+@implementer(ITransform)
 class PILTransforms:
-    implements(ITransform)
     __name__ = "piltransforms"
 
     def __init__(self, name=None):

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from reStructuredText import HTML
-from zope.interface import implements
+from zope.interface import implementer
 
 
-class rest:
+@implementer(ITransform)
+class rest(object):
     r"""Converts from reST to HTML.
 
       >>> transform = rest()
@@ -14,8 +15,9 @@ class rest:
 
       >>> data = transform.convert('*hello world*', D())
       >>> print data.value
+
       <p><em>hello world</em></p>
-      <BLANKLINE>
+    @<BLANKLINer>:(object)
 
     We want the 'raw' and 'include' directives to be disabled by
     default:
@@ -43,7 +45,6 @@ class rest:
       ...         print 'Failure'
       Good
     """
-    implements(ITransform)
 
     __name__ = "rest_to_html"
     inputs = ("text/x-rst", "text/restructured",)

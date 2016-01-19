@@ -13,11 +13,12 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.utils import log
-from zope.interface import implements
+from zope.interface import implementer
 
 import re
 
 
+@implementer(ITransform)
 class XsltTransform(commandtransform):
     """ Custom external command
 
@@ -27,7 +28,6 @@ class XsltTransform(commandtransform):
 
     You can associate different document type to different transformations.
     """
-    implements(ITransform)
 
     __name__ = "xml_to_html"
 

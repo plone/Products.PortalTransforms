@@ -18,7 +18,7 @@ Original code from active state recipe
 from cStringIO import StringIO
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 import keyword
 import string
@@ -109,10 +109,10 @@ class Parser:
         self.out.write(close_tag)
 
 
-class PythonTransform:
+@implementer(ITransform)
+class PythonTransform(object):
     """Colorize Python source files
     """
-    implements(ITransform)
 
     __name__ = "python_to_html"
     inputs = ("text/x-python",)

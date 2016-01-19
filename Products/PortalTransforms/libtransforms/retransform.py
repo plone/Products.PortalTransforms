@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 import re
 
 
+@implementer(ITransform)
 class retransform:
     """abstract class for regex transforms (re.sub wrapper)"""
-
-    implements(ITransform)
 
     inputs = ('text/',)
 

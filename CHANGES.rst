@@ -10,7 +10,8 @@ New:
 
 Fixes:
 
-- cleanup: autopep8, isort sorted imports, utf8 header, minor manual edits.
+- cleanup: autopep8, isort sorted imports, utf8 header, security decorators,
+  zca decorators, minor manual edits
   [jensens]
 
 

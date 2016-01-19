@@ -14,7 +14,7 @@ from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
 from UserDict import UserDict
-from zope.interface import implements
+from zope.interface import implementer
 
 
 def import_from_name(module_name):
@@ -62,12 +62,11 @@ VALIDATORS = {
 }
 
 
+@implementer(ITransform)
 class Transform(SimpleItem):
     """A transform is an external method with
     additional configuration information
     """
-
-    implements(ITransform)
 
     meta_type = 'Transform'
     meta_types = all_meta_types = ()
@@ -174,8 +173,7 @@ class Transform(SimpleItem):
         self._v_transform = transform
         return transform
 
-    security.declarePrivate('manage_beforeDelete')
-
+    @security.private
     def manage_beforeDelete(self, item, container):
         SimpleItem.manage_beforeDelete(self, item, container)
         if self is item:
@@ -183,30 +181,26 @@ class Transform(SimpleItem):
             tr_tool = getToolByName(self, 'portal_transforms')
             tr_tool._unmapTransform(self)
 
-    security.declarePublic('get_documentation')
-
+    @security.public
     def get_documentation(self):
         """ return transform documentation """
         if not hasattr(self, '_v_transform'):
             self._load_transform()
         return self._v_transform.__doc__
 
-    security.declarePublic('convert')
-
+    @security.public
     def convert(self, *args, **kwargs):
         # return apply the transform and return the result
         if not hasattr(self, '_v_transform'):
             self._load_transform()
         return self._v_transform.convert(*args, **kwargs)
 
-    security.declarePublic('name')
-
+    @security.public
     def name(self):
         """return the name of the transform instance"""
         return self.id
 
-    security.declareProtected(ManagePortal, 'get_parameters')
-
+    @security.protected(ManagePortal)
     def get_parameters(self):
         """ get transform's parameters names """
         if not hasattr(self, '_v_transform'):
@@ -214,8 +208,7 @@ class Transform(SimpleItem):
         keys = sorted(self._v_transform.config.keys())
         return keys
 
-    security.declareProtected(ManagePortal, 'get_parameter_value')
-
+    @security.protected(ManagePortal)
     def get_parameter_value(self, key):
         """ get value of a transform's parameter """
         value = self._config[key]
@@ -231,8 +224,7 @@ class Transform(SimpleItem):
             result = value
         return result
 
-    security.declareProtected(ManagePortal, 'get_parameter_infos')
-
+    @security.protected(ManagePortal)
     def get_parameter_infos(self, key):
         """ get informations about a parameter
 
@@ -247,8 +239,7 @@ class Transform(SimpleItem):
         except KeyError:
             return 'string', '', ''
 
-    security.declareProtected(ManagePortal, 'set_parameters')
-
+    @security.protected(ManagePortal)
     def set_parameters(self, REQUEST=None, **kwargs):
         """ set transform's parameters """
         if not kwargs:
@@ -280,8 +271,7 @@ class Transform(SimpleItem):
             REQUEST['RESPONSE'].redirect(
                 tr_tool.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'reload')
-
+    @security.protected(ManagePortal)
     def reload(self):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)

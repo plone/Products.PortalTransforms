@@ -7,13 +7,13 @@ from Products.PortalTransforms.libtransforms.commandtransform import \
     commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import \
     popentransform
-from zope.interface import implements
+from zope.interface import implementer
 
 import os
 
 
+@implementer(ITransform)
 class lynx_dump(popentransform):
-    implements(ITransform)
 
     __name__ = "lynx_dump"
     inputs = ('text/html',)
@@ -27,8 +27,9 @@ class lynx_dump(popentransform):
     useStdin = True
 
 
+@implementer(ITransform)
 class old_lynx_dump(commandtransform):
-    implements(ITransform)
+    # XXX i doubt this one works
 
     __name__ = "lynx_dump"
     inputs = ('text/html',)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 import os
 
@@ -32,8 +32,8 @@ else:
         from office_com import document
 
 
-class word_to_html:
-    implements(ITransform)
+@implementer(ITransform)
+class word_to_html(object):
 
     __name__ = "word_to_html"
     inputs = ('application/msword',)

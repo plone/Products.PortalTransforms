@@ -27,16 +27,15 @@ from Products.PortalTransforms.transforms import initialize
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from zope.interface import implements
+from zope.interface import implementer
 
 
+@implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1  # Show up in the ZMI
-
-    implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
         {'name': 'Transform', 'action': 'manage_addTransformForm'},
@@ -69,8 +68,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('unregisterTransform')
-
+    @security.private
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -79,8 +77,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if name in self.objectIds():
             self._delObject(name)
 
-    security.declarePublic('convertTo')
-
+    @security.public
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -183,8 +180,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     # make sure it's not publishable (XSS risk)
     del convertTo.__doc__
 
-    security.declarePublic('convertToData')
-
+    @security.public
     def convertToData(self, target_mimetype, orig, data=None, object=None,
                       usedby=None, context=None, **kwargs):
         # Convert to a given mimetype and return the raw data
@@ -195,8 +191,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return data.getData()
         return None
 
-    security.declarePublic('convert')
-
+    @security.public
     def convert(self, name, orig, data=None, context=None, **kwargs):
         # run a tranform of a given name on data
 
@@ -279,7 +274,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
                     for mt2 in mto[0].mimetypes:
                         try:
-                            if not transform in mt_in[mt2]:
+                            if transform not in mt_in[mt2]:
                                 mt_in[mt2].append(transform)
                         except KeyError:
                             mt_in[mt2] = PersistentList([transform])
@@ -470,8 +465,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         return result
 
-    security.declarePrivate('manage_afterAdd')
-
+    @security.private
     def manage_afterAdd(self, item, container):
         """ overload manage_afterAdd to finish initialization when the
         transform tool is added
@@ -483,8 +477,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # may fail on copy or zexp import
             pass
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
-
+    @security.protected(ManagePortal)
     def manage_addTransform(self, id, module, REQUEST=None):
         """ add a new transform to the tool """
         transform = Transform(id, module)
@@ -493,8 +486,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
-
+    @security.protected(ManagePortal)
     def manage_addTransformsChain(self, id, description, REQUEST=None):
         """ add a new transform to the tool """
         transform = TransformsChain(id, description)
@@ -503,16 +495,14 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
-
+    @security.protected(ManagePortal)
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'reloadTransforms')
-
+    @security.protected(ManagePortal)
     def reloadTransforms(self, ids=()):
         """ reload transforms with the given ids
         if no ids, reload all registered transforms
@@ -567,8 +557,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('registerTransform')
-
+    @security.private
     def registerTransform(self, transform):
         """register a new transform
 
@@ -588,8 +577,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._setObject(name, transform)
             self._mapTransform(transform)
 
-    security.declareProtected(ManagePortal, 'ZopeFind')
-
+    @security.protected(ManagePortal)
     def ZopeFind(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """
@@ -598,8 +586,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         except MissingBinary:
             log('ZopeFind: catched MissingBinary exception')
 
-    security.declareProtected(View, 'objectItems')
-
+    @security.protected(View)
     def objectItems(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """

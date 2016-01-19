@@ -9,7 +9,7 @@ author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
-from zope.interface import implements
+from zope.interface import implementer
 
 
 HAS_TEXTILE = True
@@ -20,8 +20,8 @@ except ImportError:
     log('textile_to_html: Could not import textile.')
 
 
-class textile:
-    implements(ITransform)
+@implementer(ITransform)
+class textile(object):
 
     __name__ = "textile_to_html"
     inputs = ("text/x-web-textile",)

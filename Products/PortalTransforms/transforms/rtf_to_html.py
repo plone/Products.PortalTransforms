@@ -7,13 +7,13 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
-from zope.interface import implements
+from zope.interface import implementer
 
 import os
 
 
+@implementer(ITransform)
 class rtf_to_html(commandtransform):
-    implements(ITransform)
 
     __name__ = "rtf_to_html"
     inputs = ('application/rtf',)

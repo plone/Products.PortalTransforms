@@ -6,7 +6,7 @@ from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import safeToInt
 from sgmllib import SGMLParseError
 from sgmllib import SGMLParser
-from zope.interface import implements
+from zope.interface import implementer
 
 import logging
 import re
@@ -2544,7 +2544,8 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     return parser.getResult()
 
 
-class SafeHTML:
+@implementer(ITransform)
+class SafeHTML(object):
     """Simple transform which uses CMFDefault functions to
     clean potentially bad tags.
 
@@ -2560,8 +2561,6 @@ class SafeHTML:
         -> Database Management -> main || other_used_database
         -> Flush Cache.
     """
-
-    implements(ITransform)
 
     __name__ = "safe_html"
     inputs = ('text/html', )

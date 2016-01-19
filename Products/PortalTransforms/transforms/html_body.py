@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from zope.interface import implements
+from zope.interface import implementer
 
 
-class HTMLBody:
+@implementer(ITransform)
+class HTMLBody(object):
     """Simple transform which extracts the content of the body tag"""
-
-    implements(ITransform)
 
     __name__ = "html_body"
     inputs = ('text/html',)

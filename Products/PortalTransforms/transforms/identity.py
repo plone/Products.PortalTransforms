@@ -4,15 +4,15 @@ A simple identity transform
 """
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 
-class IdentityTransform:
+@implementer(ITransform)
+class IdentityTransform(object):
     """ Identity transform
 
     return content unchanged.
     """
-    implements(ITransform)
 
     __name__ = "rest_to_text"
 

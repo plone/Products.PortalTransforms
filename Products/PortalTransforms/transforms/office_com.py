@@ -12,11 +12,6 @@ from win32com.client import gencache
 
 import os
 import os.path
-import re
-import string
-import sys
-import tempfile
-import traceback
 import win32api
 import win32com
 import win32com.client

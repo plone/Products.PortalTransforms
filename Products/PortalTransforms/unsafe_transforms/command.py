@@ -7,11 +7,12 @@ from os import popen3
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.utils import log
-from zope.interface import implements
+from zope.interface import implementer
 
 import os.path
 
 
+@implementer(ITransform)
 class ExternalCommandTransform(commandtransform):
     """ Custom external command
 
@@ -21,7 +22,6 @@ class ExternalCommandTransform(commandtransform):
     the command line parameters) and return output on stdout.
     Input and output mime types must be set correctly !
     """
-    implements(ITransform)
 
     __name__ = "command_transform"
 

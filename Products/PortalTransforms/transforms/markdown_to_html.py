@@ -7,7 +7,7 @@ Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
-from zope.interface import implements
+from zope.interface import implementer
 
 
 try:
@@ -19,8 +19,8 @@ else:
     HAS_MARKDOWN = True
 
 
-class markdown:
-    implements(ITransform)
+@implementer(ITransform)
+class markdown(object):
 
     __name__ = "markdown_to_html"
     inputs = ("text/x-web-markdown",)
