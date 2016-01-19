@@ -1,8 +1,10 @@
 """try to build some usefull transformations with the command and xml
 transforms and the available binaries
 """
-from Products.PortalTransforms.libtransforms.utils import (
-    bin_search, MissingBinary)
+from command import ExternalCommandTransform
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import MissingBinary
+
 
 COMMAND_CONFIGS = (
     ('lynx_dump', '.html',
@@ -45,7 +47,6 @@ COMMAND_CONFIGS = (
 
 TRANSFORMS = {}
 
-from command import ExternalCommandTransform
 for tr_name, extension, config in COMMAND_CONFIGS:
     try:
         bin = bin_search(config['binary_path'])

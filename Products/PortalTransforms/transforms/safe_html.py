@@ -1,13 +1,14 @@
-import logging
-from sgmllib import SGMLParser, SGMLParseError
-import re
 from cgi import escape
-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import safeToInt
+from sgmllib import SGMLParseError
+from sgmllib import SGMLParser
+from zope.interface import implements
+
+import logging
+import re
 
 
 class IllegalHTML(ValueError):

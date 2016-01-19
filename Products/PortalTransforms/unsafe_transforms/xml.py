@@ -2,17 +2,19 @@
 A custom transform using external command
 """
 
-from os.path import join, dirname, exists
-import re
-from os import system
 from cStringIO import StringIO
-
+from os import system
+from os.path import dirname
+from os.path import exists
+from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.utils import log
+from zope.interface import implements
+
+import re
 
 
 class XsltTransform(commandtransform):

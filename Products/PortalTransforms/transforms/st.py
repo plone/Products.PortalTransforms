@@ -2,6 +2,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from zope.structuredtext import stx2html
 
+
 DEFAULT_STX_LEVEL = 2
 STX_LEVEL = DEFAULT_STX_LEVEL
 

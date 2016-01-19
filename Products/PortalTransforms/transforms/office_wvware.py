@@ -1,8 +1,8 @@
-import os
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+
+import os
 
 
 class document(commandtransform):

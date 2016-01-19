@@ -4,10 +4,10 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
-from zope.interface import implements
-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
+from zope.interface import implements
+
 
 try:
     import markdown as markdown_transformer

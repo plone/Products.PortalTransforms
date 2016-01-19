@@ -2,13 +2,13 @@
 Uses the xpdf (www.foolabs.com/xpdf)
 """
 
-import os
-
-from zope.interface import implements
 from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 from Products.PortalTransforms.libtransforms.utils import sansext
-from Products.PortalTransforms.libtransforms.commandtransform import (
-    commandtransform, popentransform)
+from zope.interface import implements
+
+import os
 
 
 class pdf_to_text(popentransform):

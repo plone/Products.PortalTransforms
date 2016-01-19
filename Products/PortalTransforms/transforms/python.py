@@ -14,15 +14,16 @@ Original code from active state recipe
  original formatting (which is the hard part).
 """
 
-import string
-import keyword
-import token
-import tokenize
 from cStringIO import StringIO
-
+from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from DocumentTemplate.DT_Util import html_quote
+
+import keyword
+import string
+import token
+import tokenize
+
 
 # Python Source Parser #####################################################
 

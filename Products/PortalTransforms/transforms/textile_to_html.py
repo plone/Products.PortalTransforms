@@ -6,10 +6,9 @@ author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
 
-from zope.interface import implements
-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
+from zope.interface import implements
 
 
 HAS_TEXTILE = True

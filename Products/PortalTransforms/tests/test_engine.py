@@ -1,12 +1,11 @@
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-
-from zope.interface import implements
-from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.utils import TransformException
+from zope.interface import implements
 
-import urllib
 import re
+import urllib
 
 
 class BaseTransform:

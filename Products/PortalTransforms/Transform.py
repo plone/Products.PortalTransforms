@@ -1,21 +1,19 @@
-from logging import ERROR
-from UserDict import UserDict
-
-from zope.interface import implements
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
+from logging import ERROR
+from OFS.SimpleItem import SimpleItem
 from Persistence import PersistentMapping
 from persistent.list import PersistentList
-from OFS.SimpleItem import SimpleItem
-from AccessControl import ClassSecurityInfo
-
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.utils import getToolByName
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
+from Products.PortalTransforms.utils import _www
+from Products.PortalTransforms.utils import log
+from Products.PortalTransforms.utils import TransformException
+from UserDict import UserDict
+from zope.interface import implements
 
 
 def import_from_name(module_name):

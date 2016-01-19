@@ -2,13 +2,13 @@
 A custom transform using external command
 """
 
-import os.path
 from os import popen3
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.utils import log
+from zope.interface import implements
+
+import os.path
 
 
 class ExternalCommandTransform(commandtransform):

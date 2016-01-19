@@ -1,8 +1,7 @@
-import re
-
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 
-from Products.PortalTransforms.interfaces import ITransform
+import re
 
 
 class retransform:

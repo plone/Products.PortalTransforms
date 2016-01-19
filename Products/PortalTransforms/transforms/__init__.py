@@ -11,9 +11,12 @@
 # implement the transform, if register needs to fail for now it
 # should raise an ImportError as well (dumb, I know)
 
-from logging import DEBUG, ERROR
-from Products.PortalTransforms.utils import log
+from logging import DEBUG
+from logging import ERROR
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
+from Products.PortalTransforms.utils import log
+
+
 modules = [
     'st',             # zopish
     'rest',           # docutils

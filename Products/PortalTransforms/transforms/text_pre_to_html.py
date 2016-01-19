@@ -1,6 +1,6 @@
+from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from DocumentTemplate.DT_Util import html_quote
 
 
 class TextPreToHTML:

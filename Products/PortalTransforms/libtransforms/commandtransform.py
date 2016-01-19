@@ -1,14 +1,14 @@
-import os
-import tempfile
-import re
-import shutil
-from os.path import join, basename
-
+from os.path import basename
+from os.path import join
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import getShortPathName
 from zope.interface import implements
 
-from Products.PortalTransforms.libtransforms.utils import (
-    bin_search, getShortPathName)
-from Products.PortalTransforms.interfaces import ITransform
+import os
+import re
+import shutil
+import tempfile
 
 
 class commandtransform:

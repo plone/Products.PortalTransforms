@@ -1,6 +1,6 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from zope.interface import implements
 
 
 class HTMLBody:

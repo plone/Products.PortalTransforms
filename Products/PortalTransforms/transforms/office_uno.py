@@ -1,12 +1,11 @@
-import uno
-import unohelper
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import CloseVetoException
-
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
+
+import uno
+import unohelper
 
 
 class document(commandtransform):

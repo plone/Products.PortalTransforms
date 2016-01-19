@@ -1,6 +1,8 @@
 """some common utilities
 """
+# directory where template for the ZMI are located
 import logging
+import os.path
 
 
 class TransformException(Exception):
@@ -15,8 +17,6 @@ logger = logging.getLogger('PortalTransforms')
 def log(message, severity=logging.DEBUG):
     logger.log(severity, message)
 
-# directory where template for the ZMI are located
-import os.path
 _www = os.path.join(os.path.dirname(__file__), 'www')
 
 

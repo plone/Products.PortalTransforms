@@ -1,36 +1,36 @@
 # -*- coding: utf8  -*-
-import os
-import copy
-import logging
-import unittest
-import itertools
+from os.path import exists
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
-
-from utils import input_file_path, output_file_path, normalize_html,\
-    load, matching_inputs
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
-
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
-from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
-from Products.PortalTransforms.transforms.image_to_png import image_to_png
-from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
 from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
-from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
-from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
+from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
+from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
 from Products.PortalTransforms.transforms.image_to_pcx import image_to_pcx
-
-from Products.PortalTransforms.transforms.word_to_html import word_to_html
-
+from Products.PortalTransforms.transforms.image_to_png import image_to_png
+from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
+from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
+from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+from Products.PortalTransforms.transforms.safe_html import NASTY_TAGS
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
-from Products.PortalTransforms.transforms.safe_html import NASTY_TAGS
-
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
-from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+from Products.PortalTransforms.transforms.word_to_html import word_to_html
+from utils import input_file_path
+from utils import load
+from utils import matching_inputs
+from utils import normalize_html
+from utils import output_file_path
 
-from os.path import exists
+import copy
+import itertools
+import logging
+import os
+import unittest
+
+
 # we have to set locale because lynx output is locale sensitive !
 os.environ['LC_ALL'] = 'C'
 logger = logging.getLogger('PortalTransforms')

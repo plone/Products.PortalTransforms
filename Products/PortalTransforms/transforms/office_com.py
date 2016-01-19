@@ -1,25 +1,23 @@
 # Need to be imported first to avoid dll loading problems.
-import pywintypes
-import pythoncom
-
-import os.path
-
-import win32com
-import sys
-import string
-import win32api
-import traceback
-import re
-import tempfile
-import os
-import win32com.client
-from win32com.client import gencache
-from win32com.client import constants, Dispatch
-
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
+from win32com.client import constants
+from win32com.client import Dispatch
+from win32com.client import gencache
+
+import os
+import os.path
+import pythoncom
+import pywintypes
+import re
+import string
+import sys
+import tempfile
+import traceback
+import win32api
+import win32com
+import win32com.client
 
 
 class document(commandtransform):

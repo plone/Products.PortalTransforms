@@ -1,7 +1,11 @@
+from htmlentitydefs import entitydefs
+from Products.PortalTransforms.utils import log
+from sgmllib import SGMLParseError
+from sgmllib import SGMLParser
+
 import os
 import sys
-from sgmllib import SGMLParser, SGMLParseError
-from htmlentitydefs import entitydefs
+
 
 try:
     # Need to be imported before win32api to avoid dll loading
@@ -13,8 +17,6 @@ try:
     WIN32 = True
 except ImportError:
     WIN32 = False
-
-from Products.PortalTransforms.utils import log
 
 
 class MissingBinary(Exception):

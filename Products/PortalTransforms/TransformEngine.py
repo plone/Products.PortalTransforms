@@ -1,34 +1,32 @@
-from logging import DEBUG
-
-from persistent.list import PersistentList
-from zope.interface import implements
-
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from App.class_init import InitializeClass
+from logging import DEBUG
 from OFS.Folder import Folder
 from Persistence import PersistentMapping
+from persistent.list import PersistentList
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
-from Products.CMFCore.permissions import ManagePortal, View
+from Products.CMFCore.permissions import ManagePortal
+from Products.CMFCore.permissions import View
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import registerToolInterface
 from Products.CMFCore.utils import UniqueObject
-from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
-from Products.PortalTransforms.data import datastream
-from Products.PortalTransforms.chain import TransformsChain
-from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.cache import Cache
+from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.chain import TransformsChain
+from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
-from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.interfaces import IEngine
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.transforms import initialize
+from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.utils import _www
+from zope.interface import implements
 
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):

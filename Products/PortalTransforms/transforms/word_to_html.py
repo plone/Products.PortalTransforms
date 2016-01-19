@@ -1,6 +1,9 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 
+import os
+
+
 EXTRACT_BODY = 1
 EXTRACT_STYLE = 0
 
@@ -10,7 +13,6 @@ IMAGE_PREFIX = "img_"
 # disable office_uno because it doesn't support multithread yet
 ENABLE_UNO = False
 
-import os
 if os.name == 'posix':
     try:
         if ENABLE_UNO:

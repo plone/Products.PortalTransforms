@@ -1,6 +1,7 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
 from StringIO import StringIO
+from zope.interface import implements
+
 import PIL.Image
 
 

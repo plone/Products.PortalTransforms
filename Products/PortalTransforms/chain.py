@@ -1,21 +1,18 @@
-from zope.interface import implements
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Persistence import Persistent
-from App.class_init import InitializeClass
-from Acquisition import Implicit
-from OFS.SimpleItem import Item
 from AccessControl import ClassSecurityInfo
-
-from Products.CMFCore.permissions import ManagePortal, ManageProperties
+from Acquisition import Implicit
+from App.class_init import InitializeClass
+from OFS.SimpleItem import Item
+from Persistence import Persistent
+from Products.CMFCore.permissions import ManagePortal
+from Products.CMFCore.permissions import ManageProperties
 from Products.CMFCore.utils import getToolByName
-
-from Products.PortalTransforms.utils import _www
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PortalTransforms.interfaces import IChain
 from Products.PortalTransforms.interfaces import ITransform
-
+from Products.PortalTransforms.utils import _www
 from UserList import UserList
+from zope.interface import implements
+
 
 try:
     from OFS.role import RoleManager
