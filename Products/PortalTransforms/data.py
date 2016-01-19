@@ -6,7 +6,9 @@ from zope.interface import implementer
 class datastream(object):
     """A transformation datastream packet"""
 
-    __slots__ = ('name', '_data', '_metadata')
+    __slots__ = (
+        'name', '_data', '_metadata', '__name__', '_objects', '_cacheable'
+    )
 
     def __init__(self, name):
         self.__name__ = name

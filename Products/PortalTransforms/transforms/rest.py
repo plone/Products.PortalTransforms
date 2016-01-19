@@ -15,16 +15,14 @@ class rest(object):
 
       >>> data = transform.convert('*hello world*', D())
       >>> print data.value
-
       <p><em>hello world</em></p>
-    @<BLANKLINer>:(object)
+      <BLANKLINE>
 
     We want the 'raw' and 'include' directives to be disabled by
     default:
 
       >>> try:
-      ...     out = transform.convert(
-      ..          '.. raw:: html\n  :file: <isonum.txt>', D())
+      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:

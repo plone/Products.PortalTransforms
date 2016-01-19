@@ -81,10 +81,10 @@ class QuxToVHost(DummyHtmlFilter1):
 
 @implementer(ITransform)
 class TransformNoIO(BaseTransform):
+    pass
 
 
 class BadTransformMissingImplements(BaseTransform):
-    #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
