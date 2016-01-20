@@ -1,12 +1,12 @@
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+# -*- coding: utf-8 -*-
 from DocumentTemplate.DT_Util import html_quote
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implementer
 
 
-class TextToHTML:
+@implementer(ITransform)
+class TextToHTML(object):
     """simple transform which wrap raw text in a verbatim environment"""
-
-    implements(ITransform)
 
     __name__ = "text_to_html"
     output = "text/html"
@@ -18,7 +18,7 @@ class TextToHTML:
                 'list',
                 'Inputs',
                 'Input(s) MIME type. Change with care.'),
-            }
+        }
         if name:
             self.__name__ = name
 

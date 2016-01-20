@@ -1,5 +1,9 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
+
+import os
+
 
 EXTRACT_BODY = 1
 EXTRACT_STYLE = 0
@@ -10,7 +14,6 @@ IMAGE_PREFIX = "img_"
 # disable office_uno because it doesn't support multithread yet
 ENABLE_UNO = False
 
-import os
 if os.name == 'posix':
     try:
         if ENABLE_UNO:
@@ -29,8 +32,8 @@ else:
         from office_com import document
 
 
-class word_to_html:
-    implements(ITransform)
+@implementer(ITransform)
+class word_to_html(object):
 
     __name__ = "word_to_html"
     inputs = ('application/msword',)

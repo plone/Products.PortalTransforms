@@ -1,8 +1,13 @@
-import re
-import glob
-from unittest import TestSuite
+# -*- coding: utf-8 -*-
+from os.path import abspath
+from os.path import basename
+from os.path import dirname
+from os.path import join
 from sys import modules
-from os.path import join, abspath, dirname, basename
+from unittest import TestSuite
+
+import glob
+import re
 
 
 def normalize_html(s):

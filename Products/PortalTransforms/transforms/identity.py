@@ -1,17 +1,18 @@
+# -*- coding: utf-8 -*-
 """
 A simple identity transform
 """
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 
-class IdentityTransform:
+@implementer(ITransform)
+class IdentityTransform(object):
     """ Identity transform
 
     return content unchanged.
     """
-    implements(ITransform)
 
     __name__ = "rest_to_text"
 
@@ -19,13 +20,13 @@ class IdentityTransform:
         self.config = {
             'inputs': ('text/x-rst',),
             'output': 'text/plain',
-            }
+        }
         self.config_metadata = {
             'inputs':
                 ('list', 'Inputs', 'Input(s) MIME type. Change with care.'),
             'output':
                 ('string', 'Output', 'Output MIME type. Change with care.'),
-            }
+        }
         self.config.update(kwargs)
 
     def __getattr__(self, attr):

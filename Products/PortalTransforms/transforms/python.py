@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Original code from active state recipe
         'Colorize Python source using the built-in tokenizer'
@@ -14,17 +15,18 @@ Original code from active state recipe
  original formatting (which is the hard part).
 """
 
-import string
+from cStringIO import StringIO
+from DocumentTemplate.DT_Util import html_quote
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implementer
+
 import keyword
+import string
 import token
 import tokenize
-from cStringIO import StringIO
 
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from DocumentTemplate.DT_Util import html_quote
 
-## Python Source Parser #####################################################
+# Python Source Parser #####################################################
 
 _KEYWORD = token.NT_OFFSET + 1
 _TEXT = token.NT_OFFSET + 2
@@ -47,7 +49,7 @@ class Parser:
         # store line offsets in self.lines
         self.lines = [0, 0]
         pos = 0
-        while 1:
+        while True:
             pos = string.find(self.raw, '\n', pos) + 1
             if not pos:
                 break
@@ -60,39 +62,37 @@ class Parser:
         self.out.write('<pre class="python">\n')
         try:
             tokenize.tokenize(text.readline, self)
-        except tokenize.TokenError, ex:
+        except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
             self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
         self.out.write('\n</pre>\n')
 
-    def __call__(self, toktype, toktext, (srow, scol), (erow, ecol), line):
+    def __call__(self, toktype, toktext, sx, ex, line):
         """ Token handler.
         """
-        #print "type", toktype, token.tok_name[toktype], "text", toktext,
-        #print "start", srow,scol, "end", erow,ecol, "<br>"
-
-        ## calculate new positions
+        (srow, scol) = sx
+        (erow, ecol) = ex
         oldpos = self.pos
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)
 
-        ## handle newlines
+        # handle newlines
         if toktype in [token.NEWLINE, tokenize.NL]:
             self.out.write('\n')
             return
 
-        ## send the original whitespace, if needed
+        # send the original whitespace, if needed
         if newpos > oldpos:
             self.out.write(self.raw[oldpos:newpos])
 
-        ## skip indenting tokens
+        # skip indenting tokens
         if toktype in [token.INDENT, token.DEDENT]:
             self.pos = newpos
             return
 
-        ## map token type to a group
+        # map token type to a group
         if token.LPAR <= toktype and toktype <= token.OP:
             toktype = 'OP'
         elif toktype == token.NAME and keyword.iskeyword(toktext):
@@ -100,42 +100,42 @@ class Parser:
         else:
             toktype = tokenize.tok_name[toktype]
 
-        open_tag = self.tags.get('OPEN_'+toktype, self.tags['OPEN_TEXT'])
-        close_tag = self.tags.get('CLOSE_'+toktype, self.tags['CLOSE_TEXT'])
+        open_tag = self.tags.get('OPEN_' + toktype, self.tags['OPEN_TEXT'])
+        close_tag = self.tags.get('CLOSE_' + toktype, self.tags['CLOSE_TEXT'])
 
-        ## send text
+        # send text
         self.out.write(open_tag)
         self.out.write(html_quote(toktext))
         self.out.write(close_tag)
 
 
-class PythonTransform:
+@implementer(ITransform)
+class PythonTransform(object):
     """Colorize Python source files
     """
-    implements(ITransform)
 
     __name__ = "python_to_html"
     inputs = ("text/x-python",)
     output = "text/html"
 
     config = {
-        'OPEN_NUMBER':       '<span style="color: #0080C0;">',
-        'CLOSE_NUMBER':      '</span>',
-        'OPEN_OP':           '<span style="color: #0000C0;">',
-        'CLOSE_OP':          '</span>',
-        'OPEN_STRING':       '<span style="color: #004080;">',
-        'CLOSE_STRING':      '</span>',
-        'OPEN_COMMENT':      '<span style="color: #008000;">',
-        'CLOSE_COMMENT':      '</span>',
-        'OPEN_NAME':         '<span style="color: #000000;">',
-        'CLOSE_NAME':        '</span>',
-        'OPEN_ERRORTOKEN':   '<span style="color: #FF8080;">',
-        'CLOSE_ERRORTOKEN':  '</span>',
-        'OPEN_KEYWORD':      '<span style="color: #C00000;">',
-        'CLOSE_KEYWORD':     '</span>',
-        'OPEN_TEXT':         '',
-        'CLOSE_TEXT':        '',
-        }
+        'OPEN_NUMBER': '<span style="color: #0080C0;">',
+        'CLOSE_NUMBER': '</span>',
+        'OPEN_OP': '<span style="color: #0000C0;">',
+        'CLOSE_OP': '</span>',
+        'OPEN_STRING': '<span style="color: #004080;">',
+        'CLOSE_STRING': '</span>',
+        'OPEN_COMMENT': '<span style="color: #008000;">',
+        'CLOSE_COMMENT': '</span>',
+        'OPEN_NAME': '<span style="color: #000000;">',
+        'CLOSE_NAME': '</span>',
+        'OPEN_ERRORTOKEN': '<span style="color: #FF8080;">',
+        'CLOSE_ERRORTOKEN': '</span>',
+        'OPEN_KEYWORD': '<span style="color: #C00000;">',
+        'CLOSE_KEYWORD': '</span>',
+        'OPEN_TEXT': '',
+        'CLOSE_TEXT': '',
+    }
 
     def name(self):
         return self.__name__

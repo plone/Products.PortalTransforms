@@ -1,20 +1,21 @@
+# -*- coding: utf-8 -*-
+from os.path import basename
+from os.path import join
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import getShortPathName
+from zope.interface import implementer
+
 import os
-import tempfile
 import re
 import shutil
-from os.path import join, basename
-
-from zope.interface import implements
-
-from Products.PortalTransforms.libtransforms.utils import (
-    bin_search, getShortPathName)
-from Products.PortalTransforms.interfaces import ITransform
+import tempfile
 
 
-class commandtransform:
+@implementer(ITransform)
+class commandtransform(object):
     """abstract class for external command based transform
     """
-    implements(ITransform)
 
     def __init__(self, name=None, binary=None, **kwargs):
         if name is not None:
@@ -34,7 +35,8 @@ class commandtransform:
         os.mkdir(tmpdir)
         filename = kwargs.get("filename", '')
         fullname = join(tmpdir, basename(filename))
-        filedest = open(fullname, "wb").write(data)
+        with open(fullname, "wb") as fd:
+            fd.write(data)
         return tmpdir, fullname
 
     def subObjects(self, tmpdir):
@@ -56,12 +58,12 @@ class commandtransform:
         shutil.rmtree(tmpdir)
 
 
-class popentransform:
+@implementer(ITransform)
+class popentransform(object):
     """abstract class for external command based transform
 
     Command must read from stdin and write to stdout
     """
-    implements(ITransform)
 
     binaryName = ""
     binaryArgs = ""
@@ -105,7 +107,7 @@ class popentransform:
             if self.useStdin:
                 cin.write(data)
 
-            status = cin.close()
+            cin.close()
 
             out = self.getData(couterr)
             couterr.close()

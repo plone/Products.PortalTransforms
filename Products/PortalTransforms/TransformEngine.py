@@ -1,48 +1,46 @@
-from logging import DEBUG
-
-from persistent.list import PersistentList
-from zope.interface import implements
-
+# -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from App.class_init import InitializeClass
+from logging import DEBUG
 from OFS.Folder import Folder
 from Persistence import PersistentMapping
+from persistent.list import PersistentList
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
-from Products.CMFCore.permissions import ManagePortal, View
+from Products.CMFCore.permissions import ManagePortal
+from Products.CMFCore.permissions import View
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import registerToolInterface
 from Products.CMFCore.utils import UniqueObject
-from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-
-from Products.PortalTransforms.data import datastream
-from Products.PortalTransforms.chain import TransformsChain
-from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.cache import Cache
+from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.chain import TransformsChain
+from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
-from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.interfaces import IEngine
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
+from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.transforms import initialize
+from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.utils import _www
+from zope.interface import implementer
 
 
+@implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1  # Show up in the ZMI
 
-    implements(IPortalTransformsTool, IEngine)
-
     meta_types = all_meta_types = (
         {'name': 'Transform', 'action': 'manage_addTransformForm'},
         {'name': 'TransformsChain', 'action': 'manage_addTransformsChainForm'},
-        )
+    )
 
     manage_addTransformForm = PageTemplateFile('addTransform', _www)
     manage_addTransformsChainForm = PageTemplateFile(
@@ -58,7 +56,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
          {'label': 'Policy', 'action': 'manage_editTransformationPolicyForm'},
          {'label': 'Reload transforms',
           'action': 'manage_reloadAllTransforms'},
-        ))
+         ))
 
     security = ClassSecurityInfo()
 
@@ -70,7 +68,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('unregisterTransform')
+    @security.private
     def unregisterTransform(self, name):
         """ unregister a transform
         name is the name of a registered transform
@@ -79,7 +77,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if name in self.objectIds():
             self._delObject(name)
 
-    security.declarePublic('convertTo')
+    @security.public
     def convertTo(self, target_mimetype, orig, data=None, object=None,
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
@@ -136,7 +134,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 severity=DEBUG)
             return None
 
-        ## fastpath
+        # fastpath
         # If orig_mt and target_mt are the same, we only allow
         # a one-hop transform, a.k.a. filter.
         # XXX disabled filtering for now
@@ -148,7 +146,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 cache.setCache(str(target_mimetype), data)
             return data
 
-        ## get a path to output mime type
+        # get a path to output mime type
         requirements = self._policies.get(str(target_mt), [])
         path = self._findPath(orig_mt, target_mt, list(requirements))
         if not path and requirements:
@@ -162,7 +160,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return None
 
         if len(path) > 1:
-            ## create a chain on the fly (sly)
+            # create a chain on the fly (sly)
             transform = chain()
             for t in path:
                 transform.registerTransform(t)
@@ -182,7 +180,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
     # make sure it's not publishable (XSS risk)
     del convertTo.__doc__
 
-    security.declarePublic('convertToData')
+    @security.public
     def convertToData(self, target_mimetype, orig, data=None, object=None,
                       usedby=None, context=None, **kwargs):
         # Convert to a given mimetype and return the raw data
@@ -193,7 +191,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return data.getData()
         return None
 
-    security.declarePublic('convert')
+    @security.public
     def convert(self, name, orig, data=None, context=None, **kwargs):
         # run a tranform of a given name on data
 
@@ -276,7 +274,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
                     for mt2 in mto[0].mimetypes:
                         try:
-                            if not transform in mt_in[mt2]:
+                            if transform not in mt_in[mt2]:
                                 mt_in[mt2].append(transform)
                         except KeyError:
                             mt_in[mt2] = PersistentList([transform])
@@ -345,7 +343,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                         # which also reach the required transform.
                         shortest = len(firstPath)
                         shortestFirstPath = firstPath
-            if shortestFirstPath == None:
+            if shortestFirstPath is None:
                 return None  # there is no path leading to this transform
             # Then we have to take this transform.
             secondPath = [requiredTransform]
@@ -467,7 +465,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         return result
 
-    security.declarePrivate('manage_afterAdd')
+    @security.private
     def manage_afterAdd(self, item, container):
         """ overload manage_afterAdd to finish initialization when the
         transform tool is added
@@ -479,7 +477,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # may fail on copy or zexp import
             pass
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    @security.protected(ManagePortal)
     def manage_addTransform(self, id, module, REQUEST=None):
         """ add a new transform to the tool """
         transform = Transform(id, module)
@@ -488,7 +486,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    @security.protected(ManagePortal)
     def manage_addTransformsChain(self, id, description, REQUEST=None):
         """ add a new transform to the tool """
         transform = TransformsChain(id, description)
@@ -497,14 +495,14 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'manage_addTransform')
+    @security.protected(ManagePortal)
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'reloadTransforms')
+    @security.protected(ManagePortal)
     def reloadTransforms(self, ids=()):
         """ reload transforms with the given ids
         if no ids, reload all registered transforms
@@ -537,7 +535,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         self._policies[output_mimetype] = required_transforms
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                '/manage_editTransformationPolicyForm')
+                                         '/manage_editTransformationPolicyForm')
 
     def manage_delPolicies(self, outputs, REQUEST=None):
         """ remove policies for given output mime types"""
@@ -545,7 +543,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             del self._policies[mimetype]
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                '/manage_editTransformationPolicyForm')
+                                         '/manage_editTransformationPolicyForm')
 
     def listPolicies(self):
         """ return the list of defined policies
@@ -559,7 +557,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # mimetype oriented conversions (iengine interface)
 
-    security.declarePrivate('registerTransform')
+    @security.private
     def registerTransform(self, transform):
         """register a new transform
 
@@ -579,7 +577,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._setObject(name, transform)
             self._mapTransform(transform)
 
-    security.declareProtected(ManagePortal, 'ZopeFind')
+    @security.protected(ManagePortal)
     def ZopeFind(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """
@@ -588,7 +586,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         except MissingBinary:
             log('ZopeFind: catched MissingBinary exception')
 
-    security.declareProtected(View, 'objectItems')
+    @security.protected(View)
     def objectItems(self, *args, **kwargs):
         """Don't break ZopeFind feature when a transform can't be loaded
         """

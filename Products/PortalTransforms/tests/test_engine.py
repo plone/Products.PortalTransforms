@@ -1,21 +1,22 @@
+# -*- coding: utf-8 -*-
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-
-from zope.interface import implements
-from Products.PortalTransforms.utils import TransformException
-from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.utils import TransformException
+from zope.interface import implementer
 
-import urllib
 import re
+import urllib
 
 
 class BaseTransform:
+
     def name(self):
         return getattr(self, '__name__', self.__class__.__name__)
 
 
+@implementer(ITransform)
 class HtmlToText(BaseTransform):
-    implements(ITransform)
     inputs = ('text/html',)
     output = 'text/plain'
 
@@ -33,8 +34,8 @@ class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
 
 
+@implementer(ITransform)
 class FooToBar(BaseTransform):
-    implements(ITransform)
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -48,8 +49,8 @@ class FooToBar(BaseTransform):
         return data
 
 
+@implementer(ITransform)
 class DummyHtmlFilter1(BaseTransform):
-    implements(ITransform)
     __name__ = 'dummy_html_filter1'
     inputs = ('text/html',)
     output = 'text/html'
@@ -59,8 +60,8 @@ class DummyHtmlFilter1(BaseTransform):
         return data
 
 
+@implementer(ITransform)
 class DummyHtmlFilter2(BaseTransform):
-    implements(ITransform)
     __name__ = 'dummy_html_filter2'
     inputs = ('text/html',)
     output = 'text/html'
@@ -78,36 +79,36 @@ class QuxToVHost(DummyHtmlFilter1):
         return data
 
 
+@implementer(ITransform)
 class TransformNoIO(BaseTransform):
-    implements(ITransform)
+    pass
 
 
 class BadTransformMissingImplements(BaseTransform):
-    #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
 
+@implementer(ITransform)
 class BadTransformBadMIMEType1(BaseTransform):
-    implements(ITransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
 
+@implementer(ITransform)
 class BadTransformBadMIMEType2(BaseTransform):
-    implements(ITransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
 
 
+@implementer(ITransform)
 class BadTransformNoInput(BaseTransform):
-    implements(ITransform)
     inputs = ()
     output = 'text/plain'
 
 
+@implementer(ITransform)
 class BadTransformWildcardOutput(BaseTransform):
-    implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
 
@@ -122,7 +123,7 @@ class TestEngine(ATSiteTestCase):
             self.engine.manage_delPolicies([mt])
 
     def register(self):
-        #A default set of transforms to prove the interfaces work
+        # A default set of transforms to prove the interfaces work
         self.engine.registerTransform(HtmlToText())
         self.engine.registerTransform(FooToBar())
 
@@ -226,9 +227,9 @@ class TestEngine(ATSiteTestCase):
 
         path = self.engine._findPath('text/html', mt, required)
         self.assertEqual(str(path),
-                             "[<Transform at dummy_html_filter1>, "
-                             "<Transform at dummy_html_filter2>, "
-                             "<Transform at safe_html>]")
+                         "[<Transform at dummy_html_filter1>, "
+                         "<Transform at dummy_html_filter2>, "
+                         "<Transform at safe_html>]")
 
     def testSame(self):
         data = "This is a test"

@@ -1,19 +1,23 @@
-### Register Transforms
-### This is interesting because we don't expect all transforms to be
-### available on all platforms. To do this we allow things to fail at
-### two levels
-### 1) Imports
-###    If the import fails the module is removed from the list and
-###    will not be processed/registered
-### 2) Registration
-###    A second phase happens when the loaded modules register method
-###    is called and this produces an instance that will be used to
-###    implement the transform, if register needs to fail for now it
-###    should raise an ImportError as well (dumb, I know)
+# -*- coding: utf-8 -*-
+# Register Transforms
+# This is interesting because we don't expect all transforms to be
+# available on all platforms. To do this we allow things to fail at
+# two levels
+# 1) Imports
+# If the import fails the module is removed from the list and
+# will not be processed/registered
+# 2) Registration
+# A second phase happens when the loaded modules register method
+# is called and this produces an instance that will be used to
+# implement the transform, if register needs to fail for now it
+# should raise an ImportError as well (dumb, I know)
 
-from logging import DEBUG, ERROR
-from Products.PortalTransforms.utils import log
+from logging import DEBUG
+from logging import ERROR
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
+from Products.PortalTransforms.utils import log
+
+
 modules = [
     'st',             # zopish
     'rest',           # docutils
@@ -37,11 +41,15 @@ modules = [
     'lynx_dump',      # lynx -dump
     'python',         # python source files, no dependancies
     'identity',       # identity transform, no dependancies
-    'markdown_to_html',  # markdown, depends on http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
-    'textile_to_html',  # textile, depends on PyTextile http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
+    # markdown, depends on
+    # http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
+    'markdown_to_html',
+    # textile, depends on PyTextile
+    # http://dom.eav.free.fr/python/textile-mirror-2.0.10.tar.gz
+    'textile_to_html',
     'web_intelligent_plain_text_to_html',
     'html_to_web_intelligent_plain_text',
-    ]
+]
 
 g = globals()
 transforms = []
@@ -49,12 +57,12 @@ for m in modules:
     try:
         ns = __import__(m, g, g, None)
         transforms.append(ns.register())
-    except ImportError, e:
+    except ImportError as e:
         msg = "Problem importing module %s : %s" % (m, e)
         log(msg, severity=ERROR)
-    except MissingBinary, e:
+    except MissingBinary as e:
         log(str(e), severity=DEBUG)
-    except Exception, e:
+    except Exception as e:
         import traceback
         traceback.print_exc()
         log("Raised error %s for %s" % (e, m), severity=ERROR)

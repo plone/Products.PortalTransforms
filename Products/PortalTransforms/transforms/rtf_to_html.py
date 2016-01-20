@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Uses the http://freshmeat.net/projects/rtfconverter/ bin to do its handy work
 """
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import sansext
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.utils import sansext
+from zope.interface import implementer
+
 import os
 
 
+@implementer(ITransform)
 class rtf_to_html(commandtransform):
-    implements(ITransform)
 
     __name__ = "rtf_to_html"
     inputs = ('application/rtf',)

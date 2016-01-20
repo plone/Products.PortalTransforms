@@ -1,21 +1,20 @@
-from logging import ERROR
-from UserDict import UserDict
-
-from zope.interface import implements
-
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+# -*- coding: utf-8 -*-
+from AccessControl import ClassSecurityInfo
 from App.class_init import InitializeClass
+from logging import ERROR
+from OFS.SimpleItem import SimpleItem
 from Persistence import PersistentMapping
 from persistent.list import PersistentList
-from OFS.SimpleItem import SimpleItem
-from AccessControl import ClassSecurityInfo
-
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.utils import getToolByName
-
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.utils import TransformException, log, _www
 from Products.PortalTransforms.transforms.broken import BrokenTransform
+from Products.PortalTransforms.utils import _www
+from Products.PortalTransforms.utils import log
+from Products.PortalTransforms.utils import TransformException
+from UserDict import UserDict
+from zope.interface import implementer
 
 
 def import_from_name(module_name):
@@ -25,7 +24,7 @@ def import_from_name(module_name):
     try:
         for sub in module_name.split('.')[1:]:
             m = getattr(m, sub)
-    except AttributeError, e:
+    except AttributeError as e:
         raise ImportError(str(e))
     return m
 
@@ -35,7 +34,7 @@ def make_config_persistent(kwargs):
     dictionary by persistent mapping.
     """
     for key, value in kwargs.items():
-        if type(value) == type({}):
+        if isinstance(value, type({})):
             p_value = PersistentMapping(value)
             kwargs[key] = p_value
         elif type(value) in (type(()), type([])):
@@ -60,15 +59,14 @@ VALIDATORS = {
     'string': str,
     'list': PersistentList,
     'dict': PersistentMapping,
-    }
+}
 
 
+@implementer(ITransform)
 class Transform(SimpleItem):
     """A transform is an external method with
     additional configuration information
     """
-
-    implements(ITransform)
 
     meta_type = 'Transform'
     meta_types = all_meta_types = ()
@@ -79,7 +77,7 @@ class Transform(SimpleItem):
          {'label': 'Reload',
           'action': 'manage_reloadTransform'},) +
         SimpleItem.manage_options
-        )
+    )
 
     manage_main = PageTemplateFile('configureTransform', _www)
     manage_reloadTransform = PageTemplateFile('reloadTransform', _www)
@@ -151,7 +149,7 @@ class Transform(SimpleItem):
     def _load_transform(self):
         try:
             m = import_from_name(self.module)
-        except ImportError, err:
+        except ImportError as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = ("Cannot register transform %s (ImportError), using "
                    "BrokenTransform: Error\n %s" % (self.id, err))
@@ -164,7 +162,7 @@ class Transform(SimpleItem):
             raise TransformException(msg)
         try:
             transform = m.register()
-        except Exception, err:
+        except Exception as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = ("Cannot register transform %s, using BrokenTransform: "
                    "Error\n %s" % (self.id, err))
@@ -175,7 +173,7 @@ class Transform(SimpleItem):
         self._v_transform = transform
         return transform
 
-    security.declarePrivate('manage_beforeDelete')
+    @security.private
     def manage_beforeDelete(self, item, container):
         SimpleItem.manage_beforeDelete(self, item, container)
         if self is item:
@@ -183,35 +181,34 @@ class Transform(SimpleItem):
             tr_tool = getToolByName(self, 'portal_transforms')
             tr_tool._unmapTransform(self)
 
-    security.declarePublic('get_documentation')
+    @security.public
     def get_documentation(self):
         """ return transform documentation """
         if not hasattr(self, '_v_transform'):
             self._load_transform()
         return self._v_transform.__doc__
 
-    security.declarePublic('convert')
+    @security.public
     def convert(self, *args, **kwargs):
         # return apply the transform and return the result
         if not hasattr(self, '_v_transform'):
             self._load_transform()
         return self._v_transform.convert(*args, **kwargs)
 
-    security.declarePublic('name')
+    @security.public
     def name(self):
         """return the name of the transform instance"""
         return self.id
 
-    security.declareProtected(ManagePortal, 'get_parameters')
+    @security.protected(ManagePortal)
     def get_parameters(self):
         """ get transform's parameters names """
         if not hasattr(self, '_v_transform'):
             self._load_transform()
-        keys = self._v_transform.config.keys()
-        keys.sort()
+        keys = sorted(self._v_transform.config.keys())
         return keys
 
-    security.declareProtected(ManagePortal, 'get_parameter_value')
+    @security.protected(ManagePortal)
     def get_parameter_value(self, key):
         """ get value of a transform's parameter """
         value = self._config[key]
@@ -227,7 +224,7 @@ class Transform(SimpleItem):
             result = value
         return result
 
-    security.declareProtected(ManagePortal, 'get_parameter_infos')
+    @security.protected(ManagePortal)
     def get_parameter_infos(self, key):
         """ get informations about a parameter
 
@@ -242,7 +239,7 @@ class Transform(SimpleItem):
         except KeyError:
             return 'string', '', ''
 
-    security.declareProtected(ManagePortal, 'set_parameters')
+    @security.protected(ManagePortal)
     def set_parameters(self, REQUEST=None, **kwargs):
         """ set transform's parameters """
         if not kwargs:
@@ -274,7 +271,7 @@ class Transform(SimpleItem):
             REQUEST['RESPONSE'].redirect(
                 tr_tool.absolute_url() + '/manage_main')
 
-    security.declareProtected(ManagePortal, 'reload')
+    @security.protected(ManagePortal)
     def reload(self):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)

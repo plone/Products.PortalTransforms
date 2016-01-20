@@ -1,20 +1,24 @@
+# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
 
-from os.path import join, dirname, exists
-import re
-from os import system
 from cStringIO import StringIO
-
+from os import system
+from os.path import dirname
+from os.path import exists
+from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.utils import bin_search
+from Products.PortalTransforms.libtransforms.utils import sansext
 from Products.PortalTransforms.utils import log
+from zope.interface import implementer
+
+import re
 
 
+@implementer(ITransform)
 class XsltTransform(commandtransform):
     """ Custom external command
 
@@ -24,7 +28,6 @@ class XsltTransform(commandtransform):
 
     You can associate different document type to different transformations.
     """
-    implements(ITransform)
 
     __name__ = "xml_to_html"
 
@@ -38,10 +41,11 @@ class XsltTransform(commandtransform):
             'output_encoding': 'UTF-8',
             'dtds': {
                 '-//OASIS//DTD DocBook V4.1//EN':
-                    '/usr/share/sgml/docbook/xsl-stylesheets-1.29/html/docbook.xsl',
-                },
+                    '/usr/share/sgml/docbook/xsl-stylesheets-1.29/html/'
+                    'docbook.xsl',
+            },
             'default_transform': '',
-            }
+        }
         self.config_metadata = {
             'binary_path': (
                 'string',
@@ -75,8 +79,10 @@ printed on stdout.
             'default_transform': (
                 'string',
                 'Default xslt',
-                'Default xslt, used when no specific transformation is found.'),
-            }
+                'Default xslt, used when no specific transformation is '
+                'found.'
+            ),
+        }
         self.config.update(kwargs)
         if name:
             self.__name__ = name

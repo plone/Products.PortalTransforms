@@ -10,7 +10,9 @@ New:
 
 Fixes:
 
-- *add item here*
+- cleanup: autopep8, isort sorted imports, utf8 header, security decorators,
+  zca decorators, minor manual edits
+  [jensens]
 
 
 2.1.10 (2015-09-15)

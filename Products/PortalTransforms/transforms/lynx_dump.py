@@ -1,15 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Uses lynx -dump
 """
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.commandtransform import (
-    commandtransform, popentransform)
+from Products.PortalTransforms.libtransforms.commandtransform import \
+    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import \
+    popentransform
+from zope.interface import implementer
+
 import os
 
 
+@implementer(ITransform)
 class lynx_dump(popentransform):
-    implements(ITransform)
 
     __name__ = "lynx_dump"
     inputs = ('text/html',)
@@ -23,8 +27,9 @@ class lynx_dump(popentransform):
     useStdin = True
 
 
+@implementer(ITransform)
 class old_lynx_dump(commandtransform):
-    implements(ITransform)
+    # XXX i doubt this one works
 
     __name__ = "lynx_dump"
     inputs = ('text/html',)
@@ -47,8 +52,8 @@ class old_lynx_dump(commandtransform):
         return cache
 
     def invokeCommand(self, tmpdir, inputname, outname):
-        os.system('cd "%s" && %s %s "%s" 1>"%s" 2>/dev/null' % \
-               (tmpdir, self.binary, self.binaryArgs, inputname, outname))
+        os.system('cd "%s" && %s %s "%s" 1>"%s" 2>/dev/null' %
+                  (tmpdir, self.binary, self.binaryArgs, inputname, outname))
 
     def astext(self, outname):
         txtfile = open("%s" % (outname), 'r')

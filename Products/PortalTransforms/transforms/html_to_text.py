@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.retransform import retransform
 
 import htmlentitydefs
@@ -21,16 +22,15 @@ def register():
         else:
             res = unichr(result)
 
-        if type(full) is unicode:
+        if isinstance(full, unicode):
             return res
         return res.encode('utf-8')
 
-
     return html_to_text("html_to_text",
-                       ('<script [^>]>.*</script>(?im)', ' '),
-                       ('<style [^>]>.*</style>(?im)', ' '),
-                       ('<head [^>]>.*</head>(?im)', ' '),
-                       ('(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
-                       ('<[^>]*>(?i)(?m)', ' '),
-                       (r'&([a-zA-Z0-9#]*?);', sub_func),
-                       )
+                        ('<script [^>]>.*</script>(?im)', ' '),
+                        ('<style [^>]>.*</style>(?im)', ' '),
+                        ('<head [^>]>.*</head>(?im)', ' '),
+                        ('(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
+                        ('<[^>]*>(?i)(?m)', ' '),
+                        (r'&([a-zA-Z0-9#]*?);', sub_func),
+                        )

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-
 from utils import input_file_path
+
+
 FILE_PATH = input_file_path("demo1.pdf")
 
 
@@ -38,8 +40,10 @@ class TestGraph(ATSiteTestCase):
         """
         # we need a DummyTransform class
         class DT:
+
             def __init__(self, name):
                 self._name = name
+
             def name(self):
                 return self._name
 
@@ -57,7 +61,7 @@ class TestGraph(ATSiteTestCase):
                   '6': [DT('transform4-6')]},
             '5': {'3': [DT('transform5-3')]},
             '7': {'6': [DT('transform7-6')]},
-            }
+        }
         expectedPathes = {
             '1-1': [],
             '1-2': ['transform1-2'],
@@ -71,7 +75,7 @@ class TestGraph(ATSiteTestCase):
             '2-4': ['transform2-4'],
             '4-2': ['transform4-5', 'transform5-3', 'transform3-2'],
             '5-3': ['transform5-3'],
-            }
+        }
         self.engine._mtmap = dummyMap1
         for orig in ['1', '2', '3', '4', '5', '6', '7']:
             for target in ['1', '2', '3', '4', '5', '6', '7']:

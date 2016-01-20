@@ -1,18 +1,20 @@
+# -*- coding: utf-8 -*-
 # Need to be imported first to avoid dll loading problems.
 import pywintypes
 import pythoncom
 
-import os.path
-
-import win32com, sys, string, win32api, traceback, re, tempfile, os
-import win32com.client
-from win32com.client import gencache
-from win32com.client import constants, Dispatch
-
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
+from win32com.client import constants
+from win32com.client import Dispatch
+from win32com.client import gencache
+
+import os
+import os.path
+import win32api
+import win32com
+import win32com.client
 
 
 class document(commandtransform):
@@ -67,6 +69,6 @@ class document(commandtransform):
         body = bodyfinder(html)
         return body
 
-## This function has to be done. It's more difficult to delete the temp
-## directory under Windows, because there is sometimes a directory in it.
-##    def cleanDir(self, tmpdir):
+# This function has to be done. It's more difficult to delete the temp
+# directory under Windows, because there is sometimes a directory in it.
+# def cleanDir(self, tmpdir):

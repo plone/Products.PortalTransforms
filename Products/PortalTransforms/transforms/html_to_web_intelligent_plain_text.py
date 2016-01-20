@@ -1,13 +1,13 @@
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+# -*- coding: utf-8 -*-
 from plone.intelligenttext.transforms import \
     convertHtmlToWebIntelligentPlainText
+from Products.PortalTransforms.interfaces import ITransform
+from zope.interface import implementer
 
 
+@implementer(ITransform)
 class HtmlToWebIntelligentPlainText:
     """Transform which replaces urls and email into hyperlinks"""
-
-    implements(ITransform)
 
     __name__ = "html_to_web_intelligent_plain_text"
     output = "text/x-web-intelligent"
@@ -23,7 +23,7 @@ class HtmlToWebIntelligentPlainText:
                 ('string',
                  'Tab width',
                  'Number of spaces for a tab in the input'),
-            }
+        }
         if name:
             self.__name__ = name
 

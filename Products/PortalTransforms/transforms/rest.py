@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
 from reStructuredText import HTML
+from zope.interface import implementer
 
 
-class rest:
+@implementer(ITransform)
+class rest(object):
     r"""Converts from reST to HTML.
 
       >>> transform = rest()
@@ -41,7 +43,6 @@ class rest:
       ...         print 'Failure'
       Good
     """
-    implements(ITransform)
 
     __name__ = "rest_to_html"
     inputs = ("text/x-rst", "text/restructured",)
@@ -56,7 +57,7 @@ class rest:
             'output': self.output,
             'report_level': 2,
             'initial_header_level': 2,
-            }
+        }
 
         self.config_metadata = {
             'inputs':
@@ -69,7 +70,7 @@ class rest:
                 ('int', 'Report Level',
                  'Level of error reporting. Set to "1" will display all '
                  'messages. Setting it to "5" will display no messages.'),
-            }
+        }
 
         self.config.update(kwargs)
 

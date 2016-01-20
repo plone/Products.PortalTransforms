@@ -1,16 +1,18 @@
+# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
 
-import os.path
 from os import popen3
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.utils import log
+from zope.interface import implementer
+
+import os.path
 
 
+@implementer(ITransform)
 class ExternalCommandTransform(commandtransform):
     """ Custom external command
 
@@ -20,7 +22,6 @@ class ExternalCommandTransform(commandtransform):
     the command line parameters) and return output on stdout.
     Input and output mime types must be set correctly !
     """
-    implements(ITransform)
 
     __name__ = "command_transform"
 
@@ -30,7 +31,7 @@ class ExternalCommandTransform(commandtransform):
             'command_line': '',
             'inputs': ('text/plain',),
             'output': 'text/plain',
-            }
+        }
         self.config_metadata = {
             'binary_path': (
                 'string',
@@ -51,7 +52,7 @@ The transformation\'s result must be printed on stdout.
                 'string',
                 'Output',
                 'Output MIME type. Change with care.'),
-            }
+        }
         self.config.update(kwargs)
         commandtransform.__init__(self, name=name,
                                   binary=self.config['binary_path'], **kwargs)

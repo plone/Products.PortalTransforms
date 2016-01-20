@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from zope.structuredtext import stx2html
+
 
 DEFAULT_STX_LEVEL = 2
 STX_LEVEL = DEFAULT_STX_LEVEL
 
 
-class st:
-    implements(ITransform)
+@implementer(ITransform)
+class st(object):
 
     __name__ = "st_to_html"
     inputs = ("text/structured",)

@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Uses the xpdf (www.foolabs.com/xpdf)
 """
 
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import popentransform  # noqa
+from Products.PortalTransforms.libtransforms.utils import sansext
+from zope.interface import implementer
+
 import os
 
-from zope.interface import implements
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.utils import sansext
-from Products.PortalTransforms.libtransforms.commandtransform import (
-    commandtransform, popentransform)
 
-
+@implementer(ITransform)
 class pdf_to_text(popentransform):
-    implements(ITransform)
 
     __name__ = "pdf_to_text"
     inputs = ('application/pdf',)
@@ -26,8 +27,8 @@ class pdf_to_text(popentransform):
     useStdin = False
 
 
+@implementer(ITransform)
 class old_pdf_to_text(commandtransform):
-    implements(ITransform)
 
     __name__ = "pdf_to_text"
     inputs = ('application/pdf',)

@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
 """
 Uses the http://www.freewisdom.org/projects/python-markdown/ module
 
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
-from zope.interface import implements
-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
+from zope.interface import implementer
+
 
 try:
     import markdown as markdown_transformer
@@ -18,8 +19,8 @@ else:
     HAS_MARKDOWN = True
 
 
-class markdown:
-    implements(ITransform)
+@implementer(ITransform)
+class markdown(object):
 
     __name__ = "markdown_to_html"
     inputs = ("text/x-web-markdown",)

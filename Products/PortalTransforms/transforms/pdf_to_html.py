@@ -1,18 +1,20 @@
+# -*- coding: utf-8 -*-
 """
 Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
-from Products.PortalTransforms.libtransforms.utils import sansext
-from Products.PortalTransforms.libtransforms.commandtransform import (
-    commandtransform, popentransform)
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import popentransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.libtransforms.utils import sansext
+from zope.interface import implementer
+
 import os
 
 
+@implementer(ITransform)
 class popen_pdf_to_html(popentransform):
-    implements(ITransform)
 
     __version__ = '2004-07-02.01'
 
@@ -29,8 +31,8 @@ class popen_pdf_to_html(popentransform):
         return bodyfinder(couterr.read())
 
 
+@implementer(ITransform)
 class pdf_to_html(commandtransform):
-    implements(ITransform)
 
     __name__ = "pdf_to_html"
     inputs = ('application/pdf',)
@@ -60,7 +62,7 @@ class pdf_to_html(commandtransform):
     def invokeCommand(self, tmpdir, fullname):
         if os.name == 'posix':
             cmd = 'cd "%s" && %s %s "%s" 2>error_log 1>/dev/null' % (
-                   tmpdir, self.binary, self.binaryArgs, fullname)
+                tmpdir, self.binary, self.binaryArgs, fullname)
         else:
             cmd = 'cd "%s" && %s %s "%s"' % (
                   tmpdir, self.binary, self.binaryArgs, fullname)

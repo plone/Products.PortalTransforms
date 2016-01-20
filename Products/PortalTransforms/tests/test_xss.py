@@ -1,5 +1,4 @@
-"""
-"""
+# -*- coding: utf-8 -*-
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 

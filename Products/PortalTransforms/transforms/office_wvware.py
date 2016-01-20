@@ -1,8 +1,9 @@
-import os
+# -*- coding: utf-8 -*-
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
-from Products.PortalTransforms.libtransforms.commandtransform import \
-    commandtransform
+
+import os
 
 
 class document(commandtransform):
@@ -29,7 +30,7 @@ class document(commandtransform):
 
         if os.name == 'posix':
             os.system('cd "%s" && %s --charset=utf-8 "%s" "%s.html"' % (
-                    tmpdir, self.binary, self.fullname, self.__name__))
+                tmpdir, self.binary, self.fullname, self.__name__))
 
     def html(self):
         htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')
