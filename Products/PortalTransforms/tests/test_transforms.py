@@ -68,13 +68,27 @@ class TransformTest(ATSiteTestCase):
 
         got_start = got.strip()[:20]
         expected_start = expected.strip()[:20]
-        self.assertEqual(got_start, expected_start,
-                         '[%s]\n\n!=\n\n[%s]\n\nIN %s(%s)' % (
-                             got_start, expected_start, self.transform.name(), self.input))
-        self.assertEqual(self.subobjects, len(res_data.getSubObjects()),
-                         '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
-            self.subobjects, len(res_data.getSubObjects()),
-            self.transform.name(), self.input))
+        msg = 'IN {0}({1}) expected:\n{2}\nbut got:\n{3}'.format(
+            self.transform.name(),
+            self.input,
+            str([ord(x) for x in expected_start]),
+            str([ord(x) for x in got_start]),
+        )
+        self.assertEqual(
+            got_start,
+            expected_start,
+            msg
+        )
+        self.assertEqual(
+            self.subobjects,
+            len(res_data.getSubObjects()),
+            '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
+                self.subobjects,
+                len(res_data.getSubObjects()),
+                self.transform.name(),
+                self.input
+            )
+        )
 
     def testSame(self):
         try:
