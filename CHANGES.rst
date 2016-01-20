@@ -10,6 +10,10 @@ New:
 
 Fixes:
 
+- Fix output of TransformTest to not contain binary in case of failure. This
+  broke the test result parser.
+  [jensens]
+
 - cleanup: autopep8, isort sorted imports, utf8 header, security decorators,
   zca decorators, minor manual edits
   [jensens]
