@@ -28,7 +28,7 @@ setup(name='Products.PortalTransforms',
           test=[
               'zope.testing',
               'Products.Archetypes [test]',
-              'Pillow',
+              'Pillow>=3.1.0',
           ],
       ),
       install_requires=[
@@ -43,4 +43,4 @@ setup(name='Products.PortalTransforms',
           'Zope2',
           'Markdown>=1.7',
       ],
-      )
+)

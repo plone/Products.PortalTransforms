@@ -29,7 +29,7 @@ class PILTransforms:
         if(newwidth or newheight):
             pil_img.thumbnail((newwidth, newheight), PIL.Image.ANTIALIAS)
         pil_img.save(imgio, self.format)
-        data.setData(imgio. getvalue())
+        data.setData(imgio.getvalue())
         return data
 
 

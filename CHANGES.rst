@@ -4,13 +4,10 @@ Changelog
 2.1.12 (unreleased)
 -------------------
 
-New:
+Bug fixes:
 
-- *add item here*
-
-Fixes:
-
-- *add item here*
+- Adapted tests to work on newer Pillow.  Required ``Pillow>=3.1.0`` in tests.
+  [jensens]
 
 
 2.1.11 (2016-02-12)
