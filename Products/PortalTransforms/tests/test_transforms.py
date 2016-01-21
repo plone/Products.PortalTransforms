@@ -43,9 +43,8 @@ class TransformTest(ATSiteTestCase):
             output = self.output + '.nofilename'
         else:
             output = self.output
-        input = open(self.input)
-        orig = input.read()
-        input.close()
+        with open(self.input) as fp:
+            orig = fp.read()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
         self.assert_(IDataStream.providedBy(res_data))

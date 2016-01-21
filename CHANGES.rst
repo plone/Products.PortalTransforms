@@ -1,14 +1,20 @@
 Changelog
 =========
 
-2.1.11 (unreleased)
--------------------
+2.2.0 (unreleased)
+------------------
 
 New:
 
-- *add item here*
+- Depend on ``Pillow>=3.1.0``.
+  [jensens]
 
 Fixes:
+
+- Fix: After using ``Pillow>=3.1.0`` fix TIFF test output for this new
+  version of Pillow writing a ``dword`` instead of a ``word`` as type in 
+  the IFD header for the width.
+  [jensens]
 
 - Fix output of TransformTest to not contain binary in case of failure. This
   broke the test result parser.

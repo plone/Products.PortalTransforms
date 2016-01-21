@@ -2,7 +2,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '2.1.11.dev0'
+version = '2.2.0.dev0'
 
 setup(name='Products.PortalTransforms',
       version=version,
@@ -36,6 +36,7 @@ setup(name='Products.PortalTransforms',
           'plone.intelligenttext',
           'zope.interface',
           'zope.structuredtext',
+          'Pillow>=3.1.0',
           'Products.CMFCore',
           'Products.MimetypesRegistry',
           'Acquisition',
@@ -43,4 +44,4 @@ setup(name='Products.PortalTransforms',
           'Zope2',
           'Markdown>=1.7',
       ],
-      )
+)
