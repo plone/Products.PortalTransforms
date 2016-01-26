@@ -24,6 +24,9 @@ Fixes:
   zca decorators, minor manual edits
   [jensens]
 
+- Make tests compatible with OS other than Ubuntu 14.04.
+  [do3cc]
+
 
 2.1.10 (2015-09-15)
 -------------------

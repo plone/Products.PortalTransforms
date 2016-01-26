@@ -334,7 +334,7 @@ class ParsersTestCase(unittest.TestCase):
 
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',
-     "demo1.pdf", "demo1.html", None, 0,
+     "demo1.pdf", "demo1.html", normalize_html, 0,
      ),
     ('Products.PortalTransforms.transforms.word_to_html',
      "test.doc", "test_word.html", normalize_html, 0,

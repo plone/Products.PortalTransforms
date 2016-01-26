@@ -16,6 +16,7 @@ def normalize_html(s):
     s = re.sub(r"(?s)\s+<", "<", s)
     s = re.sub(r"(?s)>\s+", ">", s)
     s = re.sub(r"\r", "", s)
+    s = re.sub(r"<A", "<a", s)
     return s
 
 
