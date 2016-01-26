@@ -43,5 +43,6 @@ setup(name='Products.PortalTransforms',
           'ZODB3',
           'Zope2',
           'Markdown>=1.7',
+          'reStructuredText',
       ],
 )
