@@ -11,11 +11,8 @@ New:
 
 Fixes:
 
-- Declare missing dependency reStructuredText
-  [pbauer]
-
 - Fix: After using ``Pillow>=3.1.0`` fix TIFF test output for this new
-  version of Pillow writing a ``dword`` instead of a ``word`` as type in
+  version of Pillow writing a ``dword`` instead of a ``word`` as type in 
   the IFD header for the width.
   [jensens]
 
