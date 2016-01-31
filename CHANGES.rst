@@ -9,10 +9,15 @@ New:
 - Depend on ``Pillow>=3.1.0``.
   [jensens]
 
+- Add the fenced_code_blocks extension for Markdown Transformations
+  and depend on Markdown >=2.6.5.
+  https://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html
+  [pcdummy]
+
 Fixes:
 
 - Fix: After using ``Pillow>=3.1.0`` fix TIFF test output for this new
-  version of Pillow writing a ``dword`` instead of a ``word`` as type in 
+  version of Pillow writing a ``dword`` instead of a ``word`` as type in
   the IFD header for the width.
   [jensens]
 
