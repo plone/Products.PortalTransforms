@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from reStructuredText import HTML
+from docutils.core import publish_parts
 from zope.interface import implementer
 
 
@@ -22,7 +22,7 @@ class rest(object):
     default:
 
       >>> try:
-      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())
+      ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())  # noqa
       ... except NotImplementedError:
       ...     print 'Good'
       ... else:
@@ -79,27 +79,64 @@ class rest(object):
 
     def convert(self, orig, data, **kwargs):
         # do the format
+        writer_name = kwargs.get('writer_name', 'html4css1')
+
         encoding = kwargs.get('encoding', 'utf-8')
         input_encoding = kwargs.get('input_encoding', encoding)
         output_encoding = kwargs.get('output_encoding', encoding)
         language = kwargs.get('language', 'en')
         warnings = kwargs.get('warnings', None)
-
+        stylesheet = kwargs.get('stylesheet', None)
         initial_header_level = int(self.config.get('initial_header_level', 2))
         report_level = int(self.config.get('report_level', 2))
+        settings = {
+            'documentclass': '',
+            'traceback': 1,
+            'input_encoding': input_encoding,
+            'output_encoding': output_encoding,
+            'stylesheet': stylesheet,
+            'stylesheet_path': None,
+            'file_insertion_enabled': 0,
+            'raw_enabled': 0,
+            'language_code': language,
+            # starting level for <H> elements:
+            'initial_header_level': initial_header_level,
+            # set the reporting level to something sane:
+            'report_level': report_level,
+            # don't break if we get errors:
+            'halt_level': 6,
+            # remember warnings:
+            'warning_stream': warnings,
+        }
 
-        settings = {'documentclass': '',
-                    'traceback': 1,
-                    }
+        parts = publish_parts(
+            source=orig,
+            writer_name=writer_name,
+            settings_overrides=settings,
+            config_section='zope application'
+        )
 
-        html = HTML(orig,
-                    input_encoding=input_encoding,
-                    output_encoding=output_encoding,
-                    language_code=language,
-                    initial_header_level=initial_header_level,
-                    report_level=report_level,
-                    warnings=warnings,
-                    settings=settings)
+        header = '<h%(level)s class="title">%(title)s</h%(level)s>\n' % {
+            'level': initial_header_level,
+            'title': parts['title']}
+
+        subheader = '<h%(level)s class="subtitle">%(subtitle)s</h%(level)s>\n' % {  # noqa
+            'level': initial_header_level+1,
+            'subtitle': parts['subtitle']}
+
+        body = '%(docinfo)s%(body)s' % {
+            'docinfo': parts['docinfo'],
+            'body': parts['body']}
+
+        html = ''
+        if parts['title']:
+            html = html + header
+        if parts['subtitle']:
+            html = html + subheader
+        html = html + body
+
+        if output_encoding != 'unicode':
+            html = html.encode(output_encoding)
 
         html = html.replace(' class="document"', '', 1)
         data.setData(html)

@@ -6,6 +6,9 @@ Changelog
 
 New:
 
+- Use docutils for rest since the rest-wrapper was removed from zope2.
+  [pbauer]
+
 - Depend on ``Pillow>=3.1.0``.
   [jensens]
 
