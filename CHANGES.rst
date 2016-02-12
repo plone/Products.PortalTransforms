@@ -4,10 +4,6 @@ Changelog
 2.1.11 (unreleased)
 -------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Fix output of TransformTest to not contain binary in case of failure. This
