@@ -25,12 +25,12 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_3(self):
         data_in = """<html><body><IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;></body></html>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_4(self):
         data_in = """<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
 
         self.doTest(data_in, data_out)
 
@@ -48,7 +48,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_7(self):
         data_in = """<a href=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>test med a-tag</a>"""
-        data_out = """<a>test med a-tag</a>"""
+        data_out = """<a href="">test med a-tag</a>"""
         self.doTest(data_in, data_out)
 
     def test_8(self):
@@ -121,7 +121,7 @@ class TestXSSFilter(ATSiteTestCase):
         self.doTest(data_in, data_out)
 
     def test_20(self):
-        data_in = """<img src="http://www.headnet.dk/log.jpg" />"""
+        data_in = """<img src="http://www.headnet.dk/log.jpg"/>"""
         data_out = data_in
         self.doTest(data_in, data_out)
 
@@ -142,7 +142,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_24(self):
         data_in = """<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==">click me</a>"""
-        data_out = """<a>click me</a>"""
+        data_out = """<a href="">click me</a>"""
         self.doTest(data_in, data_out)
 
     def test_25(self):
