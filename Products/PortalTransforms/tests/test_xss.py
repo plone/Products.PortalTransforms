@@ -15,7 +15,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_1(self):
         data_in = """<html><body><img src="javascript:Alert('XSS');" /></body></html>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_2(self):
@@ -76,7 +76,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_12(self):
         data_in = """<img src="vbscript:msgbox('XSS')"/>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_13(self):
@@ -88,7 +88,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_14(self):
         data_in = """<a href="vbscript:Alert('XSS')">test</a>"""
-        data_out = """<a>test</a>"""
+        data_out = """<a href="">test</a>"""
         self.doTest(data_in, data_out)
 
     def test_15(self):

@@ -196,8 +196,9 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
 
     def test_charref_attributes(self):
         orig = '<a href="&#0109;">foo</a>'
+        data_out = '<a href="m">foo</a>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
@@ -206,8 +207,9 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
 
     def test_charref_data(self):
         orig = '<p>bar &#0109; foo</p>'
+        data_out = '<p>bar m foo</p>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
 
 class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
@@ -215,10 +217,10 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
-        valid_tags = copy.deepcopy(VALID_TAGS)
+        valid_tags = dict(VALID_TAGS)
         valid_tags['script'] = 1
-        nasty_tags = copy.deepcopy(NASTY_TAGS)
-        del nasty_tags['script']
+        nasty_tags = list(NASTY_TAGS)
+        nasty_tags.remove('script')
         self.pt.unregisterTransform('safe_html')
         self.pt.registerTransform(
             SafeHTML(nasty_tags=nasty_tags, valid_tags=valid_tags)
