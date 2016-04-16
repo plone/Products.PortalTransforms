@@ -20,7 +20,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_2(self):
         data_in = """<img src="javascript:Alert('XSS');" />"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_3(self):

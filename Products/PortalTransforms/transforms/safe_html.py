@@ -262,13 +262,12 @@ class SafeHTML:
             html = "<html>%s</html>" % orig
             parser = etree.HTMLParser()
             tree = etree.parse(StringIO(html), parser)
-#            for element in tree.getiterator():
-#                if element.tag in ['h3', 'h4', 'h5', 'h6', 'div']:
-#                    element.tag = 'p'
-#                if element.tag in ["html", "body"]:
-#                    etree.strip_tags(tree, element.tag)
             result = etree.tostring(tree.getroot(), pretty_print=True, method="html")
-            cleaner = Cleaner(kill_tags=NASTY_TAGS, page_structure=False, safe_attrs_only=False, embedded=False, style=True)
+            cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
+                              page_structure=False,
+                              safe_attrs_only=False,
+                              embedded=False,
+                              style=True)
             safe_html = fragments_fromstring(cleaner.clean_html(result))
             def convert_to_string(fragment):
                 return isinstance(fragment, basestring) and fragment.strip() or tostring(fragment).strip()
