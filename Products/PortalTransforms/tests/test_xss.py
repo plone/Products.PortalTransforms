@@ -147,7 +147,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_25(self):
         data_in = """<![<a href="javascript:alert('1');">click me</a>"""
-        data_out = ""
+        data_out = '<p>click me</p>'
         self.doTest(data_in, data_out)
 
     def test_26(self):
