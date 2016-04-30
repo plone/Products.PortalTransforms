@@ -262,7 +262,7 @@ class SafeHTML:
             html = "<html>%s</html>" % orig
             parser = etree.HTMLParser()
             tree = etree.parse(StringIO(html), parser)
-            result = etree.tostring(tree.getroot(), pretty_print=True, method="html")
+            result = etree.tostring(tree.getroot(), method="html")
             cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
                               page_structure=False,
                               safe_attrs_only=False,
