@@ -38,12 +38,12 @@ class TestXSSFilter(ATSiteTestCase):
         data_in = """<img src="jav
         asc
         ript:Alert('XSS');" />"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_6(self):
         data_in = """<img src="jav asc ript:Alert('XSS');"/>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_7(self):
@@ -83,7 +83,7 @@ class TestXSSFilter(ATSiteTestCase):
         data_in = """<img src="vb
         sc
         ript:msgbox('XSS')"/>"""
-        data_out = """<img />"""
+        data_out = """<img src=""/>"""
         self.doTest(data_in, data_out)
 
     def test_14(self):
@@ -132,12 +132,12 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_22(self):
         data_in = '<<frame></frame>script>alert("XSS");<<frame></frame>/script>'
-        data_out = '&lt;script&gt;alert("XSS");&lt;/script&gt;'
+        data_out = 'script>alert("XSS");/script>'
         self.doTest(data_in, data_out)
 
     def test_23(self):
         data_in = """<a href="javascript&amp;#0:alert('1');">click me</a>"""
-        data_out = """<a>click me</a>"""
+        data_out = """<a href="">click me</a>"""
         self.doTest(data_in, data_out)
 
     def test_24(self):
@@ -147,7 +147,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_25(self):
         data_in = """<![<a href="javascript:alert('1');">click me</a>"""
-        data_out = '<p>click me</p>'
+        data_out = 'click me'
         self.doTest(data_in, data_out)
 
     def test_26(self):
@@ -157,7 +157,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_27(self):
         data_in = """<a href=javascript&colon;alert(1)>click me</a>"""
-        data_out = """<a>click me</a>"""
+        data_out = """<a href="">click me</a>"""
         self.doTest(data_in, data_out)
 
     def test_28(self):
@@ -167,12 +167,12 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_29(self):
         data_in = """<meta name="Description" content="0;url=data&colon;,xss" HTTP-EQUIV="refresh">"""
-        data_out = """<meta name="Description" http-equiv="refresh" />"""
+        data_out =''
         self.doTest(data_in, data_out)
 
     def test_30(self):
         data_in = """<meta name="Description" content="0;url=javascript&colon;alert(1)" HTTP-EQUIV="refresh">"""
-        data_out = """<meta name="Description" http-equiv="refresh" />"""
+        data_out = ''
         self.doTest(data_in, data_out)
 
     def test_31(self):
@@ -187,17 +187,17 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_33(self):
         data_in = r"""<a href="java&Tab;scr&NewLine;ipt:alert(1)">asd</a>"""
-        data_out = """<a>asd</a>"""
+        data_out = """<a href="">asd</a>"""
         self.doTest(data_in, data_out)
 
     def test_34(self):
         data_in = r"""<a href="javasc&baz;ript:alert(1)">asdf</a>"""
-        data_out = """<a>asdf</a>"""
+        data_out = """<a href="">asdf</a>"""
         self.doTest(data_in, data_out)
 
     def test_35(self):
         data_in = r"""<![CDATA[><script>alert(1);</script>]]>"""
-        data_out = """"""
+        data_out = """]]>"""
         self.doTest(data_in, data_out)
 
     def test_36(self):
