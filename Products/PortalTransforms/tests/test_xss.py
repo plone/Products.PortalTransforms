@@ -211,16 +211,9 @@ class TestXSSFilter(ATSiteTestCase):
         self.doTest(data_in, data_out)
 
     def test_38(self):
-        data_in = """' <p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>' """
-        self.doTest(data_in, data_in)
+        data_in = """'<p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>'"""
+        self.doTest(data_in, data_in.replace('\\', '%5C'))  # URL encoding for poor people
 
     def test_39(self):
         data_in = """<a href="&#42;&Ascr;\xa9"></a>"""
         self.doTest(data_in, data_in)
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestXSSFilter))
-    return suite

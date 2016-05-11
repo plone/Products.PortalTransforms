@@ -2587,6 +2587,7 @@ class SafeHTML:
                         for attrib, value in elem.attrib.items():
                             if hasScript(value):
                                 elem.attrib[attrib] = ""
+            
 
             result = etree.tostring(tree.getroot(), method="html")
             cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
