@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from zope.interface import implements
 from Products.PortalTransforms.utils import log
 from lxml import etree
-from cStringIO import StringIO
+from lxml import html
 from lxml.html.clean import Cleaner
-from lxml.html import fragments_fromstring
-from lxml.etree import tostring
+
 
 # add some tags to nasty.
 NASTY_TAGS = frozenset(['style', 'script', 'object', 'applet', 'meta', 'embed'])  # noqa
@@ -2426,35 +2426,6 @@ html5entities = {
 }
 
 
-class HTMLParser(Cleaner):
-    """
-    Inherited cleaner class of lxml.html.
-
-    Modified __call__ method of the lxml.html to allow the
-    frames tags in the input.
-    """
-
-    def __call__(self, doc):
-        kill_tags = set(self.kill_tags or ())
-        remove_tags = set(self.remove_tags or ())
-        if self.frames:
-            pass
-        if self.embedded:
-            for el in list(doc.iter('param')):
-                # found_parent = False
-                parent = el.getparent()
-                while parent is not None and parent.tag not in ('applet', 'object'):
-                    parent = parent.getparent()
-                if parent is None:
-                    el.drop_tree()
-            kill_tags.update(('applet',))
-            # The alternate contents that are in an iframe are a good fallback:
-            remove_tags.update(('embed', 'layer', 'object', 'param'))
-
-
-
-
-
 class SafeHTML:
     """Simple transform which uses lxml to
     clean potentially bad tags.
@@ -2569,41 +2540,37 @@ class SafeHTML:
         # we need a disable option
         if self.config.get('disable_transform'):
             data.setData(orig)
-        elif orig == "" or orig == "<html></html>" or orig == "<html />" or orig == "<html/>":
-            data.setData('')
-        elif '<' not in orig:
-            data.setData(orig)  # shortcut for input which is not HTML
         else:
             # append html tag to create a dummy parent for the tree
-            if '<body' not in orig:
-                html_doc = "<html><body>%s</body></html>" % orig
+            html_parser = html.HTMLParser(encoding='utf-8')
+            if '<html' in orig.lower():
+                # full html
+                tree = html.fromstring(orig, parser=html_parser)
+                strip_outer = bodyfinder
             else:
-                html_doc = "<html>%s</html>" % orig
-            parser = etree.HTMLParser()
-            tree = etree.parse(StringIO(html_doc), parser)
-            for dangerous in ('img', 'a'):
-                for elem in tree.iterfind('.//%s' % dangerous):
-                    if elem is not None:
-                        for attrib, value in elem.attrib.items():
-                            if hasScript(value):
-                                elem.attrib[attrib] = ""
-            
+                # partial html (i.e. coming from WYSIWYG editor)
+                tree = html.fragment_fromstring(orig, create_parent=True, parser=html_parser)
 
-            result = etree.tostring(tree.getroot(), method="html")
+                def strip_outer(s):
+                    return s[5:-6]
+
+            for elem in tree.iter(etree.Element):
+                if elem is not None:
+                    for attrib, value in elem.attrib.items():
+                        if hasScript(value):
+                            del elem.attrib[attrib]
+
             cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
                               page_structure=False,
                               safe_attrs_only=False,
                               embedded=False,
                               remove_unknown_tags=True,
                               meta=False,
-                              javascript='script' in self.config['nasty_tags'],
-                              style='style' in self.config['nasty_tags'])
-            safe_html = fragments_fromstring(cleaner.clean_html(result))
-            def convert_to_string(fragment):
-                return isinstance(fragment, basestring) and fragment.strip() or tostring(fragment).strip()
-
-            safe_html2 = ''.join([convert_to_string(fragment) for fragment in safe_html])
-
+                              javascript=bool('script' in self.config['nasty_tags']),
+                              scripts=bool('script' in self.config['nasty_tags']),
+                              style=False)
+            cleaner(tree)
+            safe_html2 = strip_outer(etree.tostring(tree, encoding='utf-8').strip()) # remove all except body or outer div
             data.setData(safe_html2)
 
         return data
