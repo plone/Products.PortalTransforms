@@ -2,11 +2,14 @@ Changelog
 =========
 
 2.2.3 (unreleased)
+2.2.2 (unreleased)
+2.3 (unreleased)
 ------------------
 
 Breaking changes:
 
-- *add item here*
+- Use lxml.html.Cleaner for safe HTML transforms (PLIP 1441)
+  [prakharjoshi, tomgross]
 
 New features:
 

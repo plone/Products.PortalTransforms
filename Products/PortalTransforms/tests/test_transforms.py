@@ -5,6 +5,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
+from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
 from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
@@ -18,22 +19,21 @@ from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.word_to_html import word_to_html
+
 from utils import input_file_path
 from utils import load
 from utils import matching_inputs
 from utils import normalize_html
 from utils import output_file_path
+from xml.sax.saxutils import unescape
 
-import copy
 import itertools
-import logging
 import os
 import unittest
 
 
 # we have to set locale because lynx output is locale sensitive !
 os.environ['LC_ALL'] = 'C'
-logger = logging.getLogger('PortalTransforms')
 
 
 class TransformTest(ATSiteTestCase):
@@ -73,6 +73,7 @@ class TransformTest(ATSiteTestCase):
             str([ord(x) for x in expected_start]),
             str([ord(x) for x in got_start]),
         )
+
         self.assertEqual(
             got_start,
             expected_start,
@@ -191,23 +192,27 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
 
     def test_entityiref_attributes(self):
         orig = '<a href="&uuml;">foo</a>'
+        data_out = '<a href="&#xFC;">foo</a>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
     def test_charref_attributes(self):
         orig = '<a href="&#0109;">foo</a>'
+        data_out = '<a href="m">foo</a>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
+        data_out = '<p>foo \xc3\xbc bar</p>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
     def test_charref_data(self):
         orig = '<p>bar &#0109; foo</p>'
+        data_out = '<p>bar m foo</p>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), orig)
+        self.assertEqual(data.getData(), data_out)
 
 
 class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
@@ -215,10 +220,10 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
     def afterSetUp(self):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
-        valid_tags = copy.deepcopy(VALID_TAGS)
+        valid_tags = dict(VALID_TAGS)
         valid_tags['script'] = 1
-        nasty_tags = copy.deepcopy(NASTY_TAGS)
-        del nasty_tags['script']
+        nasty_tags = list(NASTY_TAGS)
+        nasty_tags.remove('script')
         self.pt.unregisterTransform('safe_html')
         self.pt.registerTransform(
             SafeHTML(nasty_tags=nasty_tags, valid_tags=valid_tags)
@@ -229,7 +234,7 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
 
     def test_entities_outside_script(self):
         orig = "<code>a > 0 && b < 1</code>"
-        escaped = "<code>a &gt; 0 &amp;&amp; b &lt; 1</code>"
+        escaped = '<code>a &gt; 0 &amp;&amp; b </code>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), escaped)
 
@@ -248,12 +253,12 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
                '<p>Officiële inschrijvingen </p>',
                )
         for tokens in itertools.product(all, repeat=5):
-            orig = '\n'.join(tokens)
+            orig = ''.join(tokens)
             data = self.pt.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
-            self.assertEqual(data.getData(), orig)
+            self.assertEqual(unescape(data.getData()), orig.replace('&nbsp;', '\xc2\xa0'))
 
     def test_script_with_all_entities_and_unicode(self):
         orig = ('<p>Officiële inschrijvingen</p>',
@@ -266,20 +271,22 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
         escd = ('<p>Officiële inschrijvingen</p>',
                 '<script type="text/javascript">'
                 '$("h1 > ul").hide();'
-                'entities = "©";'
+                'entities = "&copy;";'
                 '</script>',
-                '<p>(KU&nbsp;Loket)</p>',
+                '<p>(KU\xc2\xa0Loket)</p>',
                 )
+
         all = zip(orig, escd)
         for tokens in itertools.product(all, repeat=4):
             orig_tokens, escaped_tokens = zip(*tokens)
-            orig = '\n'.join(orig_tokens)
-            escaped = '\n'.join(escaped_tokens)
+            orig = ''.join(orig_tokens)
+            escaped = ''.join(escaped_tokens)
             data = self.pt.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
-            self.assertEqual(data.getData(), escaped)
+
+            self.assertEqual(unescape(data.getData()), escaped)
 
 
 class WordTransformsTest(ATSiteTestCase):
@@ -293,43 +300,27 @@ class WordTransformsTest(ATSiteTestCase):
         wordFile = open(input_file_path('test_js.doc'), 'rb')
         data = wordFile.read()
         # should not throw exception even though it holds javascript link
-        data = self.pt.convertTo(target_mimetype='text/html',
-                                 orig=data)
+        self.pt.convertTo(target_mimetype='text/html', orig=data)
 
 
 class ParsersTestCase(unittest.TestCase):
 
     def test_javascript_on_attr(self):
-        from Products.PortalTransforms.libtransforms.utils import (
-            scrubHTMLNoRaise, scrubHTML)
-        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
-
         htmlFile = open(input_file_path('test_js_on.html'), 'rb')
         data = htmlFile.read()
-        self.assertRaises(IllegalHTML, scrubHTML, data)
         result = scrubHTMLNoRaise(data)
         self.assertTrue('link' in result)
 
     def test_javascript_uri(self):
-        from Products.PortalTransforms.libtransforms.utils import (
-            scrubHTMLNoRaise, scrubHTML)
-        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
-
         htmlFile = open(input_file_path('test_js_uri.html'), 'rb')
         data = htmlFile.read()
-        self.assertRaises(IllegalHTML, scrubHTML, data)
         result = scrubHTMLNoRaise(data)
         self.assertTrue('link' in result)
 
     def test_invalid_tags(self):
-        from Products.PortalTransforms.libtransforms.utils import (
-            scrubHTMLNoRaise, scrubHTML)
-        from Products.PortalTransforms.libtransforms.utils import IllegalHTML
-
         htmlFile = open(input_file_path('test_invalid_tags.html'), 'rb')
         data = htmlFile.read()
-        self.assertRaises(IllegalHTML, scrubHTML, data)
-        self.assertRaises(IllegalHTML, scrubHTMLNoRaise, data)
+        self.assertEqual(scrubHTMLNoRaise(data).strip(), '')
 
 
 TRANSFORMS_TESTINFO = (
@@ -394,7 +385,6 @@ def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
     for fname in matching_inputs(pattern):
         outname = '%s.out' % fname.split('.')[0]
-        # print transform, fname, outname
         TRANSFORMS_TESTINFO += ((transform, fname, outname, normalize, 0),)
 
 

@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-from cgi import escape
+import logging
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from zope.interface import implements
 from Products.PortalTransforms.utils import log
-from Products.PortalTransforms.utils import safeToInt
-from sgmllib import SGMLParseError
-from sgmllib import SGMLParser
-from zope.interface import implementer
-
-import logging
-import re
+from lxml import etree
+from lxml import html
+from lxml.html.clean import Cleaner
 
 
-class IllegalHTML(ValueError):
-    """ Illegal HTML error.
-    """
+# add some tags to nasty.
+NASTY_TAGS = frozenset(['style', 'script', 'object', 'applet', 'meta', 'embed'])  # noqa
 
-
+# tag mapping: tag -> short or long tag
+# These are the HTML tags that we will leave intact
 # These are the HTML tags that we will leave intact
 VALID_TAGS = {
     'a': 1,
@@ -69,17 +66,7 @@ VALID_TAGS = {
     'iframe': 1,
 }
 
-NASTY_TAGS = {
-    'script': 1,
-    'object': 1,
-    'embed': 1,
-    'applet': 1,
-    'style': 1,  # this helps improve Word HTML cleanup.
-    'meta': 1,  # allowed by parsers, but can cause unexpected behavior
-}
-
-
-# add some tags to allowed types.
+# add some tags to allowed types. These should be backported to CMFDefault.
 VALID_TAGS['ins'] = 1
 VALID_TAGS['del'] = 1
 VALID_TAGS['q'] = 1
@@ -124,19 +111,14 @@ VALID_TAGS['source'] = 1
 VALID_TAGS['time'] = 1
 VALID_TAGS['video'] = 1
 
+_strings = (bytes, str)
 
-msg_pat = """
-<div class="system-message">
-<p class="system-message-title">System message: %s</p>
-%s</d>
-"""
-
+import re
 CSS_COMMENT = re.compile(r'/\*.*\*/')
 
 
 def hasScript(s):
     """Dig out evil Java/VB script inside an HTML attribute.
-
     >>> hasScript(
     ...     'data:text/html;'
     ...     'base64,PHNjcmlwdD5hbGVydCgidGVzdCIpOzwvc2NyaXB0Pg==')
@@ -158,7 +140,6 @@ def hasScript(s):
         if t in s:
             return True
     return False
-
 
 CHR_RE = re.compile(r'\\(\d+)')
 
@@ -2449,147 +2430,8 @@ html5entities = {
 }
 
 
-class StrippingParser(SGMLParser):
-    """Pass only allowed tags;  raise exception for known-bad.
-
-    Copied from Products.CMFDefault.utils
-    Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
-    """
-
-    # This replaces SGMLParser.entitydefs
-    entitydefs = html5entities
-
-    def __init__(self, valid, nasty, remove_javascript, raise_error):
-        SGMLParser.__init__(self)
-        self.result = []
-        self.valid = valid
-        self.nasty = nasty
-        self.remove_javascript = remove_javascript
-        self.raise_error = raise_error
-        self.suppress = False
-        self.inside_script = False
-
-    def handle_data(self, data):
-        if self.suppress:
-            return
-        if data:
-            self.result.append(escape(data))
-
-    def handle_charref(self, name):
-        if self.suppress:
-            return
-        self.result.append(self.convert_charref(name))
-
-    def handle_comment(self, comment):
-        pass
-
-    def handle_decl(self, data):
-        pass
-
-    def handle_entityref(self, name):
-        if self.suppress:
-            return
-        if self.inside_script:
-            self.result.append(self.entitydefs.get(name, u'').encode('utf8'))
-        else:
-            self.result.append(self.convert_entityref(name))
-
-    def convert_entityref(self, name):
-        if name + ';' in self.entitydefs:
-            x = ';'
-        elif name in self.entitydefs:
-            x = ''
-        else:
-            x = ';'
-        return '&%s%s' % (name, x)
-
-    def convert_charref(self, name):
-        return '&#%s;' % name
-
-    def unknown_starttag(self, tag, attrs):
-        """ Delete all tags except for legal ones.
-        """
-        if self.suppress:
-            return
-
-        if tag in self.valid:
-            if tag == "script":
-                self.inside_script = True
-            self.result.append('<' + tag)
-
-            remove_script = getattr(self, 'remove_javascript', True)
-
-            for k, v in attrs:
-                if remove_script and k.strip().lower().startswith('on'):
-                    if not self.raise_error:
-                        continue
-                    else:
-                        raise IllegalHTML('Script event "%s" not allowed.' % k)
-                elif remove_script and hasScript(v):
-                    if not self.raise_error:
-                        continue
-                    else:
-                        raise IllegalHTML('Script URI "%s" not allowed.' % v)
-                else:
-                    self.result.append(' %s="%s"' % (k, v))
-
-            # UNUSED endTag = '</%s>' % tag
-            if safeToInt(self.valid.get(tag)):
-                self.result.append('>')
-            else:
-                self.result.append(' />')
-        elif tag in self.nasty:
-            self.suppress = True
-            if self.raise_error:
-                raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
-        else:
-            # omit tag
-            pass
-
-    def unknown_endtag(self, tag):
-        self.inside_script = False
-        if tag in self.nasty and tag not in self.valid:
-            self.suppress = False
-        if self.suppress:
-            return
-        if safeToInt(self.valid.get(tag)):
-            self.result.append('</%s>' % tag)
-
-    def parse_declaration(self, i):
-        """Fix handling of CDATA sections. Code borrowed from BeautifulSoup.
-        """
-        j = None
-        if self.rawdata[i:i + 9] == '<![CDATA[':
-            k = self.rawdata.find(']]>', i)
-            if k == -1:
-                k = len(self.rawdata)
-            j = k + 3
-        else:
-            try:
-                j = SGMLParser.parse_declaration(self, i)
-            except SGMLParseError:
-                j = len(self.rawdata)
-        return j
-
-    def getResult(self):
-        return ''.join(self.result)
-
-
-def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
-              remove_javascript=True, raise_error=True):
-    """ Strip illegal HTML tags from string text.
-    """
-    parser = StrippingParser(valid=valid, nasty=nasty,
-                             remove_javascript=remove_javascript,
-                             raise_error=raise_error)
-    parser.feed(html)
-    parser.close()
-    return parser.getResult()
-
-
-@implementer(ITransform)
-class SafeHTML(object):
-    """Simple transform which uses CMFDefault functions to
+class SafeHTML:
+    """Simple transform which uses lxml to
     clean potentially bad tags.
 
     Tags must explicit be allowed in valid_tags to pass. Only
@@ -2604,6 +2446,8 @@ class SafeHTML(object):
         -> Database Management -> main || other_used_database
         -> Flush Cache.
     """
+
+    implements(ITransform)
 
     __name__ = "safe_html"
     inputs = ('text/html', )
@@ -2620,11 +2464,11 @@ class SafeHTML(object):
                 'cellspacing', 'cellpadding', 'bgcolor'],
             'stripped_combinations': {'table th td': 'width height'},
             'style_whitelist': ['text-align', 'list-style-type', 'float',
-                                'padding-left', 'text-decoration'],
+                                'padding-left', ],
             'class_blacklist': [],
             'remove_javascript': 1,
             'disable_transform': 0,
-        }
+            }
 
         self.config_metadata = {
             'inputs': ('list',
@@ -2672,7 +2516,7 @@ class SafeHTML(object):
             'disable_transform': ("int",
                                   'disable_transform',
                                   'If 1, nothing is done.'),
-        }
+            }
 
         self.config.update(kwargs)
 
@@ -2700,24 +2544,47 @@ class SafeHTML(object):
         # we need a disable option
         if self.config.get('disable_transform'):
             data.setData(orig)
-            return data
-
-        for repeat in range(2):
-            try:
-                safe = scrubHTML(
-                    bodyfinder(orig),
-                    valid=self.config.get('valid_tags', {}),
-                    nasty=self.config.get('nasty_tags', {}),
-                    remove_javascript=self.config.get(
-                        'remove_javascript', True),
-                    raise_error=False)
-            except IllegalHTML as inst:
-                data.setData(msg_pat % ("Error", str(inst)))
-                break
-            else:
-                data.setData(safe)
-                orig = safe
+        else:
+            safe_html = self.scrub_html(orig)
+            data.setData(safe_html)
         return data
+
+    def scrub_html(self, orig):
+        # append html tag to create a dummy parent for the tree
+        html_parser = html.HTMLParser(encoding='utf-8')
+        if '<html' in orig.lower():
+            # full html
+            tree = html.fromstring(orig, parser=html_parser)
+            strip_outer = bodyfinder
+        else:
+            # partial html (i.e. coming from WYSIWYG editor)
+            tree = html.fragment_fromstring(orig, create_parent=True, parser=html_parser)
+
+            def strip_outer(s):
+                return s[5:-6]
+
+        for elem in tree.iter(etree.Element):
+            if elem is not None:
+                for attrib, value in elem.attrib.items():
+                    if hasScript(value):
+                        del elem.attrib[attrib]
+
+        cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
+                          page_structure=False,
+                          safe_attrs_only=False,
+                          embedded=False,
+                          remove_unknown_tags=True,
+                          meta=False,
+                          javascript=bool('script' in self.config['nasty_tags']),
+                          scripts=bool('script' in self.config['nasty_tags']),
+                          style=False)
+        try:
+            cleaner(tree)
+        except AssertionError:
+            # some VERY invalid HTML
+            return ''
+        # remove all except body or outer div
+        return strip_outer(etree.tostring(tree, encoding='utf-8').strip())
 
 
 def register():
