@@ -100,7 +100,7 @@ class rest(object):
             'raw_enabled': 0,
             'language_code': language,
             # starting level for <H> elements:
-            'initial_header_level': initial_header_level,
+            'initial_header_level': initial_header_level + 1,
             # set the reporting level to something sane:
             'report_level': report_level,
             # don't break if we get errors:

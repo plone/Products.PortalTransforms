@@ -10,6 +10,12 @@ New:
 
 Fixes:
 
+- Fix regression in rest transform vs. old Zope2 reStructuredText wrapper:
+  headings now proper level in settings for body, which was necessary to
+  preserve levels assumed in downstream use of this transform
+  (e.g. Archetypes).  Behavior now matches that of previous wrapper.
+  [seanupton]
+
 - *add item here*
 
 
