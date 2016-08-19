@@ -4,10 +4,6 @@ Changelog
 2.2.1 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Fix regression in rest transform vs. old Zope2 reStructuredText wrapper:
