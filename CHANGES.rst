@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.1 (unreleased)
+2.2.1 (2016-08-19)
 ------------------
 
 Fixes:
@@ -11,8 +11,6 @@ Fixes:
   preserve levels assumed in downstream use of this transform
   (e.g. Archetypes).  Behavior now matches that of previous wrapper.
   [seanupton]
-
-- *add item here*
 
 
 2.2.0 (2016-02-14)
