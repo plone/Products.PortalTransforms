@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from htmlentitydefs import entitydefs
 from Products.PortalTransforms.utils import log
-from sgmllib import SGMLParseError
-from sgmllib import SGMLParser
 
 import os
 import sys
+import warnings
 
 
 try:
@@ -94,6 +92,10 @@ def bodyfinder(text):
 
 def scrubHTMLNoRaise(html):
     """ Strip illegal HTML tags from string text.  """
+    warnings.warn(("Call to deprecated function `scrubHTMLNoRaise` or `scrubHTML`."
+                   "Use SafeHTML().scrub_html(html) instead."),
+                  category=DeprecationWarning,
+                  stacklevel=2)
     from Products.PortalTransforms.transforms.safe_html import SafeHTML
     transform = SafeHTML()
     return transform.scrub_html(html)

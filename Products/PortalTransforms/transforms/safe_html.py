@@ -2,7 +2,7 @@
 import logging
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.utils import log
 from lxml import etree
 from lxml import html
@@ -2430,6 +2430,7 @@ html5entities = {
 }
 
 
+@implementer(ITransform)
 class SafeHTML:
     """Simple transform which uses lxml to
     clean potentially bad tags.
@@ -2446,8 +2447,6 @@ class SafeHTML:
         -> Database Management -> main || other_used_database
         -> Flush Cache.
     """
-
-    implements(ITransform)
 
     __name__ = "safe_html"
     inputs = ('text/html', )
@@ -2575,8 +2574,8 @@ class SafeHTML:
                           embedded=False,
                           remove_unknown_tags=True,
                           meta=False,
-                          javascript=bool('script' in self.config['nasty_tags']),
-                          scripts=bool('script' in self.config['nasty_tags']),
+                          javascript='script' in self.config['nasty_tags'],
+                          scripts='script' in self.config['nasty_tags'],
                           style=False)
         try:
             cleaner(tree)
