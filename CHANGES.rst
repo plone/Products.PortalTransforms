@@ -4,6 +4,7 @@ Changelog
 2.2.3 (unreleased)
 2.2.2 (unreleased)
 2.3 (unreleased)
+3.0.0 (unreleased)
 ------------------
 
 Breaking changes:
