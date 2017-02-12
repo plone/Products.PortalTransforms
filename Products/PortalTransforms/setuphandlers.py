@@ -27,23 +27,23 @@ def correctMapping(out, portal):
                         print >> out, "...ok"
 
 
-def updateSafeHtml(out, portal):
-    print >> out, 'Update safe_html...'
-    safe_html_id = 'safe_html'
-    safe_html_module = "Products.PortalTransforms.transforms.safe_html"
+def updateTransform(out, portal, id):
+    print >> out, 'Update {0}...'.format(id)
+    transform_id = id
+    transform_module = "Products.PortalTransforms.transforms.{0}".format(id)
     pt = getToolByName(portal, 'portal_transforms')
     for id in pt.objectIds():
         transform = getattr(pt, id)
-        if transform.id == safe_html_id and \
-                transform.module == safe_html_module:
+        if transform.id == transform_id and \
+                transform.module == transform_module:
             try:
                 transform.get_parameter_value('disable_transform')
             except KeyError:
-                print >> out, '  replace safe_html (%s, %s) ...' % (
-                    transform.name(), transform.module)
+                print >> out, '  replace {0} ({1}, {2}) ...'.format(
+                    id, transform.name(), transform.module)
                 try:
                     pt.unregisterTransform(id)
-                    pt.manage_addTransform(id, safe_html_module)
+                    pt.manage_addTransform(id, transform_module)
                 except:
                     raise
                 else:
@@ -55,7 +55,8 @@ def updateSafeHtml(out, portal):
 def installPortalTransforms(portal):
     out = StringIO()
 
-    updateSafeHtml(out, portal)
+    updateTransform(out, portal, 'safe_html')
+    updateTransform(out, portal, 'markdown_to_html')
 
     correctMapping(out, portal)
 

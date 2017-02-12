@@ -26,8 +26,31 @@ class markdown(object):
     inputs = ("text/x-web-markdown",)
     output = "text/html"
 
+    def __init__(self, name=None, enabled_extensions=('markdown.extensions.fenced_code', 'markdown.extensions.nl2br', ), **kwargs):
+        self.config = {
+            'enabled_extensions': enabled_extensions,
+        }
+
+        self.config_metadata = {
+            'enabled_extensions': (
+                'list',
+                'enabled_extensions',
+                'Look for available extensions at ' +
+                'https://pythonhosted.org/Markdown/extensions/index.html ' +
+                'or write your own.'
+            ),
+        }
+
+        if name:
+            self.__name__ = name
+
     def name(self):
         return self.__name__
+
+    def __getattr__(self, attr):
+        if attr in self.config:
+            return self.config[attr]
+        raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
@@ -36,7 +59,7 @@ class markdown(object):
             # PortalTransforms, however expects a string as result,
             # so we encode the unicode result back to UTF8:
             html = markdown_transformer \
-                .markdown(orig, extensions=['markdown.extensions.fenced_code']) \
+                .markdown(orig, extensions=self.config.get('enabled_extensions', [])) \
                 .encode('utf-8')
         else:
             html = orig
