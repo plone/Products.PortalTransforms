@@ -27,29 +27,28 @@ def correctMapping(out, portal):
                         print >> out, "...ok"
 
 
-def updateTransform(out, portal, id):
-    print >> out, 'Update {0}...'.format(id)
-    transform_id = id
-    transform_module = "Products.PortalTransforms.transforms.{0}".format(id)
+def updateTransform(out, portal, transform_id):
+    print >> out, 'Update {0}...'.format(transform_id)
+    transform_module = "Products.PortalTransforms.transforms.{0}".format(transform_id)
     pt = getToolByName(portal, 'portal_transforms')
-    for id in pt.objectIds():
-        transform = getattr(pt, id)
+    for item in pt.objectIds():
+        transform = getattr(pt, item)
         if transform.id == transform_id and \
                 transform.module == transform_module:
             try:
                 transform.get_parameter_value('disable_transform')
             except KeyError:
-                print >> out, '  replace {0} ({1}, {2}) ...'.format(
-                    id, transform.name(), transform.module)
+                out.write('  replace {0} ({1}, {2}) ...'.format(
+                    item, transform.name(), transform.module))
                 try:
-                    pt.unregisterTransform(id)
-                    pt.manage_addTransform(id, transform_module)
+                    pt.unregisterTransform(item)
+                    pt.manage_addTransform(item, transform_module)
                 except:
                     raise
                 else:
-                    print >> out, '  ...done'
+                    out.write('  ...done')
 
-    print >> out, '...done'
+    out.write('  ...done')
 
 
 def installPortalTransforms(portal):
