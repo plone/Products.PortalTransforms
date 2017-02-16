@@ -132,7 +132,7 @@ class TestXSSFilter(ATSiteTestCase):
 
     def test_22(self):
         data_in = '<<frame></frame>script>alert("XSS");<<frame></frame>/script>'
-        data_out = 'script&gt;alert("XSS");/script&gt;'
+        data_out = '&lt;script&gt;alert("XSS");&lt;/script&gt;'
         self.doTest(data_in, data_out)
 
     def test_23(self):

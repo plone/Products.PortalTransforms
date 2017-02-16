@@ -234,7 +234,7 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
 
     def test_entities_outside_script(self):
         orig = "<code>a > 0 && b < 1</code>"
-        escaped = '<code>a &gt; 0 &amp;&amp; b </code>'
+        escaped = '<code>a &gt; 0 &amp;&amp; b &lt; 1</code>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), escaped)
 
