@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- Add the possibility to switch on markdown extension through the zmi.
+  [pabo3000]
 
 Bug fixes:
 
