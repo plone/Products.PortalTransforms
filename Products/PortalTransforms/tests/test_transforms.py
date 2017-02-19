@@ -1,4 +1,5 @@
 # -*- coding: utf8  -*-
+from copy import copy
 from os.path import exists
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
@@ -222,8 +223,8 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
         self.pt = self.portal.portal_transforms
         valid_tags = dict(VALID_TAGS)
         valid_tags['script'] = 1
-        nasty_tags = list(NASTY_TAGS)
-        nasty_tags.remove('script')
+        nasty_tags = dict(NASTY_TAGS)
+        nasty_tags['script'] = 0
         self.pt.unregisterTransform('safe_html')
         self.pt.registerTransform(
             SafeHTML(nasty_tags=nasty_tags, valid_tags=valid_tags)

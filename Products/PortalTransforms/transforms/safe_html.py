@@ -10,7 +10,14 @@ from lxml.html.clean import Cleaner
 
 
 # add some tags to nasty.
-NASTY_TAGS = frozenset(['style', 'script', 'object', 'applet', 'meta', 'embed'])  # noqa
+NASTY_TAGS = {
+    'style': 1,
+    'script': 1,
+    'object': 1,
+    'applet': 1,
+    'meta': 1,
+    'embed': 1
+}
 
 # tag mapping: tag -> short or long tag
 # These are the HTML tags that we will leave intact
@@ -41,7 +48,7 @@ VALID_TAGS = {
     'hr': 0,
     'html': 1,
     'i': 1,
-    'img': 0,
+    'img': 1,
     'kbd': 1,
     'li': 1,
     # 'link' 1, type="script" hoses us
@@ -2458,6 +2465,7 @@ class SafeHTML:
             'output': self.output,
             'valid_tags': VALID_TAGS,
             'nasty_tags': NASTY_TAGS,
+            'stripped_tags': [],
             'stripped_attributes': [
                 'lang', 'valign', 'halign', 'border', 'frame', 'rules',
                 'cellspacing', 'cellpadding', 'bgcolor'],
@@ -2479,13 +2487,17 @@ class SafeHTML:
                            'have a closing part (e.g. <p>...</p>) and 0 for ' +
                            'empty tags (like <br />). Be carefull!',
                            ('tag', 'value')),
-            'nasty_tags': ('dict',
+            'nasty_tags': ('list',
                            'nasty_tags',
                            'Dynamic Tags that are striped with ' +
                            'everything they contain (like applet, object). ' +
                            'They are only deleted if they are not marked ' +
-                           'as valid_tags.',
-                           ('tag', 'value')),
+                           'as valid_tags.'),
+            'stripped_tags': ('list',
+                              'stripped_tags',
+                              'A list of tags to remove. Only the tags ' +
+                              'will be removed, their content will get ' +
+                              'pulled up into the parent tag.'),
             'stripped_attributes': ('list',
                                     'stripped_attributes',
                                     'These attributes are stripped from ' +
@@ -2568,14 +2580,27 @@ class SafeHTML:
                     if hasScript(value):
                         del elem.attrib[attrib]
 
-        cleaner = Cleaner(kill_tags=self.config['nasty_tags'],
+        valid_tags = [tag for tag, enabled in self.config['valid_tags'].items() if enabled]
+        nasty_tags = [tag for tag, enabled in self.config['nasty_tags'].items() if enabled]
+        safe_attrs = list(html.defs.safe_attrs) + ['style']
+
+        for attr in self.config['stripped_attributes']:
+            if attr in safe_attrs:
+                safe_attrs.remove(attr)
+
+        remove_script = self.config['nasty_tags'].get('script')
+
+        cleaner = Cleaner(kill_tags=nasty_tags,
+                          remove_tags=self.config['stripped_tags'],
+                          allow_tags=valid_tags,
                           page_structure=False,
-                          safe_attrs_only=False,
+                          safe_attrs_only=True,
+                          safe_attrs=safe_attrs,
                           embedded=False,
-                          remove_unknown_tags=True,
+                          remove_unknown_tags=False,
                           meta=False,
-                          javascript='script' in self.config['nasty_tags'],
-                          scripts='script' in self.config['nasty_tags'],
+                          javascript=remove_script,
+                          scripts=remove_script,
                           style=False)
         try:
             cleaner(tree)
