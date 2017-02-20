@@ -29,7 +29,7 @@ VALID_TAGS = {
     'big': 1,
     'blockquote': 1,
     'body': 1,
-    'br': 0,
+    'br': 1,
     'caption': 1,
     'cite': 1,
     'code': 1,
