@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
 from App.class_init import InitializeClass
+from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from Persistence import Persistent
 from Products.CMFCore.permissions import ManagePortal
@@ -12,13 +13,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import _www
 from UserList import UserList
 from zope.interface import implementer
-
-
-try:
-    from OFS.role import RoleManager
-except ImportError:
-    # Zope <=2.12
-    from AccessControl.Role import RoleManager
 
 
 @implementer(IChain, ITransform)
