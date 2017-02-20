@@ -4,18 +4,10 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - Add the possibility to switch on markdown extension through the zmi.
   [pabo3000]
-
-Bug fixes:
-
-- *add item here*
 
 
 2.2.1 (2016-08-19)
