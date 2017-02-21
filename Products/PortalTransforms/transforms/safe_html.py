@@ -2487,12 +2487,13 @@ class SafeHTML:
                            'have a closing part (e.g. <p>...</p>) and 0 for ' +
                            'empty tags (like <br />). Be carefull!',
                            ('tag', 'value')),
-            'nasty_tags': ('list',
+            'nasty_tags': ('dict',
                            'nasty_tags',
                            'Dynamic Tags that are striped with ' +
                            'everything they contain (like applet, object). ' +
                            'They are only deleted if they are not marked ' +
-                           'as valid_tags.'),
+                           'as valid_tags.',
+                           ('tag', 'value')),
             'stripped_tags': ('list',
                               'stripped_tags',
                               'A list of tags to remove. Only the tags ' +
@@ -2591,7 +2592,7 @@ class SafeHTML:
         remove_script = self.config['nasty_tags'].get('script')
 
         cleaner = Cleaner(kill_tags=nasty_tags,
-                          remove_tags=self.config['stripped_tags'],
+                          remove_tags=self.config.get('stripped_tags', []),
                           allow_tags=valid_tags,
                           page_structure=False,
                           safe_attrs_only=True,
