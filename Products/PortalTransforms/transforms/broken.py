@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
-
-
-WARNING = 100
 
 
 @implementer(ITransform)
@@ -26,8 +24,7 @@ class BrokenTransform(object):
         # do the format
         msg = "Calling convert on BROKEN transform %s (%s). Error: %s" % \
               (self.id, self.module, self.error)
-        log(msg, severity=WARNING)
-        print msg
+        log(msg, severity=logging.WARNING)
         data.setData('')
         return data
 
