@@ -18,6 +18,7 @@ from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 from Products.PortalTransforms.transforms.safe_html import NASTY_TAGS
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
+from Products.PortalTransforms.transforms.html_remove_inline_data import HTMLRemoveInlineData
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.word_to_html import word_to_html
 
@@ -289,6 +290,16 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
 
             self.assertEqual(unescape(data.getData()), escaped)
 
+
+class TestRemoveInlineContent(ATSiteTestCase):
+
+    def afterSetUp(self):
+        ATSiteTestCase.afterSetUp(self)
+        self.pt = self.portal.portal_transforms
+        self.pt.registerTransform(HTMLRemoveInlineData())
+
+    def beforeTearDown(self):
+        self.pt.unregisterTransform('html_remove_inline_data')
 
 class WordTransformsTest(ATSiteTestCase):
 

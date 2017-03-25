@@ -22,6 +22,7 @@ modules = [
     'st',             # zopish
     'rest',           # docutils
     'word_to_html',   # uno, com, wvware
+    'html_remove_inline_data',  # Remove html tags that have inline data
     'safe_html',      # extract <body> and remove potentially harmful tags
     'html_body',      # extract only the contents of the <body> tag
     'html_to_text',   # re based transform
