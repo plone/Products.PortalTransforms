@@ -9,14 +9,6 @@ Breaking changes:
 - Use lxml.html.Cleaner for safe HTML transforms (PLIP 1441)
   [prakharjoshi, tomgross]
 
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
-
 
 2.2.2 (2017-02-20)
 ------------------
