@@ -259,7 +259,8 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
-            self.assertEqual(unescape(data.getData()), orig.replace('&nbsp;', '\xc2\xa0'))
+            self.assertEqual(
+                unescape(data.getData()), orig.replace('&nbsp;', '\xc2\xa0'))
 
     def test_script_with_all_entities_and_unicode(self):
         orig = ('<p>Officiële inschrijvingen</p>',

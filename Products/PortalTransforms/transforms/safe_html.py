@@ -2469,7 +2469,6 @@ class SafeHTML:
             'stripped_attributes': [
                 'lang', 'valign', 'halign', 'border', 'frame', 'rules',
                 'cellspacing', 'cellpadding', 'bgcolor'],
-            'stripped_combinations': {'table th td': 'width height'},
             'style_whitelist': ['text-align', 'list-style-type', 'float',
                                 'padding-left', ],
             'class_blacklist': [],
@@ -2503,11 +2502,6 @@ class SafeHTML:
                                     'stripped_attributes',
                                     'These attributes are stripped from ' +
                                     'any tag.'),
-            'stripped_combinations': ('dict',
-                                      'stripped_combinations',
-                                      'These attributes are stripped from ' +
-                                      'any tag.',
-                                      ('tag', 'value')),
             'style_whitelist': ('list',
                                 'style_whitelist',
                                 'These CSS styles are allowed in style ' +
@@ -2584,13 +2578,10 @@ class SafeHTML:
         valid_tags = [tag for tag, enabled in self.config['valid_tags'].items() if enabled]
         nasty_tags = [tag for tag, enabled in self.config['nasty_tags'].items() if enabled]
         safe_attrs = list(html.defs.safe_attrs) + ['style']
-
         for attr in self.config['stripped_attributes']:
             if attr in safe_attrs:
                 safe_attrs.remove(attr)
-
         remove_script = self.config['nasty_tags'].get('script')
-
         cleaner = Cleaner(kill_tags=nasty_tags,
                           remove_tags=self.config.get('stripped_tags', []),
                           allow_tags=valid_tags,
