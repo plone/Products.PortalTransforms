@@ -1,8 +1,9 @@
 # -*- coding: utf8  -*-
-from copy import copy
 from os.path import exists
+from plone.registry.interfaces import IRegistry
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
@@ -20,6 +21,7 @@ from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.word_to_html import word_to_html
+from zope.component import getUtility
 
 from utils import input_file_path
 from utils import load
@@ -187,6 +189,9 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         ATSiteTestCase.afterSetUp(self)
         self.pt = self.portal.portal_transforms
         self.pt.registerTransform(SafeHTML())
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
     def beforeTearDown(self):
         self.pt.unregisterTransform('safe_html')

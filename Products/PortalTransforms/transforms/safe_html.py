@@ -2442,6 +2442,9 @@ class SafeHTML:
     """Simple transform which uses lxml to
     clean potentially bad tags.
 
+    We want only security related filtering here, all the rest has to be done
+    in TinyMCE & co.
+
     Tags must explicit be allowed in valid_tags to pass. Only
     the tags themself are removed, not their contents. If tags
     are removed and in nasty_tags, they are removed with
@@ -2471,7 +2474,6 @@ class SafeHTML:
                 'cellspacing', 'cellpadding', 'bgcolor'],
             'style_whitelist': ['text-align', 'list-style-type', 'float',
                                 'padding-left', ],
-            'class_blacklist': [],
             'remove_javascript': 1,
             'disable_transform': 0,
             }
@@ -2506,10 +2508,6 @@ class SafeHTML:
                                 'style_whitelist',
                                 'These CSS styles are allowed in style ' +
                                 'attributes.'),
-            'class_blacklist': ('list',
-                                'class_blacklist',
-                                'These class names are not allowed in ' +
-                                'class attributes.'),
             'remove_javascript': ("int",
                                   'remove_javascript',
                                   '1 to remove javascript attributes that ' +
