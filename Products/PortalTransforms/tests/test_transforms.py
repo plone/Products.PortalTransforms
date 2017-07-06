@@ -1,7 +1,6 @@
 # -*- coding: utf8  -*-
 from os.path import exists
 from plone.registry.interfaces import IRegistry
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.data import datastream
@@ -116,10 +115,12 @@ class TransformTest(unittest.TestCase):
         return self.transform.name()
 
 
-class PILTransformsTest(ATSiteTestCase):
+class PILTransformsTest(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
         self.pt = self.portal.portal_transforms
         self.mimetypes_registry = getToolByName(self.portal,
                                                 'mimetypes_registry')

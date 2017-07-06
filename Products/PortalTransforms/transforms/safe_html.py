@@ -6,10 +6,8 @@ from plone.registry.interfaces import IRegistry
 from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.utils import log
 from zope.component import getUtility
 from zope.interface import implementer
-import logging
 import re
 
 
@@ -2363,16 +2361,12 @@ class SafeHTML:
         self.config = {
             'inputs': self.inputs,
             'output': self.output,
-            'disable_transform': 0,
         }
 
         self.config_metadata = {
             'inputs': ('list',
                        'Inputs',
                        'Input(s) MIME type. Change with care.'),
-            'disable_transform': ("int",
-                                  'disable_transform',
-                                  'If 1, nothing is done.'),
         }
 
         self.config.update(kwargs)
@@ -2391,15 +2385,13 @@ class SafeHTML:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
-        # note if we need an upgrade.
-        if 'disable_transform' not in self.config:
-            log(logging.ERROR, 'PortalTransforms safe_html transform needs '
-                'to be updated. Please re-install the PortalTransforms '
-                'product to fix.')
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
         # if we have a config that we don't want to delete
         # we need a disable option
-        if self.config.get('disable_transform'):
+        if self.settings.disable_filtering:
             data.setData(orig)
         else:
             safe_html = self.scrub_html(orig)
