@@ -8,6 +8,8 @@ from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
+from Products.PortalTransforms.testing import \
+    PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
 from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
@@ -16,11 +18,7 @@ from Products.PortalTransforms.transforms.image_to_png import image_to_png
 from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
-from Products.PortalTransforms.transforms.safe_html import NASTY_TAGS
-from Products.PortalTransforms.transforms.safe_html import SafeHTML
-from Products.PortalTransforms.transforms.safe_html import VALID_TAGS
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
-from Products.PortalTransforms.transforms.word_to_html import word_to_html
 from zope.component import getUtility
 
 from utils import input_file_path
@@ -39,7 +37,16 @@ import unittest
 os.environ['LC_ALL'] = 'C'
 
 
-class TransformTest(ATSiteTestCase):
+class TransformTest(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        self.pt = self.portal.portal_transforms
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
     def do_convert(self, filename=None):
         if filename is None and exists(self.output + '.nofilename'):
@@ -183,18 +190,16 @@ class PILTransformsTest(ATSiteTestCase):
         self.assertEqual(data.getMetadata()['mimetype'], 'image/tiff')
 
 
-class SafeHtmlTransformsTest(ATSiteTestCase):
+class SafeHtmlTransformsTest(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
         self.pt = self.portal.portal_transforms
-        self.pt.registerTransform(SafeHTML())
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
-
-    def beforeTearDown(self):
-        self.pt.unregisterTransform('safe_html')
 
     def test_entityiref_attributes(self):
         orig = '<a href="&uuml;">foo</a>'
@@ -221,22 +226,22 @@ class SafeHtmlTransformsTest(ATSiteTestCase):
         self.assertEqual(data.getData(), data_out)
 
 
-class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
+class SafeHtmlTransformsWithScriptTest(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
         self.pt = self.portal.portal_transforms
-        valid_tags = dict(VALID_TAGS)
-        valid_tags['script'] = 1
-        nasty_tags = dict(NASTY_TAGS)
-        nasty_tags['script'] = 0
-        self.pt.unregisterTransform('safe_html')
-        self.pt.registerTransform(
-            SafeHTML(nasty_tags=nasty_tags, valid_tags=valid_tags)
-        )
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
+        self.settings.valid_tags.append('script')
+        self.settings.nasty_tags.remove('script')
 
-    def beforeTearDown(self):
-        self.pt.unregisterTransform('safe_html')
+    def tearDown(self):
+        self.settings.nasty_tags.append('script')
+        self.settings.valid_tags.remove('script')
 
     def test_entities_outside_script(self):
         orig = "<code>a > 0 && b < 1</code>"
@@ -296,12 +301,16 @@ class SafeHtmlTransformsWithScriptTest(ATSiteTestCase):
             self.assertEqual(unescape(data.getData()), escaped)
 
 
-class WordTransformsTest(ATSiteTestCase):
+class WordTransformsTest(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
         self.pt = self.portal.portal_transforms
-        self.pt.registerTransform(word_to_html())
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
     def test_ignore_javascript_attrs(self):
         wordFile = open(input_file_path('test_js.doc'), 'rb')
@@ -311,6 +320,15 @@ class WordTransformsTest(ATSiteTestCase):
 
 
 class ParsersTestCase(unittest.TestCase):
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        self.pt = self.portal.portal_transforms
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
     def test_javascript_on_attr(self):
         htmlFile = open(input_file_path('test_js_on.html'), 'rb')
@@ -421,7 +439,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
             except MissingBinary:
                 # we are not interessted in tests with missing binaries
                 continue
-            except:
+            except:  # noqa
                 import traceback
                 traceback.print_exc()
                 continue
@@ -434,7 +452,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
             input = input_file_path(tr_input)
             output = output_file_path(tr_output)
             transform = _transform
-            normalize = lambda x, y: _normalize(y)
+            normalize = lambda x, y: _normalize(y)  # noqa
             subobjects = _subobjects
 
         tests.append(TransformTestSubclass)

@@ -1,126 +1,20 @@
 # -*- coding: utf-8 -*-
-import logging
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from zope.interface import implementer
-from Products.PortalTransforms.utils import log
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
+from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.interfaces import IFilterSchema
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.utils import log
+from zope.component import getUtility
+from zope.interface import implementer
+import logging
+import re
 
-
-# add some tags to nasty.
-NASTY_TAGS = {
-    'style': 1,
-    'script': 1,
-    'object': 1,
-    'applet': 1,
-    'meta': 1,
-    'embed': 1
-}
-
-# tag mapping: tag -> short or long tag
-# These are the HTML tags that we will leave intact
-# These are the HTML tags that we will leave intact
-VALID_TAGS = {
-    'a': 1,
-    'b': 1,
-    'base': 0,
-    'big': 1,
-    'blockquote': 1,
-    'body': 1,
-    'br': 1,
-    'caption': 1,
-    'cite': 1,
-    'code': 1,
-    'dd': 1,
-    'div': 1,
-    'dl': 1,
-    'dt': 1,
-    'em': 1,
-    'h1': 1,
-    'h2': 1,
-    'h3': 1,
-    'h4': 1,
-    'h5': 1,
-    'h6': 1,
-    'head': 1,
-    'hr': 0,
-    'html': 1,
-    'i': 1,
-    'img': 1,
-    'kbd': 1,
-    'li': 1,
-    # 'link' 1, type="script" hoses us
-    'meta': 0,
-    'ol': 1,
-    'p': 1,
-    'pre': 1,
-    'small': 1,
-    'span': 1,
-    'strong': 1,
-    'sub': 1,
-    'sup': 1,
-    'table': 1,
-    'tbody': 1,
-    'td': 1,
-    'th': 1,
-    'title': 1,
-    'tr': 1,
-    'tt': 1,
-    'u': 1,
-    'ul': 1,
-    'iframe': 1,
-}
-
-# add some tags to allowed types. These should be backported to CMFDefault.
-VALID_TAGS['ins'] = 1
-VALID_TAGS['del'] = 1
-VALID_TAGS['q'] = 1
-VALID_TAGS['map'] = 1
-VALID_TAGS['area'] = 0
-VALID_TAGS['abbr'] = 1
-VALID_TAGS['acronym'] = 1
-VALID_TAGS['var'] = 1
-VALID_TAGS['dfn'] = 1
-VALID_TAGS['samp'] = 1
-VALID_TAGS['address'] = 1
-VALID_TAGS['bdo'] = 1
-VALID_TAGS['thead'] = 1
-VALID_TAGS['tfoot'] = 1
-VALID_TAGS['col'] = 1
-VALID_TAGS['colgroup'] = 1
-
-# HTML5 tags that should be allowed:
-VALID_TAGS['article'] = 1
-VALID_TAGS['aside'] = 1
-VALID_TAGS['audio'] = 1
-VALID_TAGS['canvas'] = 1
-VALID_TAGS['command'] = 1
-VALID_TAGS['datalist'] = 1
-VALID_TAGS['details'] = 1
-VALID_TAGS['dialog'] = 1
-VALID_TAGS['figure'] = 1
-VALID_TAGS['footer'] = 1
-VALID_TAGS['header'] = 1
-VALID_TAGS['hgroup'] = 1
-VALID_TAGS['keygen'] = 1
-VALID_TAGS['mark'] = 1
-VALID_TAGS['meter'] = 1
-VALID_TAGS['nav'] = 1
-VALID_TAGS['output'] = 1
-VALID_TAGS['progress'] = 1
-VALID_TAGS['rp'] = 1
-VALID_TAGS['rt'] = 1
-VALID_TAGS['ruby'] = 1
-VALID_TAGS['section'] = 1
-VALID_TAGS['source'] = 1
-VALID_TAGS['time'] = 1
-VALID_TAGS['video'] = 1
 
 _strings = (bytes, str)
 
-import re
 CSS_COMMENT = re.compile(r'/\*.*\*/')
 
 
@@ -147,6 +41,7 @@ def hasScript(s):
         if t in s:
             return True
     return False
+
 
 CHR_RE = re.compile(r'\\(\d+)')
 
@@ -2442,13 +2337,15 @@ class SafeHTML:
     """Simple transform which uses lxml to
     clean potentially bad tags.
 
-    We want only security related filtering here, all the rest has to be done
+    We only want security related filtering here, all the rest has to be done
     in TinyMCE & co.
 
     Tags must explicit be allowed in valid_tags to pass. Only
     the tags themself are removed, not their contents. If tags
     are removed and in nasty_tags, they are removed with
     all of their contents.
+
+    Settings are in plone.registry.
 
     Objects will not be transformed again with changed settings.
     You need to clear the cache by e.g.
@@ -2466,61 +2363,17 @@ class SafeHTML:
         self.config = {
             'inputs': self.inputs,
             'output': self.output,
-            'valid_tags': VALID_TAGS,
-            'nasty_tags': NASTY_TAGS,
-            'stripped_tags': [],
-            'stripped_attributes': [
-                'lang', 'valign', 'halign', 'border', 'frame', 'rules',
-                'cellspacing', 'cellpadding', 'bgcolor'],
-            'style_whitelist': ['text-align', 'list-style-type', 'float',
-                                'padding-left', ],
-            'remove_javascript': 1,
             'disable_transform': 0,
-            }
+        }
 
         self.config_metadata = {
             'inputs': ('list',
                        'Inputs',
                        'Input(s) MIME type. Change with care.'),
-            'valid_tags': ('dict',
-                           'valid_tags',
-                           'List of valid html-tags, value is 1 if they ' +
-                           'have a closing part (e.g. <p>...</p>) and 0 for ' +
-                           'empty tags (like <br />). Be carefull!',
-                           ('tag', 'value')),
-            'nasty_tags': ('dict',
-                           'nasty_tags',
-                           'Dynamic Tags that are striped with ' +
-                           'everything they contain (like applet, object). ' +
-                           'They are only deleted if they are not marked ' +
-                           'as valid_tags.',
-                           ('tag', 'value')),
-            'stripped_tags': ('list',
-                              'stripped_tags',
-                              'A list of tags to remove. Only the tags ' +
-                              'will be removed, their content will get ' +
-                              'pulled up into the parent tag.'),
-            'stripped_attributes': ('list',
-                                    'stripped_attributes',
-                                    'These attributes are stripped from ' +
-                                    'any tag.'),
-            'style_whitelist': ('list',
-                                'style_whitelist',
-                                'These CSS styles are allowed in style ' +
-                                'attributes.'),
-            'remove_javascript': ("int",
-                                  'remove_javascript',
-                                  '1 to remove javascript attributes that ' +
-                                  'begin with on (e.g. onClick) and ' +
-                                  'attributes where the value starts with ' +
-                                  '"javascript:" (e.g. ' +
-                                  '<a href="javascript:function()". This ' +
-                                  'does not effect <script> tags. 0 to ' +
-                                  'leave the attributes.'),
             'disable_transform': ("int",
                                   'disable_transform',
                                   'If 1, nothing is done.'),
-            }
+        }
 
         self.config.update(kwargs)
 
@@ -2562,7 +2415,8 @@ class SafeHTML:
             strip_outer = bodyfinder
         else:
             # partial html (i.e. coming from WYSIWYG editor)
-            tree = html.fragment_fromstring(orig, create_parent=True, parser=html_parser)
+            tree = html.fragment_fromstring(
+                orig, create_parent=True, parser=html_parser)
 
             def strip_outer(s):
                 return s[5:-6]
@@ -2573,15 +2427,18 @@ class SafeHTML:
                     if hasScript(value):
                         del elem.attrib[attrib]
 
-        valid_tags = [tag for tag, enabled in self.config['valid_tags'].items() if enabled]
-        nasty_tags = [tag for tag, enabled in self.config['nasty_tags'].items() if enabled]
-        safe_attrs = list(html.defs.safe_attrs) + ['style']
-        for attr in self.config['stripped_attributes']:
-            if attr in safe_attrs:
-                safe_attrs.remove(attr)
-        remove_script = self.config['nasty_tags'].get('script')
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
+
+        valid_tags = self.settings.valid_tags
+        nasty_tags = self.settings.nasty_tags
+        safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
+        safe_attrs.extend(
+            self.settings.custom_attributes)
+        remove_script = 'script' in nasty_tags and 1 or 0
         cleaner = Cleaner(kill_tags=nasty_tags,
-                          remove_tags=self.config.get('stripped_tags', []),
+                          remove_tags=[],
                           allow_tags=valid_tags,
                           page_structure=False,
                           safe_attrs_only=True,
