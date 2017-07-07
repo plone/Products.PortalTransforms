@@ -2424,7 +2424,8 @@ class SafeHTML:
             IFilterSchema, prefix="plone")
 
         valid_tags = self.settings.valid_tags
-        nasty_tags = self.settings.nasty_tags
+        nasty_tags = [
+            tag for tag in self.settings.nasty_tags if tag not in valid_tags]
         safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
         safe_attrs.extend(
             self.settings.custom_attributes)

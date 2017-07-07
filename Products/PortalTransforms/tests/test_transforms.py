@@ -201,6 +201,18 @@ class SafeHtmlTransformsTest(unittest.TestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
+        self.settings.valid_tags.append('style')
+
+    def tearDown(self):
+        self.settings.valid_tags.remove('style')
+
+    def test_kill_nasty_tags_which_are_not_valid(self):
+        self.assertTrue('script' in self.settings.nasty_tags)
+        self.assertFalse('script' in self.settings.valid_tags)
+        orig = '<script>foo</script>'
+        data_out = ''
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), data_out)
 
     def test_entityiref_attributes(self):
         orig = '<a href="&uuml;">foo</a>'
@@ -233,12 +245,12 @@ class SafeHtmlTransformsWithScriptTest(unittest.TestCase):
     def setUp(self):
         self.portal = self.layer['portal']
         self.request = self.layer['request']
-        self.pt = self.portal.portal_transforms
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
         self.settings.valid_tags.append('script')
         self.settings.nasty_tags.remove('script')
+        self.pt = self.portal.portal_transforms
 
     def tearDown(self):
         self.settings.nasty_tags.append('script')
