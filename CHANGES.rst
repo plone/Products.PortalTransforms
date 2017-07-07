@@ -6,7 +6,9 @@ Changelog
 
 Breaking changes:
 
-- *add item here*
+- Fix and migrate safe_html filter completly into Plone registry and sync settings with TinyMCE.
+  Also some unused options in controlpanel where removed, like stripped_combinations and class_blacklist.
+  [MrTango]
 
 New features:
 
