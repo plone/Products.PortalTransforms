@@ -202,15 +202,25 @@ class SafeHtmlTransformsTest(unittest.TestCase):
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
         self.settings.valid_tags.append('style')
+        self.settings.valid_tags.remove('h1')
+        self.settings.nasty_tags.append('h1')
 
     def tearDown(self):
         self.settings.valid_tags.remove('style')
+        self.settings.valid_tags.append('h1')
 
     def test_kill_nasty_tags_which_are_not_valid(self):
         self.assertTrue('script' in self.settings.nasty_tags)
         self.assertFalse('script' in self.settings.valid_tags)
-        orig = '<script>foo</script>'
-        data_out = ''
+        orig = '<p><script>foo</script></p>'
+        data_out = '<p/>'
+        data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        self.assertEqual(data.getData(), data_out)
+
+        self.assertTrue('h1' in self.settings.nasty_tags)
+        self.assertFalse('h1' in self.settings.valid_tags)
+        orig = '<p><h1>foo</h1></p>'
+        data_out = '<p/>'
         data = self.pt.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), data_out)
 
