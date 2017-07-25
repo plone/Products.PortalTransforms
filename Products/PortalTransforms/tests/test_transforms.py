@@ -462,7 +462,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
             except MissingBinary:
                 # we are not interessted in tests with missing binaries
                 continue
-            except:  # noqa
+            except Exception:
                 import traceback
                 traceback.print_exc()
                 continue
