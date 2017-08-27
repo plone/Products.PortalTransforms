@@ -10,14 +10,6 @@ Breaking changes:
   Also some unused options in controlpanel where removed, like stripped_combinations and class_blacklist.
   [MrTango]
 
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
-
 
 3.0.0 (2017-04-02)
 ------------------
