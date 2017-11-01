@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Do not expose dead settings in ``safe_html`` ZMI settings page.
+  This fixes `Products.CMFPlone #2130 <https://github.com/plone/Products.CMFPlone/issues/2130>`_
+  [jensens]
 
 
 3.1 (2017-09-03)
