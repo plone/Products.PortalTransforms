@@ -4,14 +4,6 @@ Changelog
 3.1.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Do not expose dead settings in ``safe_html`` ZMI settings page.
