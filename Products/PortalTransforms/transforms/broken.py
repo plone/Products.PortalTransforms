@@ -27,7 +27,7 @@ class BrokenTransform(object):
         msg = "Calling convert on BROKEN transform %s (%s). Error: %s" % \
               (self.id, self.module, self.error)
         log(msg, severity=WARNING)
-        print msg
+        print(msg)
         data.setData('')
         return data
 

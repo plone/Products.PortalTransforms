@@ -11,6 +11,9 @@ from zope.interface import implementer
 import re
 
 
+import six
+
+
 _strings = (bytes, str)
 
 CSS_COMMENT = re.compile(r'/\*.*\*/')
@@ -58,7 +61,7 @@ def decode_charref(s):
             c = int(s[1:], 16)
         else:
             c = int(s)
-        c = unichr(c)
+        c = six.unichr(c)
         if isinstance(s, str):
             c = c.encode('utf8')
         return c

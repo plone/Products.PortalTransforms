@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
-from StringIO import StringIO
 from zope.interface import implementer
 
 import PIL.Image
+
+
+from six import StringIO
 
 
 @implementer(ITransform)

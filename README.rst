@@ -18,10 +18,18 @@ product since Zope files have been removed from this distribution.
 
 This product is an off-spring of the Archetypes project.
 
+
+Compatibility
+-------------
+
+- For Plone 4 and 5.0, use version 2.x.
+
+- For Plone 5.1 and later, use version 3.
+
+
 Authors
 -------
 
 - Benjamin Saller <bcsaller@yahoo.com>
 - Sidnei da Silva  <sidnei@x3ng.com>
 - Sylvain Thenault <sylvain.thenault@logilab.fr>
-

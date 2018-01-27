@@ -10,6 +10,9 @@ from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
 
+import six
+
+
 try:
     import markdown as markdown_transformer
 except ImportError:
@@ -55,7 +58,7 @@ class markdown(object):
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
-            orig = unicode(orig.decode('utf-8'))
+            orig = six.text_type(orig.decode('utf-8'))
             # PortalTransforms, however expects a string as result,
             # so we encode the unicode result back to UTF8:
             html = markdown_transformer \

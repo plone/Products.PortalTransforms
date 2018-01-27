@@ -1,4 +1,5 @@
 # -*- coding: utf8  -*-
+from __future__ import print_function
 from os.path import exists
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
@@ -62,8 +63,9 @@ class TransformTest(unittest.TestCase):
             output = open(output)
         except IOError:
             import sys
-            print >> sys.stderr, 'No output file found.'
-            print >> sys.stderr, 'File %s created, check it !' % self.output
+            print('No output file found.', file=sys.stderr)
+            print('File {0} created, check it !'.format(self.output),
+                file=sys.stderr)
             output = open(output, 'w')
             output.write(got)
             output.close()
@@ -468,7 +470,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
                 continue
 
         if TR_NAMES is not None and not _transform.name() in TR_NAMES:
-            print 'skip test for', _transform.name()
+            print('skip test for {0}'.format(_transform.name()))
             continue
 
         class TransformTestSubclass(TransformTest):

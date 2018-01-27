@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.retransform import retransform
 
-import htmlentitydefs
+
+import six
+from six.moves import html_entities
 
 
 class html_to_text(retransform):
@@ -13,16 +15,16 @@ def register():
     def sub_func(matchobj):
         full = matchobj.group()
         ent = matchobj.group(1)
-        result = htmlentitydefs.name2codepoint.get(ent)
+        result = html_entities.name2codepoint.get(ent)
         if result is None:
             if ent.startswith('#'):
-                res = unichr(int(ent[1:]))
+                res = six.unichr(int(ent[1:]))
             else:
                 res = full
         else:
-            res = unichr(result)
+            res = six.unichr(result)
 
-        if isinstance(full, unicode):
+        if isinstance(full, six.text_type):
             return res
         return res.encode('utf-8')
 

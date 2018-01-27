@@ -6,7 +6,8 @@ from Products.PortalTransforms.utils import TransformException
 from zope.interface import implementer
 
 import re
-import urllib
+
+from six.moves import urllib
 
 
 class BaseTransform:
@@ -22,7 +23,7 @@ class HtmlToText(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('<[^>]*>(?i)(?m)', '', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -41,7 +42,7 @@ class FooToBar(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('foo', 'bar', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
