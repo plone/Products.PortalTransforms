@@ -15,6 +15,9 @@ from UserList import UserList
 from zope.interface import implementer
 
 
+from six.moves import reload_module
+
+
 @implementer(IChain, ITransform)
 class chain(UserList):
     """A chain of transforms used to transform data"""

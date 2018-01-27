@@ -17,6 +17,9 @@ from UserDict import UserDict
 from zope.interface import implementer
 
 
+from six.moves import reload_module
+
+
 def import_from_name(module_name):
     """ import and return a module by its name """
     __traceback_info__ = (module_name, )
@@ -276,7 +279,7 @@ class Transform(SimpleItem):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)
         m = import_from_name(self.module)
-        reload(m)
+        reload_module(m)
         self._tr_init()
 
     def preprocess_param(self, kwargs):

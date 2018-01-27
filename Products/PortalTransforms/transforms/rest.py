@@ -4,6 +4,9 @@ from docutils.core import publish_parts
 from zope.interface import implementer
 
 
+import six
+
+
 @implementer(ITransform)
 class rest(object):
     r"""Converts from reST to HTML.
@@ -14,7 +17,7 @@ class rest(object):
       ...         self.value = data
 
       >>> data = transform.convert('*hello world*', D())
-      >>> print data.value
+      >>> print(data.value)
       <p><em>hello world</em></p>
       <BLANKLINE>
 
@@ -24,23 +27,23 @@ class rest(object):
       >>> try:
       ...     out = transform.convert('.. raw:: html\n  :file: <isonum.txt>', D())  # noqa
       ... except NotImplementedError:
-      ...     print 'Good'
+      ...     print('Good')
       ... else:
       ...     if "&quot;raw&quot; directive disabled." in out.value:
-      ...         print 'Good'
+      ...         print('Good')
       ...     else:
-      ...         print 'Failure'
+      ...         print('Failure')
       Good
 
       >>> try:
       ...     out = transform.convert('.. include:: <isonum.txt>', D())
       ... except NotImplementedError:
-      ...     print 'Good'
+      ...     print('Good')
       ... else:
       ...     if "&quot;include&quot; directive disabled." in out.value:
-      ...         print 'Good'
+      ...         print('Good')
       ...     else:
-      ...         print 'Failure'
+      ...         print('Failure')
       Good
     """
 
@@ -135,6 +138,7 @@ class rest(object):
             html = html + subheader
         html = html + body
 
+        # TODO: check if this unicode condition works on Python 3.
         if output_encoding != 'unicode':
             html = html.encode(output_encoding)
 

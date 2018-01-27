@@ -22,4 +22,4 @@ class curry:
 data = open("/tmp/word.doc", "r").read()
 
 data = transformer.convert("WordToHtml", data, filename="word.doc")
-print data.getData()
+print(data.getData())

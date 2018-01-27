@@ -15,15 +15,16 @@ Original code from active state recipe
  original formatting (which is the hard part).
 """
 
-from cStringIO import StringIO
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 import keyword
-import string
 import token
 import tokenize
+
+
+from six.moves import cStringIO as StringIO
 
 
 # Python Source Parser #####################################################
@@ -39,7 +40,7 @@ class Parser:
     def __init__(self, raw, tags, out):
         """ Store the source text.
         """
-        self.raw = string.strip(string.expandtabs(raw))
+        self.raw = raw.expandtabs().strip()
         self.out = out
         self.tags = tags
 
@@ -50,7 +51,7 @@ class Parser:
         self.lines = [0, 0]
         pos = 0
         while True:
-            pos = string.find(self.raw, '\n', pos) + 1
+            pos = self.raw.find('\n', pos) + 1
             if not pos:
                 break
             self.lines.append(pos)
