@@ -22,6 +22,9 @@ Bug fixes:
 
 Bug fixes:
 
+- Start fixing startup in py3
+  [pbauer]
+
 - Add Python 2 / 3 compatibility.  [maurits]
 
 
