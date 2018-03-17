@@ -14,16 +14,14 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Start fixing startup in py3
+  [pbauer]
 
 
 3.1.2 (2018-02-05)
 ------------------
 
 Bug fixes:
-
-- Start fixing startup in py3
-  [pbauer]
 
 - Add Python 2 / 3 compatibility.  [maurits]
 
