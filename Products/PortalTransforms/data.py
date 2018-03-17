@@ -7,11 +7,11 @@ class datastream(object):
     """A transformation datastream packet"""
 
     __slots__ = (
-        'name', '_data', '_metadata', '__name__', '_objects', '_cacheable'
+        'name_', '_data', '_metadata', '__name__', '_objects', '_cacheable'
     )
 
-    def __init__(self, name):
-        self.__name__ = name
+    def __init__(self, name_):
+        self.__name__ = name_
         self._data = ''
         self._metadata = {}
         self._objects = {}
