@@ -11,11 +11,12 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PortalTransforms.interfaces import IChain
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import _www
-from UserList import UserList
 from zope.interface import implementer
 
-
-from six.moves import reload_module
+try:
+    from collections import UserList
+except ImportError:
+    from UserList import UserList
 
 
 @implementer(IChain, ITransform)

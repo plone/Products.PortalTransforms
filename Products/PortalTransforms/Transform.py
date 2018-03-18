@@ -13,11 +13,13 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from UserDict import UserDict
+from six.moves import reload_module
 from zope.interface import implementer
 
-
-from six.moves import reload_module
+try:
+    from collections import UserDict
+except ImportError:
+    from UserDict import UserDict
 
 
 def import_from_name(module_name):
@@ -56,6 +58,7 @@ def make_config_nonpersistent(kwargs):
         elif isinstance(value, PersistentList):
             p_value = list(value)
             kwargs[key] = p_value
+
 
 VALIDATORS = {
     'int': int,
