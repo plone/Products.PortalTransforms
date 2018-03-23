@@ -26,15 +26,24 @@ else:
 class markdown(object):
 
     __name__ = "markdown_to_html"
-    inputs = ("text/x-web-markdown",)
     output = "text/html"
 
-    def __init__(self, name=None, enabled_extensions=('markdown.extensions.fenced_code', 'markdown.extensions.nl2br', ), **kwargs):
+    def __init__(self,
+                 name=None,
+                 inputs=("text/x-web-markdown", ),
+                 enabled_extensions=('markdown.extensions.fenced_code',
+                                     'markdown.extensions.nl2br', ),
+                 **kwargs):
         self.config = {
+            'inputs': inputs,
             'enabled_extensions': enabled_extensions,
         }
 
         self.config_metadata = {
+            'inputs': (
+                'list',
+                'Inputs',
+                'Input(s) MIME type. Change with care.'),
             'enabled_extensions': (
                 'list',
                 'enabled_extensions',
