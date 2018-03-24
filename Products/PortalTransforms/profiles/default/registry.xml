@@ -1,0 +1,14 @@
+<registry>
+  <record name="plone.markdown_exts" interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema" field="markdown_exts">
+    <field type="plone.registry.field.List">
+      <description xmlns:ns0="http://xml.zope.org/namespaces/i18n" ns0:domain="plone" ns0:translate="">Markdown Extensions</description>
+      <missing_value/>
+      <title xmlns:ns0="http://xml.zope.org/namespaces/i18n" ns0:domain="plone" ns0:translate="">Check available extensions at https://pythonhosted.org/Markdown/extensions/index.html or write your own.</title>
+      <value_type type="plone.registry.field.TextLine"/>
+    </field>
+    <value>
+      <element>markdown.extensions.fenced_code</element>
+      <element>markdown.extensions.nl2br</element>
+    </value>
+  </record>
+</registry>
