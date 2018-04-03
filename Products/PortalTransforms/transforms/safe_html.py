@@ -2404,7 +2404,7 @@ class SafeHTML:
     def scrub_html(self, orig):
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding='utf-8')
-        if '<html' in orig.lower():
+        if b'<html' in orig.lower():
             # full html
             tree = html.fromstring(orig, parser=html_parser)
             strip_outer = bodyfinder
@@ -2429,7 +2429,10 @@ class SafeHTML:
         valid_tags = self.settings.valid_tags
         nasty_tags = [
             tag for tag in self.settings.nasty_tags if tag not in valid_tags]
-        safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
+        if six.PY2:
+            safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
+        else:
+            safe_attrs = [i for i in html.defs.safe_attrs]
         safe_attrs.extend(
             self.settings.custom_attributes)
         remove_script = 'script' in nasty_tags and 1 or 0
