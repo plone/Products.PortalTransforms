@@ -15,7 +15,7 @@ New features:
 Bug fixes:
 
 - Start fixing startup in py3
-  [pbauer]
+  [ale-rt, pbauer]
 
 
 3.1.2 (2018-02-05)
