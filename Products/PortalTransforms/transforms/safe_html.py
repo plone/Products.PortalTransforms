@@ -2404,7 +2404,11 @@ class SafeHTML:
     def scrub_html(self, orig):
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding='utf-8')
-        if b'<html' in orig.lower():
+        if isinstance(orig, six.binary_type):
+            tag = b'<html'
+        else:
+            tag = '<html'
+        if tag in orig.lower():
             # full html
             tree = html.fromstring(orig, parser=html_parser)
             strip_outer = bodyfinder
