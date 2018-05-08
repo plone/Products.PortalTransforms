@@ -21,11 +21,11 @@ from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from zope.component import getUtility
 
-from utils import input_file_path
-from utils import load
-from utils import matching_inputs
-from utils import normalize_html
-from utils import output_file_path
+from .utils import input_file_path
+from .utils import load
+from .utils import matching_inputs
+from .utils import normalize_html
+from .utils import output_file_path
 from xml.sax.saxutils import unescape
 
 import itertools
