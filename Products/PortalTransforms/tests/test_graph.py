@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-from utils import input_file_path
-
+from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+from .utils import input_file_path
+import unittest
 
 FILE_PATH = input_file_path("demo1.pdf")
 
 
-class TestGraph(ATSiteTestCase):
+class TestGraph(unittest.TestCase):
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
         self.engine = self.portal.portal_transforms
 
     def testGraph(self):
@@ -107,10 +109,3 @@ class TestGraph(ATSiteTestCase):
         converted = self.engine.convertTo(
             'text/plain', 'Some text', mimetype='text/plain')
         self.assertEqual(orig, str(converted))
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestGraph))
-    return suite
