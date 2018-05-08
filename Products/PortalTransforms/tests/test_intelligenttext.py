@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
+from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+import unittest
 
 
-class TransformTestCase(ATSiteTestCase):
+class TransformTestCase(unittest.TestCase):
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
         self.transforms = self.portal.portal_transforms
 
 

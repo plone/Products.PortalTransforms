@@ -17,6 +17,9 @@ Bug fixes:
 - Start fixing startup in py3
   [ale-rt, pbauer]
 
+- Stop using ATTestCase for tests.
+  [davisagli]
+
 
 3.1.2 (2018-02-05)
 ------------------
