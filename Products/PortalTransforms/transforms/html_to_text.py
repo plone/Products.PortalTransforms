@@ -29,10 +29,10 @@ def register():
         return res.encode('utf-8')
 
     return html_to_text("html_to_text",
-                        ('<script [^>]>.*</script>(?im)', ' '),
-                        ('<style [^>]>.*</style>(?im)', ' '),
-                        ('<head [^>]>.*</head>(?im)', ' '),
-                        ('(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
-                        ('<[^>]*>(?i)(?m)', ' '),
-                        (r'&([a-zA-Z0-9#]*?);', sub_func),
+                        (u'<script [^>]>.*</script>(?im)', ' '),
+                        (u'<style [^>]>.*</style>(?im)', ' '),
+                        (u'<head [^>]>.*</head>(?im)', ' '),
+                        (u'(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
+                        (u'<[^>]*>(?i)(?m)', ' '),
+                        (ur'&([a-zA-Z0-9#]*?);', sub_func),
                         )

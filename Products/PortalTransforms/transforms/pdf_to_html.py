@@ -54,7 +54,7 @@ class pdf_to_html(commandtransform):
             subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
-            htmlfile = open(htmlfilename, 'r')
+            htmlfile = open(htmlfilename, 'rb')
             html = htmlfile.read()
             htmlfile.close()
         except:

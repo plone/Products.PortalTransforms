@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.utils import log
 
 import os
@@ -76,7 +77,9 @@ def bodyfinder(text):
     """ Return body or unchanged text if no body tags found.
 
     Always use html_headcheck() first.
+    Accepts bytes or text. Returns text.
     """
+    text = safe_unicode(text)
     lowertext = text.lower()
     bodystart = lowertext.find('<body')
     if bodystart == -1:
