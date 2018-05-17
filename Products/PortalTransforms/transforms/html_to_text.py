@@ -34,5 +34,5 @@ def register():
                         (u'<head [^>]>.*</head>(?im)', ' '),
                         (u'(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
                         (u'<[^>]*>(?i)(?m)', ' '),
-                        (ur'&([a-zA-Z0-9#]*?);', sub_func),
+                        (u'&([a-zA-Z0-9#]*?);', sub_func),
                         )
