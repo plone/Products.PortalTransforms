@@ -8,8 +8,9 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
-
 import os
+import six
+import subprocess
 
 
 @implementer(ITransform)
@@ -47,7 +48,10 @@ class pdf_to_html(commandtransform):
         else:
             cmd = 'cd "%s" && %s %s "%s"' % (
                   tmpdir, self.binary, self.binaryArgs, fullname)
-        os.system(cmd)
+        if six.PY2:
+            os.system(cmd)
+        else:
+            subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
             htmlfile = open(htmlfilename, 'r')
