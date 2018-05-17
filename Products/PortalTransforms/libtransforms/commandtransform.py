@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from os.path import basename
-from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import getShortPathName
+from os.path import basename
+from os.path import join
 from zope.interface import implementer
-
 import os
 import re
 import shutil
+import six
+import subprocess
 import tempfile
 
 
@@ -86,7 +87,7 @@ class popentransform(object):
 
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
-        try:
+        if six.PY2:
             cin, couterr = os.popen4(command, 'b')
 
             cin.write(data)
@@ -94,8 +95,10 @@ class popentransform(object):
 
             out = self.getData(couterr)
             couterr.close()
+        else:
+            process = subprocess.run(
+                command, shell=True, input=data, stdout=subprocess.PIPE)
+            out = process.stdout
 
-            cache.setData(out)
-            return cache
-        finally:
-            pass
+        cache.setData(out)
+        return cache
