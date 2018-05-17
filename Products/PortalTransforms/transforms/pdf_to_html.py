@@ -5,30 +5,11 @@ Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 """
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
-from Products.PortalTransforms.libtransforms.commandtransform import popentransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
 
 import os
-
-
-@implementer(ITransform)
-class popen_pdf_to_html(popentransform):
-
-    __version__ = '2004-07-02.01'
-
-    __name__ = "pdf_to_html"
-    inputs = ('application/pdf',)
-    output = 'text/html'
-    output_encoding = 'utf-8'
-
-    binaryName = "pdftohtml"
-    binaryArgs = "%(infile)s -noframes -stdout -enc UTF-8"
-    useStdin = False
-
-    def getData(self, couterr):
-        return bodyfinder(couterr.read())
 
 
 @implementer(ITransform)
