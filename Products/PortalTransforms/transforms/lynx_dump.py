@@ -15,12 +15,9 @@ class lynx_dump(popentransform):
     inputs = ('text/html',)
     output = 'text/plain'
 
-    __version__ = '2004-07-02.1'
-
     binaryName = "lynx"
     # XXX does -stdin work on windows?
     binaryArgs = "-dump -stdin -force_html"
-    useStdin = True
 
 
 def register():

@@ -16,11 +16,8 @@ class pdf_to_text(popentransform):
     output = 'text/plain'
     output_encoding = 'utf-8'
 
-    __version__ = '2004-07-02.01'
-
     binaryName = "pdftotext"
-    binaryArgs = "%(infile)s -enc UTF-8 -"
-    useStdin = False
+    binaryArgs = "- -enc UTF-8 -"
 
 
 def register():

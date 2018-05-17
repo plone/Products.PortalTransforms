@@ -67,10 +67,8 @@ class popentransform(object):
 
     binaryName = ""
     binaryArgs = ""
-    useStdin = True
 
-    def __init__(self, name=None, binary=None, binaryArgs=None, useStdin=None,
-                 **kwargs):
+    def __init__(self, name=None, binary=None, binaryArgs=None, **kwargs):
         if name is not None:
             self.__name__ = name
         if binary is not None:
@@ -79,8 +77,6 @@ class popentransform(object):
             self.binary = bin_search(self.binaryName)
         if binaryArgs is not None:
             self.binaryArgs = binaryArgs
-        if useStdin is not None:
-            self.useStdin = useStdin
 
     def name(self):
         return self.__name__
@@ -90,23 +86,10 @@ class popentransform(object):
 
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
-        tmpname = None
         try:
-            if not self.useStdin:
-                # create tmp
-                tmpfile, tmpname = tempfile.mkstemp(text=False)
-                # write data to tmp using a file descriptor
-                os.write(tmpfile, data)
-                # close it so the other process can read it
-                os.close(tmpfile)
-                # apply tmp name to command
-                command = command % {'infile': tmpname}
-
             cin, couterr = os.popen4(command, 'b')
 
-            if self.useStdin:
-                cin.write(data)
-
+            cin.write(data)
             cin.close()
 
             out = self.getData(couterr)
@@ -115,6 +98,4 @@ class popentransform(object):
             cache.setData(out)
             return cache
         finally:
-            if not self.useStdin and tmpname is not None:
-                # remove tmp file
-                os.unlink(tmpname)
+            pass
