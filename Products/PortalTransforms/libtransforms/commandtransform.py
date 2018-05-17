@@ -82,9 +82,6 @@ class popentransform(object):
     def name(self):
         return self.__name__
 
-    def getData(self, couterr):
-        return couterr.read()
-
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
         if six.PY2:
@@ -93,7 +90,7 @@ class popentransform(object):
             cin.write(data)
             cin.close()
 
-            out = self.getData(couterr)
+            out = couterr.read()
             couterr.close()
         else:
             process = subprocess.run(
