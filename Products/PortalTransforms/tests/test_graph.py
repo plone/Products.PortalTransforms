@@ -15,7 +15,7 @@ class TestGraph(unittest.TestCase):
         self.engine = self.portal.portal_transforms
 
     def testGraph(self):
-        data = open(FILE_PATH, 'r').read()
+        data = open(FILE_PATH, 'rb').read()
         requirements = self.engine._policies.get('text/plain', [])
         if requirements:
             out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)

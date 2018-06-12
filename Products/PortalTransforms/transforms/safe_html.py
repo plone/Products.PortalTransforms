@@ -62,7 +62,7 @@ def decode_charref(s):
         else:
             c = int(s)
         c = six.unichr(c)
-        if isinstance(s, str):
+        if six.PY2 and isinstance(s, six.text_type):
             c = c.encode('utf8')
         return c
     except ValueError:

@@ -17,14 +17,13 @@ Original code from active state recipe
 
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
+from six import BytesIO
 from zope.interface import implementer
 
 import keyword
+import six
 import token
 import tokenize
-
-
-from six.moves import cStringIO as StringIO
 
 
 # Python Source Parser #####################################################
@@ -33,7 +32,7 @@ _KEYWORD = token.NT_OFFSET + 1
 _TEXT = token.NT_OFFSET + 2
 
 
-class Parser:
+class Parser(object):
     """ Send colored python source.
     """
 
@@ -51,7 +50,7 @@ class Parser:
         self.lines = [0, 0]
         pos = 0
         while True:
-            pos = self.raw.find('\n', pos) + 1
+            pos = self.raw.find(b'\n', pos) + 1
             if not pos:
                 break
             self.lines.append(pos)
@@ -59,16 +58,16 @@ class Parser:
 
         # parse the source and write it
         self.pos = 0
-        text = StringIO(self.raw)
-        self.out.write('<pre class="python">\n')
+        text = BytesIO(self.raw)
+        self.out.write(b'<pre class="python">\n')
         try:
-            tokenize.tokenize(text.readline, self)
+            tokenize.tokenize(text.readline)
         except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
-            self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (
+            self.out.write(b"<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
-        self.out.write('\n</pre>\n')
+        self.out.write(b'\n</pre>\n')
 
     def __call__(self, toktype, toktext, sx, ex, line):
         """ Token handler.
@@ -81,7 +80,7 @@ class Parser:
 
         # handle newlines
         if toktype in [token.NEWLINE, tokenize.NL]:
-            self.out.write('\n')
+            self.out.write(b'\n')
             return
 
         # send the original whitespace, if needed
@@ -142,7 +141,9 @@ class PythonTransform(object):
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        dest = StringIO()
+        if isinstance(orig, six.text_type):
+            orig = orig.encode('utf8')
+        dest = BytesIO()
         Parser(orig, self.config, dest).format()
         data.setData(dest.getvalue())
         return data

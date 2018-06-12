@@ -4,6 +4,7 @@ from os.path import exists
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
+from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
@@ -30,6 +31,7 @@ from xml.sax.saxutils import unescape
 
 import itertools
 import os
+import six
 import unittest
 
 
@@ -53,24 +55,27 @@ class TransformTest(unittest.TestCase):
             output = self.output + '.nofilename'
         else:
             output = self.output
-        with open(self.input) as fp:
+        with open(self.input, 'rb') as fp:
             orig = fp.read()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
         self.assertTrue(IDataStream.providedBy(res_data))
         got = res_data.getData()
         try:
-            output = open(output)
+            output = open(output, 'rb')
         except IOError:
             import sys
             print('No output file found.', file=sys.stderr)
             print('File {0} created, check it !'.format(self.output),
                 file=sys.stderr)
-            output = open(output, 'w')
+            output = open(output, 'wb')
             output.write(got)
             output.close()
             self.assertTrue(0)
         expected = output.read()
+        if six.PY3 and isinstance(expected, six.binary_type):
+            expected = safe_unicode(expected)
+            got = safe_unicode(got)
         if self.normalize is not None:
             expected = self.normalize(expected)
             got = self.normalize(got)

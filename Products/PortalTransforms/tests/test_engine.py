@@ -124,7 +124,7 @@ class TestEngine(unittest.TestCase):
         self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'
-        for mt in self.engine._policies.keys():
+        for mt in list(self.engine._policies.keys()):
             self.engine.manage_delPolicies([mt])
 
     def register(self):

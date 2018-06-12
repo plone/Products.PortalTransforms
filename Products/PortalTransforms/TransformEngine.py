@@ -553,7 +553,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # XXXFIXME: backward compat, should be removed latter
         if not hasattr(self, '_policies'):
             self._policies = PersistentMapping()
-        return self._policies.items()
+        return list(self._policies.items())
 
     # mimetype oriented conversions (iengine interface)
 

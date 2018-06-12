@@ -5,7 +5,7 @@ from zope.interface import implementer
 import PIL.Image
 
 
-from six import StringIO
+from six import BytesIO
 
 
 @implementer(ITransform)
@@ -20,8 +20,8 @@ class PILTransforms:
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        imgio = StringIO()
-        orig = StringIO(orig)
+        imgio = BytesIO()
+        orig = BytesIO(orig)
         newwidth = kwargs.get('width', None)
         newheight = kwargs.get('height', None)
         pil_img = PIL.Image.open(orig)
