@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.1.3 (unreleased)
+3.1.4 (unreleased)
 ------------------
 
 Breaking changes:
@@ -11,6 +11,14 @@ Breaking changes:
 New features:
 
 - *add item here*
+
+Bug fixes:
+
+- *add item here*
+
+
+3.1.3 (2018-06-21)
+------------------
 
 Bug fixes:
 
