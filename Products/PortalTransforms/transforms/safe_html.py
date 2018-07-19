@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
+import re
+import six
+
+from Products.CMFPlone.interfaces import IFilterSchema
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
 from plone.registry.interfaces import IRegistry
-from Products.CMFPlone.interfaces import IFilterSchema
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from zope.component import getUtility
 from zope.interface import implementer
-import re
-
-
-import six
-
 
 _strings = (bytes, str)
 

@@ -52,6 +52,14 @@ def output_file_path(file):
     return join(PREFIX, 'output', file)
 
 
+def read_file_data(path, mode='rb'):
+    data = None
+    with open(path, mode) as fd:
+        data = fd.read()
+        fd.close()
+    return data
+
+
 def matching_inputs(pattern):
     return [basename(path) for path in
             glob.glob(join(PREFIX, "input", pattern))]
