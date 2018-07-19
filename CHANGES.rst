@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- fix test for python 3
+  [petschki]
 
 
 3.1.3 (2018-06-21)
