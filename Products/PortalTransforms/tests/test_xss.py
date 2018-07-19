@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from plone.registry.interfaces import IRegistry
+import unittest
+
 from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
+from Products.PortalTransforms.transforms.safe_html import html5entities
+from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
-import unittest
 
 
 class TestXSSFilter(unittest.TestCase):
@@ -215,7 +217,7 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_36(self):
         data_in = r"""Normal text&mdash;whew."""
-        data_out = 'Normal text\xe2\x80\x94whew.'
+        data_out = u'Normal text{}whew.'.format(html5entities['mdash;'])
         self.doTest(data_in, data_out)
 
     def test_37(self):

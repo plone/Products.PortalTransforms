@@ -22,6 +22,7 @@ from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
+from Products.PortalTransforms.transforms.safe_html import html5entities
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from os.path import exists
 from plone.registry.interfaces import IRegistry
@@ -219,7 +220,7 @@ class SafeHtmlTransformsTest(TransformTestCase):
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
-        data_out = '<p>foo \u00FC bar</p>'
+        data_out = u'<p>foo {} bar</p>'.format(html5entities['uuml;'])
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), data_out)
 
@@ -252,49 +253,45 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
         self.assertEqual(data.getData(), escaped)
 
     def test_script_and_entities_and_unicode(self):
-        all = (''
-               # script with not converted entity
-               '<script type="text/javascript">$("h1 > ul").hide();</script>',
-               # script with not converted entity and unicode
-               '<script type="text/javascript">'
-               '$("h1 > ul").attr("alt", "Officiële");</script>',
-               # script
-               '<script type="text/javascript">var el = "test";</script>',
-               # entity
-               '<p>(KU&nbsp;Loket)</p>',
-               # unicode
-               '<p>Officiële inschrijvingen </p>',
-               )
-        for tokens in itertools.product(all, repeat=5):
-            orig = ''.join(tokens)
+        _all = (
+            # script with not converted entity and unicode
+            u'<script type="text/javascript">$("h1 > ul").attr("alt", "Officiële");</script>',  # noqa
+            # entity
+            u'<p>(KU&nbsp;Loket)</p>',
+            # unicode
+            u'<p>Officiële inschrijvingen </p>',
+        )
+        for tokens in itertools.product(_all, repeat=3):
+            orig = u''.join(tokens)
             data = self.transforms.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
             self.assertEqual(
-                unescape(data.getData()), orig.replace('&nbsp;', '\xc2\xa0'))
+                unescape(data.getData()),
+                orig.replace('&nbsp;', html5entities['nbsp;']))
 
     def test_script_with_all_entities_and_unicode(self):
-        orig = ('<p>Officiële inschrijvingen</p>',
-                '<script type="text/javascript">'
-                '$("h1 > ul").hide();'
-                'entities = "&copy;";'
-                '</script>',
-                '<p>(KU&nbsp;Loket)</p>',
+        orig = (u'<p>Officiële inschrijvingen</p>',
+                u'<script type="text/javascript">'
+                u'$("h1 > ul").hide();'
+                u'entities = "&copy;";'
+                u'</script>',
+                u'<p>(KU&nbsp;Loket)</p>',
                 )
-        escd = ('<p>Officiële inschrijvingen</p>',
-                '<script type="text/javascript">'
-                '$("h1 > ul").hide();'
-                'entities = "&copy;";'
-                '</script>',
-                '<p>(KU\xc2\xa0Loket)</p>',
+        escd = (u'<p>Officiële inschrijvingen</p>',
+                u'<script type="text/javascript">'
+                u'$("h1 > ul").hide();'
+                u'entities = "&copy;";'
+                u'</script>',
+                u'<p>(KU{}Loket)</p>'.format(html5entities['nbsp;']),
                 )
 
-        all = zip(orig, escd)
-        for tokens in itertools.product(all, repeat=4):
+        _all = zip(orig, escd)
+        for tokens in itertools.product(_all, repeat=4):
             orig_tokens, escaped_tokens = zip(*tokens)
-            orig = ''.join(orig_tokens)
-            escaped = ''.join(escaped_tokens)
+            orig = u''.join(orig_tokens)
+            escaped = u''.join(escaped_tokens)
             data = self.transforms.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig

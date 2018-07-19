@@ -66,14 +66,11 @@ def decode_charref(s):
 
 def decode_entityref(s):
     s = s.group(1)
-    # python3 has its own html5 entitydef translation dict
-    # unfortunytely not backported in six for python 2
-    entitydefs = six.PY3 and six.moves.html_entities.html5 or html5entities
     try:
-        c = entitydefs[s + ';']
+        c = html5entities[s + ';']
     except KeyError:
         try:
-            c = entitydefs[s]
+            c = html5entities[s]
         except KeyError:
             # strip unrecognized entities
             c = u''
@@ -94,9 +91,9 @@ def decode_htmlentities(s):
     return ENTITYREF_RE.sub(decode_entityref, s)
 
 
-# maps the HTML5 named character references to the equivalent Unicode
-# character(s) (taken from http://hg.python.org/cpython/rev/2b54e25d6ecb)
-html5entities = {
+# python3 has its own html5 entitydef translation dict
+# unfortunytely not backported in six for python 2
+html5entities = six.PY3 and six.moves.html_entities.html5 or {
     'Aacute;': u'\xc1',
     'Aacute': u'\xc1',
     'aacute;': u'\xe1',
