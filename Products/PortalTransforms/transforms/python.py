@@ -60,8 +60,11 @@ class Parser(object):
         text = BytesIO(self.raw)
         self.out.write(b'<pre class="python">\n')
         try:
-            for args in tokenize.tokenize(text.readline):
-                self.format_tokenizer(*args)
+            if six.PY2:
+                tokenize.tokenize(text.readline, self.format_tokenizer)
+            else:
+                for args in tokenize.tokenize(text.readline):
+                    self.format_tokenizer(*args)
         except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
@@ -80,7 +83,7 @@ class Parser(object):
         self.pos = newpos + len(toktext)
 
         # skip encoding
-        if toktype == tokenize.ENCODING:
+        if six.PY3 and toktype == tokenize.ENCODING:
             return
 
         # handle newlines
