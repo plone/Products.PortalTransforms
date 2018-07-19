@@ -77,7 +77,7 @@ class TransformTest(TransformTestCase):
                 fd.write(got)
             self.assertTrue(0)
 
-        if six.PY3:
+        if six.PY3 and isinstance(expected, six.binary_type):
             got = safe_unicode(got)
             expected = safe_unicode(expected)
 
