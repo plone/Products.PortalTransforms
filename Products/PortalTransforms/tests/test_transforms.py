@@ -2,11 +2,9 @@
 from __future__ import print_function
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
-from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
-from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.tests.utils import input_file_path
 from Products.PortalTransforms.tests.utils import load
@@ -22,12 +20,14 @@ from Products.PortalTransforms.transforms.image_to_png import image_to_png
 from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from os.path import exists
 from plone.registry.interfaces import IRegistry
 from xml.sax.saxutils import unescape
 from zope.component import getUtility
 
+import hashlib
 import itertools
 import os
 import six
@@ -45,6 +45,13 @@ class TransformTest(TransformTestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(IFilterSchema, prefix="plone")
 
+    def md5(self, fname):
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
     def do_convert(self, filename=None):
         if filename is None and exists(self.output + '.nofilename'):
             output = self.output + '.nofilename'
@@ -55,39 +62,43 @@ class TransformTest(TransformTestCase):
         res_data = self.transform.convert(orig, data, filename=filename)
         self.assertTrue(IDataStream.providedBy(res_data))
         got = res_data.getData()
+        expected = ''
         try:
-            output = open(output, 'rb')
+            expected = read_file_data(self.output, 'rb')
         except IOError:
             import sys
             print('No output file found.', file=sys.stderr)
-            print('File {0} created, check it !'.format(self.output),
+            print(
+                'File {0} created, check it !'.format(self.output),
                 file=sys.stderr)
-            output = open(output, 'wb')
-            output.write(got)
-            output.close()
+            with open(output, 'wb') as fd:
+                fd.write(got)
             self.assertTrue(0)
-        expected = output.read()
-        output.close()
-        if six.PY3 and isinstance(expected, six.binary_type):
-            expected = safe_unicode(expected)
-            got = safe_unicode(got)
+
         if self.normalize is not None:
             expected = self.normalize(expected)
             got = self.normalize(got)
 
+        if isinstance(got, six.binary_type):
+            got = got.decode('unicode-escape')
+        if isinstance(expected, six.binary_type):
+            expected = expected.decode('unicode-escape')
+
+        # show the first character ord table for debugging
         got_start = got.strip()[:40]
         expected_start = expected.strip()[:40]
         msg = 'IN {0}({1}) expected:\n{2}\nbut got:\n{3}'.format(
             self.transform.name(),
             self.input,
-            str([ord(x) for x in expected_start]),
-            str([ord(x) for x in got_start]),
+            "%s %s" % (expected_start, str([ord(x) for x in expected_start])),
+            "%s %s" % (got_start, str([ord(x) for x in got_start])),
         )
 
+        # compare md5 sum of the whole file content
         self.assertEqual(
             got_start,
             expected_start,
-            msg
+            msg,
         )
         self.assertEqual(
             self.subobjects,
@@ -96,7 +107,7 @@ class TransformTest(TransformTestCase):
                 self.subobjects,
                 len(res_data.getSubObjects()),
                 self.transform.name(),
-                self.input
+                self.input,
             )
         )
 
@@ -302,8 +313,7 @@ class WordTransformsTest(TransformTestCase):
             IFilterSchema, prefix="plone")
 
     def test_ignore_javascript_attrs(self):
-        wordFile = open(input_file_path('test_js.doc'), 'rb')
-        data = wordFile.read()
+        data = read_file_data(input_file_path('test_js.doc'))
         # should not throw exception even though it holds javascript link
         self.transforms.convertTo(target_mimetype='text/html', orig=data)
 
@@ -318,21 +328,18 @@ class ParsersTestCase(TransformTestCase):
             IFilterSchema, prefix="plone")
 
     def test_javascript_on_attr(self):
-        htmlFile = open(input_file_path('test_js_on.html'), 'rb')
-        data = htmlFile.read()
-        result = scrubHTMLNoRaise(data)
+        data = read_file_data(input_file_path('test_js_on.html'))
+        result = SafeHTML().scrub_html(data)
         self.assertTrue('link' in result)
 
     def test_javascript_uri(self):
-        htmlFile = open(input_file_path('test_js_uri.html'), 'rb')
-        data = htmlFile.read()
-        result = scrubHTMLNoRaise(data)
+        data = read_file_data(input_file_path('test_js_uri.html'))
+        result = SafeHTML().scrub_html(data)
         self.assertTrue('link' in result)
 
     def test_invalid_tags(self):
-        htmlFile = open(input_file_path('test_invalid_tags.html'), 'rb')
-        data = htmlFile.read()
-        self.assertEqual(scrubHTMLNoRaise(data).strip(), '')
+        data = read_file_data(input_file_path('test_invalid_tags.html'))
+        self.assertEqual(SafeHTML().scrub_html(data).strip(), '')
 
 
 TRANSFORMS_TESTINFO = (

@@ -2,7 +2,7 @@
 import six
 import unittest
 
-from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
 
 
 class TransformTestCase(unittest.TestCase):
@@ -13,7 +13,16 @@ class TransformTestCase(unittest.TestCase):
         self.portal = self.layer['portal']
         self.transforms = self.portal.portal_transforms
 
+    def _decode(self, first, second):
+        if isinstance(first, six.binary_type):
+            first = first.decode('unicode-escape')
+        if isinstance(second, six.binary_type):
+            second = second.decode('unicode-escape')
+
     def _baseAssertEqual(self, first, second, msg=None):
-        if six.PY3 and isinstance(first, six.binary_type):
-            first = first.decode('utf-8')
+        self._decode(first, second)
         return unittest.TestCase._baseAssertEqual(self, first, second, msg)
+
+    def assertMultiLineEqual(self, first, second, msg=None):
+        self._decode(first, second)
+        return unittest.TestCase.assertMultiLineEqual(self, first, second, msg)

@@ -10,7 +10,6 @@ class TestGraph(TransformTestCase):
     def testGraph(self):
         with open(FILE_PATH, 'rb') as fd:
             data = fd.read()
-            fd.close()
         requirements = self.transforms._policies.get('text/plain', [])
         if requirements:
             out = self.transforms.convertTo('text/plain', data, filename=FILE_PATH)

@@ -42,9 +42,6 @@ def hasScript(s):
     return False
 
 
-CHR_RE = re.compile(r'\\(\d+)')
-
-
 def unescape_chr(matchobj):
     try:
         return chr(int(matchobj.group(1), 16))
@@ -77,11 +74,12 @@ def decode_entityref(s):
         except KeyError:
             # strip unrecognized entities
             c = u''
-    if isinstance(s, str):
+    if isinstance(s, six.text_type):
         c = c.encode('utf8')
     return c
 
 
+CHR_RE = re.compile(r'\\(\d+)')
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")
 ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
 

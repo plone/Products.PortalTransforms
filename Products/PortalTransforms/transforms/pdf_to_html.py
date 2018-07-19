@@ -27,13 +27,6 @@ class pdf_to_html(commandtransform):
     def __init__(self):
         commandtransform.__init__(self, binary=self.binaryName)
 
-    @property
-    def binaryArgs(self):
-        if os.uname().sysname != 'Darwin':
-            # pdftohtml 4.0 on Mac OS doesn't know these arguments
-            return "-noframes -enc UTF-8"
-        return ''
-
     def convert(self, data, cache, **kwargs):
         kwargs['filename'] = 'unknown.pdf'
 
@@ -49,10 +42,7 @@ class pdf_to_html(commandtransform):
         return cache
 
     def invokeCommand(self, tmpdir, fullname):
-        if os.uname().sysname == 'Darwin':
-            cmd = '{0} {1} {2} 2>{2}/error_log 1>/dev/null'.format(
-                self.binary, fullname, tmpdir)
-        elif os.name == 'posix':
+        if os.name == 'posix':
             cmd = 'cd "%s" && %s %s "%s" 2>error_log 1>/dev/null' % (
                 tmpdir, self.binary, self.binaryArgs, fullname)
         else:
@@ -64,14 +54,12 @@ class pdf_to_html(commandtransform):
             subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
-            htmlfile = open(htmlfilename, 'rb')
-            html = htmlfile.read()
-            htmlfile.close()
+            with open(htmlfilename, 'rb') as htmlfile:
+                html = htmlfile.read()
         except:
             try:
                 with open("%s/error_log" % tmpdir, 'r') as fd:
                     error_log = fd.read()
-                    fd.close()
                 return error_log
             except:
                 return ("transform failed while running %s (maybe this pdf "

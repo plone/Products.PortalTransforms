@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Products.CMFPlone.utils import safe_unicode
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
@@ -8,10 +9,14 @@ from unittest import TestSuite
 
 import glob
 import re
+import six
 
 
 def normalize_html(s):
+    if six.PY3 and isinstance(s, six.binary_type):
+        s = safe_unicode(s)
     s = re.sub(r"&nbsp;", " ", s)
+    s = re.sub(r"&#160;", " ", s)
     s = re.sub(r"\s+", " ", s)
     s = re.sub(r"(?s)\s+<", "<", s)
     s = re.sub(r"(?s)>\s+", ">", s)
@@ -41,6 +46,7 @@ def build_test_suite(package_name, module_names, required=1):
             raise
     return suite
 
+
 PREFIX = abspath(dirname(__file__))
 
 
@@ -56,7 +62,6 @@ def read_file_data(path, mode='rb'):
     data = None
     with open(path, mode) as fd:
         data = fd.read()
-        fd.close()
     return data
 
 

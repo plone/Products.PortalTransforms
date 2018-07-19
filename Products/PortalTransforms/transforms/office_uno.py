@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from com.sun.star.beans import PropertyValue
-from com.sun.star.util import CloseVetoException
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
+from com.sun.star.beans import PropertyValue
+from com.sun.star.util import CloseVetoException
 
 import uno
 import unohelper
@@ -59,6 +59,6 @@ class document(commandtransform):
         htmlfile = open(self.outputfile, 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTMLNoRaise(html)
+        html = SafeHTML().scrub_html(html)
         body = bodyfinder(html)
         return body

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
-from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
 import os
 import six
 import subprocess
+
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
 
 
 class document(commandtransform):
@@ -41,6 +42,6 @@ class document(commandtransform):
         htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTMLNoRaise(html)
+        html = SafeHTML().scrub_html(html)
         body = bodyfinder(html)
         return body
