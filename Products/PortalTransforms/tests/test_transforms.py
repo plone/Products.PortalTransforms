@@ -85,8 +85,8 @@ class TransformTest(TransformTestCase):
             expected = self.normalize(expected)
 
         # show the first character ord table for debugging
-        got_start = got.strip()[:40]
-        expected_start = expected.strip()[:40]
+        got_start = got.strip()[:20]
+        expected_start = expected.strip()[:20]
         msg = 'IN {0}({1}) expected:\n{2}\nbut got:\n{3}'.format(
             self.transform.name(),
             self.input,
