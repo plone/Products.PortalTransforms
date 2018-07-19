@@ -66,16 +66,17 @@ def decode_charref(s):
 
 def decode_entityref(s):
     s = s.group(1)
+    # python3 has its own html5 entitydef translation dict
+    # unfortunytely not backported in six for python 2
+    entitydefs = six.PY3 and six.moves.html_entities.html5 or html5entities
     try:
-        c = html5entities[s + ';']
+        c = entitydefs[s + ';']
     except KeyError:
         try:
-            c = html5entities[s]
+            c = entitydefs[s]
         except KeyError:
             # strip unrecognized entities
             c = u''
-    if isinstance(s, six.text_type):
-        c = c.encode('utf8')
     return c
 
 
@@ -2428,7 +2429,7 @@ class SafeHTML:
 
         valid_tags = self.settings.valid_tags
         nasty_tags = [
-            tag for tag in self.settings.nasty_tags if tag not in valid_tags]
+            t for t in self.settings.nasty_tags if t not in valid_tags]
         if six.PY2:
             safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
         else:

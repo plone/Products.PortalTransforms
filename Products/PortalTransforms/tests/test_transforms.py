@@ -2,6 +2,7 @@
 from __future__ import print_function
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
+from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
@@ -75,14 +76,13 @@ class TransformTest(TransformTestCase):
                 fd.write(got)
             self.assertTrue(0)
 
-        if self.normalize is not None:
-            expected = self.normalize(expected)
-            got = self.normalize(got)
+        if six.PY3:
+            got = safe_unicode(got)
+            expected = safe_unicode(expected)
 
-        if isinstance(got, six.binary_type):
-            got = got.decode('unicode-escape')
-        if isinstance(expected, six.binary_type):
-            expected = expected.decode('unicode-escape')
+        if self.normalize is not None:
+            got = self.normalize(got)
+            expected = self.normalize(expected)
 
         # show the first character ord table for debugging
         got_start = got.strip()[:40]
