@@ -287,7 +287,7 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
                 u'<p>(KU{}Loket)</p>'.format(html5entities['nbsp;']),
                 )
 
-        _all = zip(orig, escd)
+        _all = six.moves.zip(orig, escd)
         for tokens in itertools.product(_all, repeat=4):
             orig_tokens, escaped_tokens = zip(*tokens)
             orig = u''.join(orig_tokens)

@@ -66,8 +66,8 @@ class Parser(object):
                 for args in tokenize.tokenize(text.readline):
                     self.format_tokenizer(*args)
         except tokenize.TokenError as ex:
-            msg = ex[0]
-            line = ex[1][0]
+            msg = ex.args[0]
+            line = ex.args[1][0]
             self.out.write(b"<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
         self.out.write(b'\n</pre>\n')
