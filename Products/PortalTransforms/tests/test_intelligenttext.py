@@ -1,15 +1,5 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
-import unittest
-
-
-class TransformTestCase(unittest.TestCase):
-
-    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
-
-    def setUp(self):
-        self.portal = self.layer['portal']
-        self.transforms = self.portal.portal_transforms
+from Products.PortalTransforms.tests.base import TransformTestCase
 
 
 class TestIntelligentTextToHtml(TransformTestCase):

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Need to be imported first to avoid dll loading problems.
-import pywintypes
 import pythoncom
+import pywintypes
 
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
-from win32com.client import constants
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from win32com.client import Dispatch
+from win32com.client import constants
 from win32com.client import gencache
 
 import os
@@ -65,7 +65,7 @@ class document(commandtransform):
         htmlfile = open(self.fullname + '.htm', 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTMLNoRaise(html)
+        html = SafeHTML().scrub_html(html)
         body = bodyfinder(html)
         return body
 

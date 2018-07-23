@@ -54,12 +54,13 @@ class pdf_to_html(commandtransform):
             subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
-            htmlfile = open(htmlfilename, 'rb')
-            html = htmlfile.read()
-            htmlfile.close()
+            with open(htmlfilename, 'rb') as htmlfile:
+                html = htmlfile.read()
         except:
             try:
-                return open("%s/error_log" % tmpdir, 'r').read()
+                with open("%s/error_log" % tmpdir, 'r') as fd:
+                    error_log = fd.read()
+                return error_log
             except:
                 return ("transform failed while running %s (maybe this pdf "
                         "file doesn't support transform)" % cmd)

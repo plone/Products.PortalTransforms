@@ -1,28 +1,22 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
-from .utils import input_file_path
-import unittest
+from Products.PortalTransforms.tests.base import TransformTestCase
+from Products.PortalTransforms.tests.utils import input_file_path
 
 FILE_PATH = input_file_path("demo1.pdf")
 
 
-class TestGraph(unittest.TestCase):
-
-    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
-
-    def setUp(self):
-        self.portal = self.layer['portal']
-        self.engine = self.portal.portal_transforms
+class TestGraph(TransformTestCase):
 
     def testGraph(self):
-        data = open(FILE_PATH, 'rb').read()
-        requirements = self.engine._policies.get('text/plain', [])
+        with open(FILE_PATH, 'rb') as fd:
+            data = fd.read()
+        requirements = self.transforms._policies.get('text/plain', [])
         if requirements:
-            out = self.engine.convertTo('text/plain', data, filename=FILE_PATH)
+            out = self.transforms.convertTo('text/plain', data, filename=FILE_PATH)
             self.assertTrue(out.getData())
 
     def testFindPath(self):
-        originalMap = self.engine._mtmap
+        originalMap = self.transforms._mtmap
         """
         The dummy map used for this test corresponds to a graph
         depicted in ASCII art below :
@@ -78,7 +72,7 @@ class TestGraph(unittest.TestCase):
             '4-2': ['transform4-5', 'transform5-3', 'transform3-2'],
             '5-3': ['transform5-3'],
         }
-        self.engine._mtmap = dummyMap1
+        self.transforms._mtmap = dummyMap1
         for orig in ['1', '2', '3', '4', '5', '6', '7']:
             for target in ['1', '2', '3', '4', '5', '6', '7']:
                 # build the name of the path
@@ -88,24 +82,24 @@ class TestGraph(unittest.TestCase):
                     # we do. Here is the expected shortest path
                     expectedPath = expectedPathes[pathName]
                     # what's the shortest path according to the engine ?
-                    gotPath = self.engine._findPath(orig, target)
+                    gotPath = self.transforms._findPath(orig, target)
                     # just keep the name of the transforms, please
                     if gotPath is not None:
                         gotPath = [transform.name() for transform in gotPath]
                     # this must be the same as in our expectation
                     self.assertEqual(expectedPath, gotPath)
-        self.engine._mtmap = originalMap
+        self.transforms._mtmap = originalMap
 
     def testFindPathWithEmptyTransform(self):
         """ _findPath should not throw "index out of range" when dealing with
             empty transforms list
         """
         dummyMap = {'1': {'2': []}}
-        self.engine._mtmap = dummyMap
-        self.engine._findPath('1', '2')
+        self.transforms._mtmap = dummyMap
+        self.transforms._findPath('1', '2')
 
     def testIdentity(self):
         orig = 'Some text'
-        converted = self.engine.convertTo(
+        converted = self.transforms.convertTo(
             'text/plain', 'Some text', mimetype='text/plain')
         self.assertEqual(orig, str(converted))

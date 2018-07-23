@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
+import re
+import six
+
+from Products.CMFPlone.interfaces import IFilterSchema
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
 from plone.registry.interfaces import IRegistry
-from Products.CMFPlone.interfaces import IFilterSchema
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from zope.component import getUtility
 from zope.interface import implementer
-import re
-
-
-import six
-
 
 _strings = (bytes, str)
 
@@ -42,9 +40,6 @@ def hasScript(s):
         if t in s:
             return True
     return False
-
-
-CHR_RE = re.compile(r'\\(\d+)')
 
 
 def unescape_chr(matchobj):
@@ -79,11 +74,10 @@ def decode_entityref(s):
         except KeyError:
             # strip unrecognized entities
             c = u''
-    if isinstance(s, str):
-        c = c.encode('utf8')
     return c
 
 
+CHR_RE = re.compile(r'\\(\d+)')
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")
 ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
 
@@ -97,9 +91,9 @@ def decode_htmlentities(s):
     return ENTITYREF_RE.sub(decode_entityref, s)
 
 
-# maps the HTML5 named character references to the equivalent Unicode
-# character(s) (taken from http://hg.python.org/cpython/rev/2b54e25d6ecb)
-html5entities = {
+# python3 has its own html5 entitydef translation dict
+# unfortunytely not backported in six for python 2
+html5entities = six.PY3 and six.moves.html_entities.html5 or {
     'Aacute;': u'\xc1',
     'Aacute': u'\xc1',
     'aacute;': u'\xe1',
@@ -2432,7 +2426,7 @@ class SafeHTML:
 
         valid_tags = self.settings.valid_tags
         nasty_tags = [
-            tag for tag in self.settings.nasty_tags if tag not in valid_tags]
+            t for t in self.settings.nasty_tags if t not in valid_tags]
         if six.PY2:
             safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
         else:
