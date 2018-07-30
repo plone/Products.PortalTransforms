@@ -2,6 +2,7 @@
 import six
 
 from DocumentTemplate.DT_Util import html_quote
+from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
@@ -35,9 +36,10 @@ class TextToHTML(object):
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
+        orig = safe_unicode(orig)
+        if six.PY2:
+            orig = orig.encode(kwargs.get('encoding', 'utf-8'))
         # Replaces all line breaks with a br tag, and wraps it in a p tag.
-        if isinstance(orig, six.binary_type):
-            orig = orig.decode('unicode-escape')
         data.setData('<p>%s</p>' %
                      html_quote(orig.strip()).replace('\n', '<br />'))
         return data
