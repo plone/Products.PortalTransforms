@@ -217,7 +217,7 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_36(self):
         data_in = r"""Normal text&mdash;whew."""
-        data_out = u'Normal text{}whew.'.format(html5entities['mdash;'])
+        data_out = 'Normal text{}whew.'.format(html5entities['mdash;'].encode('utf-8'))  # noqa
         self.doTest(data_in, data_out)
 
     def test_37(self):
