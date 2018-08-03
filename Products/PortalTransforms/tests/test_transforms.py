@@ -7,6 +7,7 @@ from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.tests.base import TransformTestCase
+from Products.PortalTransforms.tests.utils import html5entity
 from Products.PortalTransforms.tests.utils import input_file_path
 from Products.PortalTransforms.tests.utils import load
 from Products.PortalTransforms.tests.utils import matching_inputs
@@ -22,7 +23,6 @@ from Products.PortalTransforms.transforms.image_to_ppm import image_to_ppm
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
-from Products.PortalTransforms.transforms.safe_html import html5entities
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from os.path import exists
 from plone.registry.interfaces import IRegistry
@@ -220,7 +220,7 @@ class SafeHtmlTransformsTest(TransformTestCase):
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
-        data_out = u'<p>foo {} bar</p>'.format(html5entities['uuml;'])
+        data_out = '<p>foo {} bar</p>'.format(html5entity('uuml;'))
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         self.assertEqual(data.getData(), data_out)
 
@@ -254,44 +254,51 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
 
     def test_script_and_entities_and_unicode(self):
         _all = (
-            # script with not converted entity and unicode
-            u'<script type="text/javascript">$("h1 > ul").attr("alt", "Officiële");</script>',  # noqa
-            # entity
-            u'<p>(KU&nbsp;Loket)</p>',
-            # unicode
-            u'<p>Officiële inschrijvingen </p>',
+           ''
+           # script with not converted entity
+           '<script type="text/javascript">$("h1 > ul").hide();</script>',
+           # script with not converted entity and unicode
+           '<script type="text/javascript">'
+           '$("h1 > ul").attr("alt", "Officiële");</script>',
+           # script
+           '<script type="text/javascript">var el = "test";</script>',
+           # entity
+           '<p>(KU&nbsp;Loket)</p>',
+           # unicode
+           '<p>Officiële inschrijvingen </p>',
         )
-        for tokens in itertools.product(_all, repeat=3):
-            orig = u''.join(tokens)
+        nbsp = html5entity('nbsp;')
+        for tokens in itertools.product(_all, repeat=5):
+            orig = ''.join(tokens)
             data = self.transforms.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
             self.assertEqual(
                 unescape(data.getData()),
-                orig.replace('&nbsp;', html5entities['nbsp;']))
+                orig.replace('&nbsp;', nbsp))
 
     def test_script_with_all_entities_and_unicode(self):
-        orig = (u'<p>Officiële inschrijvingen</p>',
-                u'<script type="text/javascript">'
-                u'$("h1 > ul").hide();'
-                u'entities = "&copy;";'
-                u'</script>',
-                u'<p>(KU&nbsp;Loket)</p>',
+        orig = ('<p>Officiële inschrijvingen</p>',
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "&copy;";'
+                '</script>',
+                '<p>(KU&nbsp;Loket)</p>',
                 )
-        escd = (u'<p>Officiële inschrijvingen</p>',
-                u'<script type="text/javascript">'
-                u'$("h1 > ul").hide();'
-                u'entities = "&copy;";'
-                u'</script>',
-                u'<p>(KU{}Loket)</p>'.format(html5entities['nbsp;']),
+        escd = ('<p>Officiële inschrijvingen</p>',
+                '<script type="text/javascript">'
+                '$("h1 > ul").hide();'
+                'entities = "&copy;";'
+                '</script>',
+                '<p>(KU{}Loket)</p>'.format(html5entity('nbsp;')),
                 )
 
         _all = six.moves.zip(orig, escd)
         for tokens in itertools.product(_all, repeat=4):
             orig_tokens, escaped_tokens = zip(*tokens)
-            orig = u''.join(orig_tokens)
-            escaped = u''.join(escaped_tokens)
+            orig = ''.join(orig_tokens)
+            escaped = ''.join(escaped_tokens)
             data = self.transforms.convertTo(
                 target_mimetype='text/x-html-safe',
                 orig=orig

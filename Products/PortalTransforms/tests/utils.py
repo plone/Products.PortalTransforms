@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.CMFPlone.utils import safe_unicode
+from Products.PortalTransforms.transforms.safe_html import html5entities
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
@@ -23,6 +24,13 @@ def normalize_html(s):
     s = re.sub(r"\r", "", s)
     s = re.sub(r"<A", "<a", s)
     return s
+
+
+def html5entity(ent):
+    mapped_ent = html5entities[ent]
+    if six.PY2:
+        mapped_ent = mapped_ent.encode('utf-8')
+    return mapped_ent
 
 
 def build_test_suite(package_name, module_names, required=1):
