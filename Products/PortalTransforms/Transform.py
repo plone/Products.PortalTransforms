@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from logging import ERROR
 from OFS.SimpleItem import SimpleItem
 from Persistence import PersistentMapping

@@ -139,7 +139,7 @@ class rest(object):
         html = html + body
 
         # TODO: check if this unicode condition works on Python 3.
-        if output_encoding != 'unicode':
+        if six.PY2 and output_encoding != 'unicode':
             html = html.encode(output_encoding)
 
         html = html.replace(' class="document"', '', 1)

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
+import re
+
 from Products.CMFPlone.utils import _createObjectByType
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.utils import TransformException
 from six.moves import urllib
 from zope.interface import implementer
-import re
-import unittest
 
 
 class BaseTransform:
@@ -114,17 +114,15 @@ class BadTransformWildcardOutput(BaseTransform):
     output = 'text/*'
 
 
-class TestEngine(unittest.TestCase):
-
-    layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
+class TestEngine(TransformTestCase):
 
     def setUp(self):
-        self.portal = self.layer['portal']
+        super(TestEngine, self).setUp()
         _createObjectByType('Folder', self.portal, id='folder')
         self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'
-        for mt in self.engine._policies.keys():
+        for mt in list(self.engine._policies.keys()):
             self.engine.manage_delPolicies([mt])
 
     def register(self):

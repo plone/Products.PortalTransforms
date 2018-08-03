@@ -17,14 +17,13 @@ Original code from active state recipe
 
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
+from six import BytesIO
 from zope.interface import implementer
 
 import keyword
+import six
 import token
 import tokenize
-
-
-from six.moves import cStringIO as StringIO
 
 
 # Python Source Parser #####################################################
@@ -33,44 +32,48 @@ _KEYWORD = token.NT_OFFSET + 1
 _TEXT = token.NT_OFFSET + 2
 
 
-class Parser:
+class Parser(object):
     """ Send colored python source.
     """
 
-    def __init__(self, raw, tags, out):
+    def __init__(self, raw, tags):
         """ Store the source text.
         """
         self.raw = raw.expandtabs().strip()
-        self.out = out
+        self.out = BytesIO()
         self.tags = tags
 
-    def format(self):
+    def __call__(self):
         """ Parse and send the colored source.
         """
         # store line offsets in self.lines
         self.lines = [0, 0]
         pos = 0
         while True:
-            pos = self.raw.find('\n', pos) + 1
+            pos = self.raw.find(b'\n', pos) + 1
             if not pos:
                 break
             self.lines.append(pos)
         self.lines.append(len(self.raw))
-
         # parse the source and write it
         self.pos = 0
-        text = StringIO(self.raw)
-        self.out.write('<pre class="python">\n')
+        text = BytesIO(self.raw)
+        self.out.write(b'<pre class="python">\n')
         try:
-            tokenize.tokenize(text.readline, self)
+            if six.PY2:
+                tokenize.tokenize(text.readline, self.format_tokenizer)
+            else:
+                for args in tokenize.tokenize(text.readline):
+                    self.format_tokenizer(*args)
         except tokenize.TokenError as ex:
-            msg = ex[0]
-            line = ex[1][0]
-            self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (
+            msg = ex.args[0]
+            line = ex.args[1][0]
+            self.out.write(b"<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
-        self.out.write('\n</pre>\n')
+        self.out.write(b'\n</pre>\n')
+        return self.out.getvalue()
 
-    def __call__(self, toktype, toktext, sx, ex, line):
+    def format_tokenizer(self, toktype, toktext, sx, ex, line):
         """ Token handler.
         """
         (srow, scol) = sx
@@ -79,9 +82,13 @@ class Parser:
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)
 
+        # skip encoding
+        if six.PY3 and toktype == tokenize.ENCODING:
+            return
+
         # handle newlines
         if toktype in [token.NEWLINE, tokenize.NL]:
-            self.out.write('\n')
+            self.out.write(b'\n')
             return
 
         # send the original whitespace, if needed
@@ -106,7 +113,7 @@ class Parser:
 
         # send text
         self.out.write(open_tag)
-        self.out.write(html_quote(toktext))
+        self.out.write(six.b(html_quote(toktext)))
         self.out.write(close_tag)
 
 
@@ -120,31 +127,32 @@ class PythonTransform(object):
     output = "text/html"
 
     config = {
-        'OPEN_NUMBER': '<span style="color: #0080C0;">',
-        'CLOSE_NUMBER': '</span>',
-        'OPEN_OP': '<span style="color: #0000C0;">',
-        'CLOSE_OP': '</span>',
-        'OPEN_STRING': '<span style="color: #004080;">',
-        'CLOSE_STRING': '</span>',
-        'OPEN_COMMENT': '<span style="color: #008000;">',
-        'CLOSE_COMMENT': '</span>',
-        'OPEN_NAME': '<span style="color: #000000;">',
-        'CLOSE_NAME': '</span>',
-        'OPEN_ERRORTOKEN': '<span style="color: #FF8080;">',
-        'CLOSE_ERRORTOKEN': '</span>',
-        'OPEN_KEYWORD': '<span style="color: #C00000;">',
-        'CLOSE_KEYWORD': '</span>',
-        'OPEN_TEXT': '',
-        'CLOSE_TEXT': '',
+        'OPEN_NUMBER': b'<span style="color: #0080C0;">',
+        'CLOSE_NUMBER': b'</span>',
+        'OPEN_OP': b'<span style="color: #0000C0;">',
+        'CLOSE_OP': b'</span>',
+        'OPEN_STRING': b'<span style="color: #004080;">',
+        'CLOSE_STRING': b'</span>',
+        'OPEN_COMMENT': b'<span style="color: #008000;">',
+        'CLOSE_COMMENT': b'</span>',
+        'OPEN_NAME': b'<span style="color: #000000;">',
+        'CLOSE_NAME': b'</span>',
+        'OPEN_ERRORTOKEN': b'<span style="color: #FF8080;">',
+        'CLOSE_ERRORTOKEN': b'</span>',
+        'OPEN_KEYWORD': b'<span style="color: #C00000;">',
+        'CLOSE_KEYWORD': b'</span>',
+        'OPEN_TEXT': b'',
+        'CLOSE_TEXT': b'',
     }
 
     def name(self):
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        dest = StringIO()
-        Parser(orig, self.config, dest).format()
-        data.setData(dest.getvalue())
+        if isinstance(orig, six.text_type):
+            orig = orig.encode('utf8')
+        parser = Parser(orig, self.config)
+        data.setData(parser())
         return data
 
 
