@@ -4,14 +4,6 @@ Changelog
 3.1.4 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - fix test for python 3
