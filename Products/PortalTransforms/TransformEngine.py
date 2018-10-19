@@ -84,7 +84,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
 
-        * orig is an encoded string
+        * orig is a native string
 
         * data an optional IDataStream object. If None a new datastream will be
         created and returned

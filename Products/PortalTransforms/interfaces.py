@@ -9,10 +9,12 @@ class IDataStream(Interface):
     """data stream, is the result of a transform"""
 
     def setData(value):
-        """set the main data produced by a transform, i.e. usually a string"""
+        """set the main data produced by a transform,
+        i.e. usually a native string"""
 
     def getData():
-        """provide access to the transformed data object, i.e. usually a string
+        """provide access to the transformed data object,
+        i.e. usually a native string
         This data may references subobjects.
         """
 
@@ -87,7 +89,7 @@ class IEngine(Interface):
                   **kwargs):
         """Convert orig to a given mimetype
 
-        * orig is an encoded string
+        * orig is a native string
 
         * data an optional idatastream object. If None a new datastream will be
         created and returned
@@ -120,6 +122,7 @@ class IEngine(Interface):
         return an encoded string.
         see convert docstring for more info on additional arguments.
         """
+
 
 # BBB
 idatastream = IDataStream

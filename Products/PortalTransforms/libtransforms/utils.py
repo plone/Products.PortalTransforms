@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.utils import log
+from Products.PortalTransforms.utils import safe_nativestring
 
 import os
 import sys
@@ -79,7 +79,7 @@ def bodyfinder(text):
     Always use html_headcheck() first.
     Accepts bytes or text. Returns text.
     """
-    text = safe_unicode(text)
+    text = safe_nativestring(text)
     lowertext = text.lower()
     bodystart = lowertext.find('<body')
     if bodystart == -1:

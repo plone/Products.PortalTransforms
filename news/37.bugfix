@@ -1,0 +1,1 @@
+Some transform were returning unicode instead of strings in Python 2
