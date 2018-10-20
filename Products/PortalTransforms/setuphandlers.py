@@ -3,8 +3,7 @@ PortalTransforms setup handlers.
 """
 from __future__ import print_function
 from Products.CMFCore.utils import getToolByName
-
-from six import StringIO
+from six import StringIO as NativeStringIO
 
 
 def correctMapping(out, portal):
@@ -53,7 +52,7 @@ def updateTransform(out, portal, transform_id):
 
 
 def installPortalTransforms(portal):
-    out = StringIO()
+    out = NativeStringIO()
 
     updateTransform(out, portal, 'safe_html')
     updateTransform(out, portal, 'markdown_to_html')

@@ -16,8 +16,9 @@ Original code from active state recipe
 """
 
 from DocumentTemplate.DT_Util import html_quote
+from io import BytesIO
 from Products.PortalTransforms.interfaces import ITransform
-from six import BytesIO
+from Products.PortalTransforms.utils import safe_nativestring
 from zope.interface import implementer
 
 import keyword
@@ -71,7 +72,7 @@ class Parser(object):
             self.out.write(b"<h5 class='error>'ERROR: %s%s</h5>" % (
                 msg, self.raw[self.lines[line]:]))
         self.out.write(b'\n</pre>\n')
-        return self.out.getvalue()
+        return safe_nativestring(self.out.getvalue())
 
     def format_tokenizer(self, toktype, toktext, sx, ex, line):
         """ Token handler.

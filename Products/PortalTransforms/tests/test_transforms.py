@@ -2,7 +2,6 @@
 from __future__ import print_function
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
-from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
@@ -41,6 +40,8 @@ os.environ['LC_ALL'] = 'C'
 
 class TransformTest(TransformTestCase):
 
+    allowed_types = str
+
     def setUp(self):
         super(TransformTest, self).setUp()
         self.request = self.layer['request']
@@ -64,22 +65,20 @@ class TransformTest(TransformTestCase):
         res_data = self.transform.convert(orig, data, filename=filename)
         self.assertTrue(IDataStream.providedBy(res_data))
         got = res_data.getData()
-        expected = ''
+
+        self.assertIsInstance(got, self.allowed_types)
         try:
-            expected = read_file_data(self.output, 'rb')
+            expected = read_file_data(self.output)
         except IOError:
+            expected = ''
             import sys
             print('No output file found.', file=sys.stderr)
             print(
                 'File {0} created, check it !'.format(self.output),
                 file=sys.stderr)
-            with open(output, 'wb') as fd:
+            with open(output, 'w') as fd:
                 fd.write(got)
             self.assertTrue(0)
-
-        if six.PY3 and isinstance(expected, six.binary_type):
-            got = safe_unicode(got)
-            expected = safe_unicode(expected)
 
         if self.normalize is not None:
             got = self.normalize(got)
@@ -197,38 +196,50 @@ class SafeHtmlTransformsTest(TransformTestCase):
         orig = '<p><script>foo</script></p>'
         data_out = '<p/>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
         self.assertTrue('h1' in self.settings.nasty_tags)
         self.assertFalse('h1' in self.settings.valid_tags)
         orig = '<p><h1>foo</h1></p>'
         data_out = '<p/>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
     def test_entityiref_attributes(self):
         orig = '<a href="&uuml;">foo</a>'
         data_out = '<a href="&#xFC;">foo</a>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
     def test_charref_attributes(self):
         orig = '<a href="&#0109;">foo</a>'
         data_out = '<a href="m">foo</a>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
     def test_entityiref_data(self):
         orig = '<p>foo &uuml; bar</p>'
         data_out = '<p>foo {} bar</p>'.format(html5entity('uuml;'))
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
     def test_charref_data(self):
         orig = '<p>bar &#0109; foo</p>'
         data_out = '<p>bar m foo</p>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), data_out)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
 
 
 class SafeHtmlTransformsWithScriptTest(TransformTestCase):
@@ -250,7 +261,9 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
         orig = "<code>a > 0 && b < 1</code>"
         escaped = '<code>a &gt; 0 &amp;&amp; b &lt; 1</code>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
-        self.assertEqual(data.getData(), escaped)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, escaped)
 
     def test_script_and_entities_and_unicode(self):
         _all = (
@@ -274,8 +287,10 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
+            got = data.getData()
+            self.assertIsInstance(got, self.allowed_types)
             self.assertEqual(
-                unescape(data.getData()),
+                unescape(got),
                 orig.replace('&nbsp;', nbsp))
 
     def test_script_with_all_entities_and_unicode(self):
@@ -303,8 +318,9 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
                 target_mimetype='text/x-html-safe',
                 orig=orig
             )
-
-            self.assertEqual(unescape(data.getData()), escaped)
+            got = data.getData()
+            self.assertIsInstance(got, self.allowed_types)
+            self.assertEqual(unescape(got), escaped)
 
 
 class WordTransformsTest(TransformTestCase):
@@ -348,58 +364,58 @@ class ParsersTestCase(TransformTestCase):
 
 TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.pdf_to_html',
-     "demo1.pdf", "demo1.html", normalize_html, 0,
+     "demo1.pdf", "demo1.html", normalize_html, 0, str,
      ),
     ('Products.PortalTransforms.transforms.word_to_html',
-     "test.doc", "test_word.html", normalize_html, 0,
+     "test.doc", "test_word.html", normalize_html, 0, str,
      ),
     ('Products.PortalTransforms.transforms.lynx_dump',
-     "test_lynx.html", "test_lynx.txt", None, 0,
+     "test_lynx.html", "test_lynx.txt", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.html_to_text',
-     "test_lynx.html", "test_html_to_text.txt", None, 0,
+     "test_lynx.html", "test_html_to_text.txt", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.identity',
-     "rest1.rst", "rest1.rst", None, 0,
+     "rest1.rst", "rest1.rst", None, 0, (six.binary_type, six.text_type),
      ),
     ('Products.PortalTransforms.transforms.text_to_html',
-     "rest1.rst", "rest1.html", None, 0,
+     "rest1.rst", "rest1.html", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.safe_html',
-     "test_safehtml.html", "test_safe.html", None, 0,
+     "test_safehtml.html", "test_safe.html", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.image_to_bmp',
-     "logo.jpg", "logo.bmp", None, 0,
+     "logo.jpg", "logo.bmp", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_gif',
-     "logo.bmp", "logo.gif", None, 0,
+     "logo.bmp", "logo.gif", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_jpeg',
-     "logo.gif", "logo.jpg", None, 0,
+     "logo.gif", "logo.jpg", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_png',
-     "logo.bmp", "logo.png", None, 0,
+     "logo.bmp", "logo.png", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_ppm',
-     "logo.gif", "logo.ppm", None, 0,
+     "logo.gif", "logo.ppm", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_tiff',
-     "logo.png", "logo.tiff", None, 0,
+     "logo.png", "logo.tiff", None, 0, six.binary_type,
      ),
     ('Products.PortalTransforms.transforms.image_to_pcx',
-     "logo.png", "logo.pcx", None, 0,
+     "logo.png", "logo.pcx", None, 0, six.binary_type,
      ),
 )
 if HAS_MARKDOWN:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.markdown_to_html',
-         "markdown.txt", "markdown.html", None, 0,
+         "markdown.txt", "markdown.html", None, 0, str,
          ),
     )
 if HAS_TEXTILE:
     TRANSFORMS_TESTINFO = TRANSFORMS_TESTINFO + (
         ('Products.PortalTransforms.transforms.textile_to_html',
-         "input.textile", "textile.html", None, 0,
+         "input.textile", "textile.html", None, 0, str,
          ),
     )
 
@@ -408,7 +424,9 @@ def initialise(transform, normalize, pattern):
     global TRANSFORMS_TESTINFO
     for fname in matching_inputs(pattern):
         outname = '%s.out' % fname.split('.')[0]
-        TRANSFORMS_TESTINFO += ((transform, fname, outname, normalize, 0),)
+        TRANSFORMS_TESTINFO += (
+            (transform, fname, outname, normalize, 0, str,),
+        )
 
 
 # ReST test cases
@@ -429,7 +447,14 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
     return the list of generated test classes
     """
     tests = []
-    for _transform, tr_input, tr_output, _normalize, _subobjects in test_descr:
+    for (
+        _transform,
+        tr_input,
+        tr_output,
+        _normalize,
+        _subobjects,
+        _allowed_types,
+    ) in test_descr:
         # load transform if necessary
         if isinstance(_transform, type('')):
             try:
@@ -447,6 +472,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
             continue
 
         class TransformTestSubclass(TransformTest):
+            allowed_types = _allowed_types
             input = input_file_path(tr_input)
             output = output_file_path(tr_output)
             transform = _transform

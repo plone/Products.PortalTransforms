@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.transforms.safe_html import html5entities
+from Products.PortalTransforms.utils import safe_nativestring
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
@@ -14,8 +14,7 @@ import six
 
 
 def normalize_html(s):
-    if six.PY3 and isinstance(s, six.binary_type):
-        s = safe_unicode(s)
+    s = safe_nativestring(s)
     s = re.sub(r"&nbsp;", " ", s)
     s = re.sub(r"&#160;", " ", s)
     s = re.sub(r"\s+", " ", s)
