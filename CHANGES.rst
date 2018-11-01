@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.5 (2018-11-01)
+------------------
+
+Bug fixes:
+
+
+- Some transform were returning unicode instead of strings in Python 2 (#37)
+- fix scrub_html when passing unicode [pbauer] (#38)
+
 
 3.1.4 (2018-09-23)
 ------------------
