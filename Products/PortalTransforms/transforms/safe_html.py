@@ -2444,6 +2444,7 @@ class SafeHTML:
                           meta=False,
                           javascript=remove_script,
                           scripts=remove_script,
+                          forms=False,
                           style=False)
         try:
             cleaner(tree)

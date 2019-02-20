@@ -1,5 +1,6 @@
 # -*- coding: utf8  -*-
 from __future__ import print_function
+from copy import deepcopy
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.data import datastream
@@ -323,6 +324,91 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
             self.assertEqual(unescape(got), escaped)
 
 
+class SafeHtmlTransformsWithFormTest(TransformTestCase):
+
+    def setUp(self):
+        super(SafeHtmlTransformsWithFormTest, self).setUp()
+        self.request = self.layer['request']
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+
+    def tearDown(self):
+        self.settings.valid_tags = self.orig_valid_tags
+
+    def test_form_tag_removed(self):
+        orig = "<form><label>Hello</label></form>"
+        expected = "Hello"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_tag_kept(self):
+        # Allow form tag
+        self.settings.valid_tags.append('form')
+        orig = "<form><label>Hello</label></form>"
+        expected = "<form>Hello</form>"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_with_input_removed(self):
+        orig = (
+            '<form>'
+            '<label>Hello</label> '
+            '<button name="but">Click here</button> '
+            '<input type="text" value="hi"/> '
+            '<select name="sel"><option value="1">One</option></select> '
+            '<textarea name="text">Stuff</textarea>'
+            '</form>')
+        # Originally, up to and including version 3.1.5, 'Hello    ' was kept.
+        # Now, with cleaner.forms = False, more text is kept:
+        expected = "Hello Click here  One Stuff"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_with_input_kept(self):
+        # Allow various form related tags
+        self.settings.valid_tags.extend(
+            'form button input select textarea option label'.split()
+        )
+        orig = (
+            '<form>'
+            '<label>Hello</label> '
+            '<button name="but">Click here</button> '
+            '<input type="text" value="hi"/> '
+            '<select name="sel"><option value="1">One</option></select> '
+            '<textarea name="text">Stuff</textarea>'
+            '</form>')
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, orig)
+
+    def test_label_tag_removed(self):
+        orig = "<form><label>Hello</label></form>"
+        expected = "Hello"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_label_tag_kept(self):
+        # Allow label tag
+        self.settings.valid_tags.append('label')
+        orig = "<form><label>Hello</label></form>"
+        expected = "<label>Hello</label>"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+
 class WordTransformsTest(TransformTestCase):
 
     def setUp(self):
@@ -484,6 +570,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
     tests.append(PILTransformsTest)
     tests.append(SafeHtmlTransformsTest)
     tests.append(SafeHtmlTransformsWithScriptTest)
+    tests.append(SafeHtmlTransformsWithFormTest)
     tests.append(WordTransformsTest)
     tests.append(ParsersTestCase)
     return tests
