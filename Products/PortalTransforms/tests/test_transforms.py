@@ -183,13 +183,15 @@ class SafeHtmlTransformsTest(TransformTestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
-        self.settings.valid_tags.append('style')
-        self.settings.valid_tags.remove('h1')
-        self.settings.nasty_tags.append('h1')
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+        self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
+        self.settings.valid_tags.append(u'style')
+        self.settings.valid_tags.remove(u'h1')
+        self.settings.nasty_tags.append(u'h1')
 
     def tearDown(self):
-        self.settings.valid_tags.remove('style')
-        self.settings.valid_tags.append('h1')
+        self.settings.valid_tags = self.orig_valid_tags
+        self.settings.nasty_tags = self.orig_nasty_tags
 
     def test_kill_nasty_tags_which_are_not_valid(self):
         self.assertTrue('script' in self.settings.nasty_tags)
@@ -251,12 +253,14 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
-        self.settings.valid_tags.append('script')
-        self.settings.nasty_tags.remove('script')
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+        self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
+        self.settings.valid_tags.append(u'script')
+        self.settings.nasty_tags.remove(u'script')
 
     def tearDown(self):
-        self.settings.nasty_tags.append('script')
-        self.settings.valid_tags.remove('script')
+        self.settings.valid_tags = self.orig_valid_tags
+        self.settings.nasty_tags = self.orig_nasty_tags
 
     def test_entities_outside_script(self):
         orig = "<code>a > 0 && b < 1</code>"
@@ -335,6 +339,11 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
         self.orig_valid_tags = deepcopy(self.settings.valid_tags)
 
     def tearDown(self):
+        # If this gives a WrongContainedType because some of the tags are
+        # strings instead of the expected unicode,
+        # then some other test is adding strings and not cleaning up.
+        # Note that with valid_tags.append no validation is done,
+        # but only when realling setting valid_tags.
         self.settings.valid_tags = self.orig_valid_tags
 
     def test_form_tag_removed(self):
@@ -347,7 +356,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
 
     def test_form_tag_kept(self):
         # Allow form tag
-        self.settings.valid_tags.append('form')
+        self.settings.valid_tags.append(u'form')
         orig = "<form><label>Hello</label></form>"
         expected = "<form>Hello</form>"
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
@@ -400,7 +409,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
 
     def test_label_tag_kept(self):
         # Allow label tag
-        self.settings.valid_tags.append('label')
+        self.settings.valid_tags.append(u'label')
         orig = "<form><label>Hello</label></form>"
         expected = "<label>Hello</label>"
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
