@@ -1,5 +1,6 @@
 # -*- coding: utf8  -*-
 from __future__ import print_function
+from copy import deepcopy
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.data import datastream
@@ -182,13 +183,15 @@ class SafeHtmlTransformsTest(TransformTestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
-        self.settings.valid_tags.append('style')
-        self.settings.valid_tags.remove('h1')
-        self.settings.nasty_tags.append('h1')
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+        self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
+        self.settings.valid_tags.append(u'style')
+        self.settings.valid_tags.remove(u'h1')
+        self.settings.nasty_tags.append(u'h1')
 
     def tearDown(self):
-        self.settings.valid_tags.remove('style')
-        self.settings.valid_tags.append('h1')
+        self.settings.valid_tags = self.orig_valid_tags
+        self.settings.nasty_tags = self.orig_nasty_tags
 
     def test_kill_nasty_tags_which_are_not_valid(self):
         self.assertTrue('script' in self.settings.nasty_tags)
@@ -250,12 +253,14 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
-        self.settings.valid_tags.append('script')
-        self.settings.nasty_tags.remove('script')
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+        self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
+        self.settings.valid_tags.append(u'script')
+        self.settings.nasty_tags.remove(u'script')
 
     def tearDown(self):
-        self.settings.nasty_tags.append('script')
-        self.settings.valid_tags.remove('script')
+        self.settings.valid_tags = self.orig_valid_tags
+        self.settings.nasty_tags = self.orig_nasty_tags
 
     def test_entities_outside_script(self):
         orig = "<code>a > 0 && b < 1</code>"
@@ -321,6 +326,96 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
             got = data.getData()
             self.assertIsInstance(got, self.allowed_types)
             self.assertEqual(unescape(got), escaped)
+
+
+class SafeHtmlTransformsWithFormTest(TransformTestCase):
+
+    def setUp(self):
+        super(SafeHtmlTransformsWithFormTest, self).setUp()
+        self.request = self.layer['request']
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
+        self.orig_valid_tags = deepcopy(self.settings.valid_tags)
+
+    def tearDown(self):
+        # If this gives a WrongContainedType because some of the tags are
+        # strings instead of the expected unicode,
+        # then some other test is adding strings and not cleaning up.
+        # Note that with valid_tags.append no validation is done,
+        # but only when realling setting valid_tags.
+        self.settings.valid_tags = self.orig_valid_tags
+
+    def test_form_tag_removed(self):
+        orig = "<form><label>Hello</label></form>"
+        expected = "Hello"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_tag_kept(self):
+        # Allow form tag
+        self.settings.valid_tags.append(u'form')
+        orig = "<form><label>Hello</label></form>"
+        expected = "<form>Hello</form>"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_with_input_removed(self):
+        orig = (
+            '<form>'
+            '<label>Hello</label> '
+            '<button name="but">Click here</button> '
+            '<input type="text" value="hi"/> '
+            '<select name="sel"><option value="1">One</option></select> '
+            '<textarea name="text">Stuff</textarea>'
+            '</form>')
+        # Originally, up to and including version 3.1.5, 'Hello    ' was kept.
+        # Now, with cleaner.forms = False, more text is kept:
+        expected = "Hello Click here  One Stuff"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_form_with_input_kept(self):
+        # Allow various form related tags
+        self.settings.valid_tags.extend(
+            'form button input select textarea option label'.split()
+        )
+        orig = (
+            '<form>'
+            '<label>Hello</label> '
+            '<button name="but">Click here</button> '
+            '<input type="text" value="hi"/> '
+            '<select name="sel"><option value="1">One</option></select> '
+            '<textarea name="text">Stuff</textarea>'
+            '</form>')
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, orig)
+
+    def test_label_tag_removed(self):
+        orig = "<form><label>Hello</label></form>"
+        expected = "Hello"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
+
+    def test_label_tag_kept(self):
+        # Allow label tag
+        self.settings.valid_tags.append(u'label')
+        orig = "<form><label>Hello</label></form>"
+        expected = "<label>Hello</label>"
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, expected)
 
 
 class WordTransformsTest(TransformTestCase):
@@ -484,6 +579,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
     tests.append(PILTransformsTest)
     tests.append(SafeHtmlTransformsTest)
     tests.append(SafeHtmlTransformsWithScriptTest)
+    tests.append(SafeHtmlTransformsWithFormTest)
     tests.append(WordTransformsTest)
     tests.append(ParsersTestCase)
     return tests
