@@ -1,4 +1,0 @@
-When form tag is added to the valid tags, do not remove it anyway.
-By default the cleaner would always remove form tags and kill button, input, select, and textarea tags
-Fixes `issue 2693 <https://github.com/plone/Products.CMFPlone/issues/2693>`_.
-[maurits]
