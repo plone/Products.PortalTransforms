@@ -30,10 +30,10 @@ def register():
 
     return html_to_text(
         "html_to_text",
-        (r'<script [^>]>.*</script>(?im)', ' '),
-        (r'<style [^>]>.*</style>(?im)', ' '),
-        (r'<head [^>]>.*</head>(?im)', ' '),
+        (r'(?im)<script [^>]>.*</script>', ' '),
+        (r'(?im)<style [^>]>.*</style>', ' '),
+        (r'(?im)<head [^>]>.*</head>', ' '),
         (r'(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
-        (r'<[^>]*>(?i)(?m)', ' '),
+        (r'(?i)(?m)<[^>]*>', ' '),
         (r'&([a-zA-Z0-9#]*?);', sub_func),
     )
