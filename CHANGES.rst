@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.7 (2019-05-21)
+------------------
+
+Bug fixes:
+
+
+- Fix: 'DeprecationWarning: Flags not at the start of the expression'
+  [jensens] (#40)
+
+
 3.1.6 (2019-03-02)
 ------------------
 
