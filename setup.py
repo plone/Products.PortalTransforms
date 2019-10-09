@@ -10,6 +10,7 @@ setup(name='Products.PortalTransforms',
       long_description=open("README.rst").read() + "\n" +
       open("CHANGES.rst").read(),
       classifiers=[
+          "Development Status :: 5 - Production/Stable",
           "Framework :: Plone",
           "Framework :: Plone :: 5.1",
           "Framework :: Plone :: 5.2",
