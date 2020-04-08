@@ -5,8 +5,10 @@ Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
 from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
+from Products.PortalTransforms.utils import safe_nativestring
 from zope.component import getUtility
 from zope.interface import implementer
 
@@ -37,15 +39,14 @@ class markdown(object):
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
-            orig = unicode(orig.decode('utf-8'))
-            # PortalTransforms, however expects a string as result,
-            # so we encode the unicode result back to UTF8:
-            html = markdown_transformer \
-                .markdown(orig, self.extensions()) \
-                .encode('utf-8')
+            html = markdown_transformer.markdown(
+                safe_unicode(orig),
+                extensions=self.extensions()
+            )
         else:
             html = orig
-        data.setData(html)
+
+        data.setData(safe_nativestring(html))
         return data
 
 

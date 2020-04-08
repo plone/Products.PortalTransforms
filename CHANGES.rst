@@ -1,21 +1,64 @@
 Changelog
 =========
 
-3.1.3 (unreleased)
+.. You should *NOT* be adding new change log entries to this file.
+   You should create a file in the news directory instead.
+   For helpful instructions, please see:
+   https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
+
+.. towncrier release notes start
+
+3.1.7 (2019-05-21)
 ------------------
 
-Breaking changes:
+Bug fixes:
 
-- *add item here*
 
-New features:
+- Fix: 'DeprecationWarning: Flags not at the start of the expression'
+  [jensens] (#40)
 
-- *add item here*
+
+3.1.6 (2019-03-02)
+------------------
+
+Bug fixes:
+
+
+- When form tag is added to the valid tags, do not remove it anyway.
+  By default the cleaner would always remove form tags and kill button, input, select, and textarea tags
+  Fixes `issue 2693 <https://github.com/plone/Products.CMFPlone/issues/2693>`_.
+  [maurits] (#2693)
+
+
+3.1.5 (2018-11-01)
+------------------
+
+Bug fixes:
+
+
+- Some transform were returning unicode instead of strings in Python 2 (#37)
+- fix scrub_html when passing unicode [pbauer] (#38)
+
+
+3.1.4 (2018-09-23)
+------------------
+
+Bug fixes:
+
+- fix test for python 3
+  [petschki]
+
+
+3.1.3 (2018-06-21)
+------------------
 
 Bug fixes:
 
 - Start fixing startup in py3
-  [pbauer]
+  [ale-rt, pbauer]
+
+- Stop using ATTestCase for tests.
+  [davisagli]
 
 - Persist changes to config entry enabled_extensions in markdown_to_html.
   [pabo3000]

@@ -7,8 +7,9 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
-
 import os
+import six
+import subprocess
 
 
 @implementer(ITransform)
@@ -42,7 +43,10 @@ class rtf_to_xml(commandtransform):
         xmlfile = "%s/%s.xml" % (tmpdir, sansext(fullname))
         cmd = 'cd "%s" && %s -o %s "%s" 2>error_log 1>/dev/null' % (
             tmpdir, self.binary, xmlfile, fullname)
-        os.system(cmd)
+        if six.PY2:
+            os.system(cmd)
+        else:
+            subprocess.run(cmd, shell=True)
         try:
             xml = open(xmlfile).read()
         except:

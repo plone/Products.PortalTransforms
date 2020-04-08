@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import os
+import six
+import subprocess
+
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from Products.PortalTransforms.libtransforms.utils import scrubHTMLNoRaise
-
-import os
+from Products.PortalTransforms.transforms.safe_html import SafeHTML
 
 
 class document(commandtransform):
@@ -29,13 +31,17 @@ class document(commandtransform):
         #    d:\temp\test.doc > test.html
 
         if os.name == 'posix':
-            os.system('cd "%s" && %s --charset=utf-8 "%s" "%s.html"' % (
-                tmpdir, self.binary, self.fullname, self.__name__))
+            cmd = 'cd "%s" && %s --charset=utf-8 "%s" "%s.html"' % (
+                tmpdir, self.binary, self.fullname, self.__name__)
+            if six.PY2:
+                os.system(cmd)
+            else:
+                subprocess.run(cmd, shell=True)
 
     def html(self):
         htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')
         html = htmlfile.read()
         htmlfile.close()
-        html = scrubHTMLNoRaise(html)
+        html = SafeHTML().scrub_html(html)
         body = bodyfinder(html)
         return body

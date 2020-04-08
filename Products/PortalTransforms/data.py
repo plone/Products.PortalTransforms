@@ -24,11 +24,13 @@ class datastream(object):
         return self.__name__
 
     def setData(self, value):
-        """set the main data produced by a transform, i.e. usually a string"""
+        """set the main data produced by a transform,
+        i.e. usually a native string"""
         self._data = value
 
     def getData(self):
-        """provide access to the transformed data object, i.e. usually a string
+        """provide access to the transformed data object,
+        i.e. usually a native string
         This data may references subobjects.
         """
         if callable(self._data):

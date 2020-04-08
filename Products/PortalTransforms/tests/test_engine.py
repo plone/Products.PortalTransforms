@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-from Products.PortalTransforms.chain import chain
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.utils import TransformException
-from zope.interface import implementer
-
 import re
 
+from Products.CMFPlone.utils import _createObjectByType
+from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.tests.base import TransformTestCase
+from Products.PortalTransforms.utils import TransformException
 from six.moves import urllib
+from zope.interface import implementer
 
 
 class BaseTransform:
@@ -114,13 +114,15 @@ class BadTransformWildcardOutput(BaseTransform):
     output = 'text/*'
 
 
-class TestEngine(ATSiteTestCase):
+class TestEngine(TransformTestCase):
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        super(TestEngine, self).setUp()
+        _createObjectByType('Folder', self.portal, id='folder')
+        self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'
-        for mt in self.engine._policies.keys():
+        for mt in list(self.engine._policies.keys()):
             self.engine.manage_delPolicies([mt])
 
     def register(self):
@@ -301,10 +303,3 @@ class TestEngine(ATSiteTestCase):
         self.assertEqual(
             out.getData(), '<a href="http://otherhost">vhost link</a>',
             out.getData())
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestEngine))
-    return suite

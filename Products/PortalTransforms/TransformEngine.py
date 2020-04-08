@@ -1,32 +1,34 @@
 # -*- coding: utf-8 -*-
+import six
+
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
-from App.class_init import InitializeClass
-from logging import DEBUG
 from OFS.Folder import Folder
 from Persistence import PersistentMapping
-from persistent.list import PersistentList
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.permissions import View
+from Products.CMFCore.utils import UniqueObject
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import registerToolInterface
-from Products.CMFCore.utils import UniqueObject
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.cache import Cache
-from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.chain import TransformsChain
+from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.interfaces import IEngine
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
-from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.transforms import initialize
+from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
-from Products.PortalTransforms.utils import TransformException
+from logging import DEBUG
+from persistent.list import PersistentList
 from zope.interface import implementer
 
 
@@ -82,7 +84,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                   usedby=None, context=None, **kwargs):
         """Convert orig to a given mimetype
 
-        * orig is an encoded string
+        * orig is a native string
 
         * data an optional IDataStream object. If None a new datastream will be
         created and returned
@@ -391,7 +393,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if outputs:
                     for reachedType, transforms in outputs.items():
                         # Does this lead to a type we never reached before ?
-                        if reachedType not in pathToType.keys() and transforms:
+                        if reachedType not in six.iterkeys(pathToType) and transforms:  # noqa
                             # Yes, we did not know any path reaching this type
                             # Let's remember the path to here
                             pathToType[reachedType] = (
@@ -553,7 +555,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # XXXFIXME: backward compat, should be removed latter
         if not hasattr(self, '_policies'):
             self._policies = PersistentMapping()
-        return self._policies.items()
+        return list(self._policies.items())
 
     # mimetype oriented conversions (iengine interface)
 

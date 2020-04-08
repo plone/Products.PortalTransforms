@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.utils import log
+from Products.PortalTransforms.utils import safe_nativestring
 
 import os
 import sys
@@ -76,7 +77,9 @@ def bodyfinder(text):
     """ Return body or unchanged text if no body tags found.
 
     Always use html_headcheck() first.
+    Accepts bytes or text. Returns text.
     """
+    text = safe_nativestring(text)
     lowertext = text.lower()
     bodystart = lowertext.find('<body')
     if bodystart == -1:

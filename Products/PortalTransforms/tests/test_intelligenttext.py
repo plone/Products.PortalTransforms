@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
-
-
-class TransformTestCase(ATSiteTestCase):
-
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
-        self.transforms = self.portal.portal_transforms
+from Products.PortalTransforms.tests.base import TransformTestCase
 
 
 class TestIntelligentTextToHtml(TransformTestCase):

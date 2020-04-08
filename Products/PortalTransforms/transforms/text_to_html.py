@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from DocumentTemplate.DT_Util import html_quote
 from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.utils import safe_nativestring
 from zope.interface import implementer
 
 
@@ -33,6 +34,7 @@ class TextToHTML(object):
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
+        orig = safe_nativestring(orig)
         # Replaces all line breaks with a br tag, and wraps it in a p tag.
         data.setData('<p>%s</p>' %
                      html_quote(orig.strip()).replace('\n', '<br />'))

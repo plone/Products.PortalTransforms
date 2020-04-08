@@ -17,7 +17,7 @@ from zope.interface import implementer
 import re
 
 
-from six.moves import cStringIO as StringIO
+from six import StringIO as NativeStringIO
 
 
 @implementer(ITransform)
@@ -154,7 +154,7 @@ def get_doctype(data):
     """ return the public id for the doctype given some raw xml data
     """
     if not hasattr(data, 'readlines'):
-        data = StringIO(data)
+        data = NativeStringIO(data)
     for line in data.readlines():
         line = line.strip()
         if not line:
@@ -172,7 +172,7 @@ def get_dtd(data):
     """ return the public id for the doctype given some raw xml data
     """
     if not hasattr(data, 'readlines'):
-        data = StringIO(data)
+        data = NativeStringIO(data)
     for line in data.readlines():
         line = line.strip()
         if not line:

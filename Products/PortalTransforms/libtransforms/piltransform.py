@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implementer
-
 import PIL.Image
 
-
-from six import StringIO
+from Products.PortalTransforms.interfaces import ITransform
+from six import BytesIO
+from zope.interface import implementer
 
 
 @implementer(ITransform)
@@ -20,8 +18,8 @@ class PILTransforms:
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        imgio = StringIO()
-        orig = StringIO(orig)
+        imgio = BytesIO()
+        orig = BytesIO(orig)
         newwidth = kwargs.get('width', None)
         newheight = kwargs.get('height', None)
         pil_img = PIL.Image.open(orig)

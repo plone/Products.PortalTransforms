@@ -17,19 +17,19 @@ ENABLE_UNO = False
 if os.name == 'posix':
     try:
         if ENABLE_UNO:
-            from office_uno import document
+            from .office_uno import document
         else:
             raise
     except:
-        from office_wvware import document
+        from .office_wvware import document
 else:
     try:
         if ENABLE_UNO:
-            from office_uno import document
+            from .office_uno import document
         else:
             raise
     except:
-        from office_com import document
+        from .office_com import document
 
 
 @implementer(ITransform)
