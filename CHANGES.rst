@@ -60,9 +60,6 @@ Bug fixes:
 - Stop using ATTestCase for tests.
   [davisagli]
 
-- Persist changes to config entry enabled_extensions in markdown_to_html.
-  [pabo3000]
-
 
 3.1.2 (2018-02-05)
 ------------------
