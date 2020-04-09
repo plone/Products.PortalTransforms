@@ -5,6 +5,7 @@ Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
 from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.interfaces import IMarkupSchema
 from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
@@ -21,6 +22,11 @@ except ImportError:
 else:
     HAS_MARKDOWN = True
 
+DEFAULT_EXTENSIONS = [
+    'markdown.extensions.fenced_code',
+    'markdown.extensions.nl2br',
+]
+
 
 @implementer(ITransform)
 class markdown(object):
@@ -34,7 +40,8 @@ class markdown(object):
 
     def extensions(self):
         registry = getUtility(IRegistry)
-        return registry.get('plone.markdown_exts')
+        settings = registry.forInterface(IMarkupSchema, prefix="plone")
+        return getattr(settings, 'markdown_extensions', DEFAULT_EXTENSIONS)
 
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
