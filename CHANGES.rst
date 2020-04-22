@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.8 (2020-04-23)
+------------------
+
+Bug fixes:
+
+
+- Minor packaging updates. (#1)
+- Use markdown extension settings from markup control panel.
+  [pabo3000, thomasmassmann] (#30)
+
+
 3.1.7 (2019-05-21)
 ------------------
 
