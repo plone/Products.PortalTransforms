@@ -15,7 +15,7 @@ Original code from active state recipe
  original formatting (which is the hard part).
 """
 
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.html_quote import html_quote
 from io import BytesIO
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import safe_nativestring
