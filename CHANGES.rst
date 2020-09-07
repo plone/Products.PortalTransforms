@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.9 (2020-09-07)
+------------------
+
+Bug fixes:
+
+
+- Fixed deprecation warning for DocumentTemplate.DT_Util.html_quote.
+  [maurits] (#41)
+
+
 3.1.8 (2020-04-23)
 ------------------
 
