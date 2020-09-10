@@ -142,8 +142,9 @@ printed on stdout.
 def register():
     return XsltTransform()
 
-DT_RGX = re.compile('<!DOCTYPE \w* PUBLIC \"([^"]*)\" \"([^"]*)\"')
-DT_RGX2 = re.compile('<!DOCTYPE \w* SYSTEM \"([^"]*)\"')
+
+DT_RGX = re.compile(r'<!DOCTYPE \w* PUBLIC "([^"]*)" "([^"]*)"')
+DT_RGX2 = re.compile(r'<!DOCTYPE \w* SYSTEM "([^"]*)"')
 
 
 class DTException(Exception):
