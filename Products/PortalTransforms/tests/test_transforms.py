@@ -244,6 +244,13 @@ class SafeHtmlTransformsTest(TransformTestCase):
         self.assertIsInstance(got, self.allowed_types)
         self.assertEqual(got, data_out)
 
+    def test_do_not_autoclose_tags(self):
+        orig = '<p></p>'
+        data_out = '<p></p>'
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
+        self.assertEqual(got, data_out)
+
 
 class SafeHtmlTransformsWithScriptTest(TransformTestCase):
 
