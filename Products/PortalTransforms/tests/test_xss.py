@@ -31,22 +31,22 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_1(self):
         data_in = """<html><body><img src="javascript:Alert('XSS');" /></body></html>"""  # noqa
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_2(self):
         data_in = """<img src="javascript:Alert('XSS');" />"""
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_3(self):
         data_in = """<html><body><IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;></body></html>"""  # noqa
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_4(self):
         data_in = """<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>"""  # noqa
-        data_out = '<img/>'
+        data_out = '<img>'
 
         self.doTest(data_in, data_out)
 
@@ -54,12 +54,12 @@ class TestXSSFilter(unittest.TestCase):
         data_in = """<img src="jav
         asc
         ript:Alert('XSS');" />"""
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_6(self):
         data_in = """<img src="jav asc ript:Alert('XSS');"/>"""
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_7(self):
@@ -92,14 +92,14 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_12(self):
         data_in = """<img src="vbscript:msgbox('XSS')"/>"""
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_13(self):
         data_in = """<img src="vb
         sc
         ript:msgbox('XSS')"/>"""
-        data_out = '<img/>'
+        data_out = '<img>'
         self.doTest(data_in, data_out)
 
     def test_14(self):
@@ -137,7 +137,7 @@ class TestXSSFilter(unittest.TestCase):
         self.doTest(data_in, data_out)
 
     def test_20(self):
-        data_in = '<img src="http://www.headnet.dk/log.jpg"/>'
+        data_in = '<img src="http://www.headnet.dk/log.jpg">'
         data_out = data_in
         self.doTest(data_in, data_out)
 
@@ -228,9 +228,10 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_38(self):
         data_in = """<p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>"""  # noqa
-        self.doTest(data_in, data_in)
+        data_out = """<p><a href="http://T%5Cfoo%5C20111015%5Cbar.msg">FOO</a></p>"""
+        self.doTest(data_in, data_out)
 
     def test_39(self):
         data_in = """<a href="&#42;&Ascr;\xa9"></a>"""
-        data_out = '<a href="*&amp;Ascr;&#xA9;"/>'
+        data_out = '<a href="*&amp;Ascr;%C2%A9"></a>'
         self.doTest(data_in, data_out)

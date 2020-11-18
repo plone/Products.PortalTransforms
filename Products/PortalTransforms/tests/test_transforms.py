@@ -198,7 +198,7 @@ class SafeHtmlTransformsTest(TransformTestCase):
         self.assertTrue('script' in self.settings.nasty_tags)
         self.assertFalse('script' in self.settings.valid_tags)
         orig = '<p><script>foo</script></p>'
-        data_out = '<p/>'
+        data_out = '<p></p>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         got = data.getData()
         self.assertIsInstance(got, self.allowed_types)
@@ -207,7 +207,7 @@ class SafeHtmlTransformsTest(TransformTestCase):
         self.assertTrue('h1' in self.settings.nasty_tags)
         self.assertFalse('h1' in self.settings.valid_tags)
         orig = '<p><h1>foo</h1></p>'
-        data_out = '<p/>'
+        data_out = '<p></p>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         got = data.getData()
         self.assertIsInstance(got, self.allowed_types)
@@ -215,7 +215,7 @@ class SafeHtmlTransformsTest(TransformTestCase):
 
     def test_entityiref_attributes(self):
         orig = '<a href="&uuml;">foo</a>'
-        data_out = '<a href="&#xFC;">foo</a>'
+        data_out = '<a href="%C3%BC">foo</a>'
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         got = data.getData()
         self.assertIsInstance(got, self.allowed_types)
@@ -243,6 +243,13 @@ class SafeHtmlTransformsTest(TransformTestCase):
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
         got = data.getData()
         self.assertIsInstance(got, self.allowed_types)
+        self.assertEqual(got, data_out)
+
+    def test_do_not_autoclose_tags(self):
+        orig = '<p></p>'
+        data_out = '<p></p>'
+        data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
+        got = data.getData()
         self.assertEqual(got, data_out)
 
 
@@ -391,7 +398,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
             '<form>'
             '<label>Hello</label> '
             '<button name="but">Click here</button> '
-            '<input type="text" value="hi"/> '
+            '<input type="text" value="hi"> '
             '<select name="sel"><option value="1">One</option></select> '
             '<textarea name="text">Stuff</textarea>'
             '</form>')

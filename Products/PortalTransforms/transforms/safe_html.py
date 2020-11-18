@@ -2458,9 +2458,10 @@ class SafeHTML:
             return ''
         # remove all except body or outer div
         if six.PY2:
-            result = etree.tostring(tree, encoding='utf-8').strip()
+            result = etree.tostring(
+                tree, encoding='utf-8', method="html").strip()
         else:
-            result = etree.tounicode(tree).strip()
+            result = etree.tounicode(tree, method="html").strip()
         return strip_outer(result)
 
 
