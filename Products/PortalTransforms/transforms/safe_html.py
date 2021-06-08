@@ -2396,6 +2396,36 @@ class SafeHTML:
             data.setData(safe_html)
         return data
 
+    def cleaner_options(self):
+        # Create dictionary of options that we pass to the html cleaner.
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(IFilterSchema, prefix="plone")
+
+        valid_tags = self.settings.valid_tags
+        nasty_tags = [t for t in self.settings.nasty_tags if t not in valid_tags]
+        if six.PY2:
+            safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
+        else:
+            safe_attrs = [i for i in html.defs.safe_attrs]
+        safe_attrs.extend(self.settings.custom_attributes)
+        remove_script = 'script' in nasty_tags and 1 or 0
+        options = dict(
+            kill_tags=nasty_tags,
+            remove_tags=[],
+            allow_tags=valid_tags,
+            page_structure=False,
+            safe_attrs_only=True,
+            safe_attrs=safe_attrs,
+            embedded=False,
+            remove_unknown_tags=False,
+            meta=False,
+            javascript=remove_script,
+            scripts=remove_script,
+            forms=False,
+            style=False,
+        )
+        return options
+
     def scrub_html(self, orig):
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding='utf-8')
@@ -2419,33 +2449,8 @@ class SafeHTML:
                     if hasScript(value):
                         del elem.attrib[attrib]
 
-        registry = getUtility(IRegistry)
-        self.settings = registry.forInterface(
-            IFilterSchema, prefix="plone")
-
-        valid_tags = self.settings.valid_tags
-        nasty_tags = [
-            t for t in self.settings.nasty_tags if t not in valid_tags]
-        if six.PY2:
-            safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
-        else:
-            safe_attrs = [i for i in html.defs.safe_attrs]
-        safe_attrs.extend(
-            self.settings.custom_attributes)
-        remove_script = 'script' in nasty_tags and 1 or 0
-        cleaner = Cleaner(kill_tags=nasty_tags,
-                          remove_tags=[],
-                          allow_tags=valid_tags,
-                          page_structure=False,
-                          safe_attrs_only=True,
-                          safe_attrs=safe_attrs,
-                          embedded=False,
-                          remove_unknown_tags=False,
-                          meta=False,
-                          javascript=remove_script,
-                          scripts=remove_script,
-                          forms=False,
-                          style=False)
+        options = self.cleaner_options()
+        cleaner = Cleaner(**options)
         try:
             cleaner(tree)
         except AssertionError:
