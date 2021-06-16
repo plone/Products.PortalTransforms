@@ -3,7 +3,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from docutils.core import publish_parts
 from zope.interface import implementer
 
-
 import six
 
 
@@ -88,16 +87,20 @@ class rest(object):
         input_encoding = kwargs.get('input_encoding', encoding)
         output_encoding = kwargs.get('output_encoding', encoding)
         language = kwargs.get('language', 'en')
-        warnings = kwargs.get('warnings', None)
-        stylesheet = kwargs.get('stylesheet', None)
         initial_header_level = int(self.config.get('initial_header_level', 2))
         report_level = int(self.config.get('report_level', 2))
+        # Note: we must NOT use warning_stream and stylesheet, because an attacker can abuse them.
+        # See https://sourceforge.net/p/docutils/bugs/413/
+        # Part of PloneHotfix20210518.
+        # It would be okay if we can be sure this method is called from trusted Python code,
+        # but we cannot be sure.
+        # We keep them in the settings, to be sure nothing changes due to this fix.
         settings = {
             'documentclass': '',
             'traceback': 1,
             'input_encoding': input_encoding,
             'output_encoding': output_encoding,
-            'stylesheet': stylesheet,
+            'stylesheet': None,
             'stylesheet_path': None,
             'file_insertion_enabled': 0,
             'raw_enabled': 0,
@@ -109,7 +112,7 @@ class rest(object):
             # don't break if we get errors:
             'halt_level': 6,
             # remember warnings:
-            'warning_stream': warnings,
+            'warning_stream': None
         }
 
         parts = publish_parts(
