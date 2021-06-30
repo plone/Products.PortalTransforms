@@ -1,3 +1,0 @@
-Split method cleaner_options off from scrub_html in safe_html transform.
-This makes it easier to monkey patch or subclass.
-[maurits]

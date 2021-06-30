@@ -1,4 +1,0 @@
-REST transform: ignore warnings and stylesheet keyword arguments.
-They can be abused.
-From `Products.PloneHotfix20210518 <https://plone.org/security/hotfix/20210518/writing-arbitrary-files-via-docutils-and-python-script>`_.
-[maurits]

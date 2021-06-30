@@ -8,6 +8,21 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.11 (2021-06-30)
+-------------------
+
+Bug fixes:
+
+
+- Split method cleaner_options off from scrub_html in safe_html transform.
+  This makes it easier to monkey patch or subclass.
+  [maurits] (#44)
+- REST transform: ignore warnings and stylesheet keyword arguments.
+  They can be abused.
+  From `Products.PloneHotfix20210518 <https://plone.org/security/hotfix/20210518/writing-arbitrary-files-via-docutils-and-python-script>`_.
+  [maurits] (#3274)
+
+
 3.1.10 (2020-09-21)
 -------------------
 
