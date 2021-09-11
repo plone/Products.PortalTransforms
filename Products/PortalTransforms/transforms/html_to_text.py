@@ -18,7 +18,11 @@ def register():
         result = html_entities.name2codepoint.get(ent)
         if result is None:
             if ent.startswith('#'):
-                res = six.unichr(int(ent[1:]))
+                try:
+                    number = int(ent[1:])
+                    res = six.unichr(number)
+                except:
+                    res = full
             else:
                 res = full
         else:
