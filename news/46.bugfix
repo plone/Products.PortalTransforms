@@ -1,0 +1,2 @@
+Fix "ValueError: invalid literal for int() with base 10" when transforming some html to text.
+[pbauer]
