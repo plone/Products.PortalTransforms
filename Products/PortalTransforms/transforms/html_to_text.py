@@ -17,8 +17,12 @@ def register():
         ent = matchobj.group(1)
         result = html_entities.name2codepoint.get(ent)
         if result is None:
-            if ent.startswith('#') and ent[1:].isdecimal():
-                res = six.unichr(int(ent[1:]))
+            if ent.startswith('#'):
+                try:
+                    number = int(ent[1:])
+                    res = six.unichr(number)
+                except:
+                    res = full
             else:
                 res = full
         else:
