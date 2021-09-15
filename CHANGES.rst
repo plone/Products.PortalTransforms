@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.12 (2021-09-15)
+-------------------
+
+Bug fixes:
+
+
+- Fix "ValueError: invalid literal for int() with base 10" when transforming some html to text.
+  [pbauer] (#46)
+
+
 3.1.11 (2021-06-30)
 -------------------
 
