@@ -1,126 +1,20 @@
 # -*- coding: utf-8 -*-
-import logging
+import re
+import six
+
+from Products.CMFPlone.interfaces import IFilterSchema
+from Products.CMFPlone.utils import safe_encode
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
-from zope.interface import implementer
-from Products.PortalTransforms.utils import log
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
-
-
-# add some tags to nasty.
-NASTY_TAGS = {
-    'style': 1,
-    'script': 1,
-    'object': 1,
-    'applet': 1,
-    'meta': 1,
-    'embed': 1
-}
-
-# tag mapping: tag -> short or long tag
-# These are the HTML tags that we will leave intact
-# These are the HTML tags that we will leave intact
-VALID_TAGS = {
-    'a': 1,
-    'b': 1,
-    'base': 0,
-    'big': 1,
-    'blockquote': 1,
-    'body': 1,
-    'br': 1,
-    'caption': 1,
-    'cite': 1,
-    'code': 1,
-    'dd': 1,
-    'div': 1,
-    'dl': 1,
-    'dt': 1,
-    'em': 1,
-    'h1': 1,
-    'h2': 1,
-    'h3': 1,
-    'h4': 1,
-    'h5': 1,
-    'h6': 1,
-    'head': 1,
-    'hr': 0,
-    'html': 1,
-    'i': 1,
-    'img': 1,
-    'kbd': 1,
-    'li': 1,
-    # 'link' 1, type="script" hoses us
-    'meta': 0,
-    'ol': 1,
-    'p': 1,
-    'pre': 1,
-    'small': 1,
-    'span': 1,
-    'strong': 1,
-    'sub': 1,
-    'sup': 1,
-    'table': 1,
-    'tbody': 1,
-    'td': 1,
-    'th': 1,
-    'title': 1,
-    'tr': 1,
-    'tt': 1,
-    'u': 1,
-    'ul': 1,
-    'iframe': 1,
-}
-
-# add some tags to allowed types. These should be backported to CMFDefault.
-VALID_TAGS['ins'] = 1
-VALID_TAGS['del'] = 1
-VALID_TAGS['q'] = 1
-VALID_TAGS['map'] = 1
-VALID_TAGS['area'] = 0
-VALID_TAGS['abbr'] = 1
-VALID_TAGS['acronym'] = 1
-VALID_TAGS['var'] = 1
-VALID_TAGS['dfn'] = 1
-VALID_TAGS['samp'] = 1
-VALID_TAGS['address'] = 1
-VALID_TAGS['bdo'] = 1
-VALID_TAGS['thead'] = 1
-VALID_TAGS['tfoot'] = 1
-VALID_TAGS['col'] = 1
-VALID_TAGS['colgroup'] = 1
-
-# HTML5 tags that should be allowed:
-VALID_TAGS['article'] = 1
-VALID_TAGS['aside'] = 1
-VALID_TAGS['audio'] = 1
-VALID_TAGS['canvas'] = 1
-VALID_TAGS['command'] = 1
-VALID_TAGS['datalist'] = 1
-VALID_TAGS['details'] = 1
-VALID_TAGS['dialog'] = 1
-VALID_TAGS['figure'] = 1
-VALID_TAGS['footer'] = 1
-VALID_TAGS['header'] = 1
-VALID_TAGS['hgroup'] = 1
-VALID_TAGS['keygen'] = 1
-VALID_TAGS['mark'] = 1
-VALID_TAGS['meter'] = 1
-VALID_TAGS['nav'] = 1
-VALID_TAGS['output'] = 1
-VALID_TAGS['progress'] = 1
-VALID_TAGS['rp'] = 1
-VALID_TAGS['rt'] = 1
-VALID_TAGS['ruby'] = 1
-VALID_TAGS['section'] = 1
-VALID_TAGS['source'] = 1
-VALID_TAGS['time'] = 1
-VALID_TAGS['video'] = 1
+from plone.registry.interfaces import IRegistry
+from zope.component import getUtility
+from zope.interface import implementer
 
 _strings = (bytes, str)
 
-import re
 CSS_COMMENT = re.compile(r'/\*.*\*/')
 
 
@@ -148,8 +42,6 @@ def hasScript(s):
             return True
     return False
 
-CHR_RE = re.compile(r'\\(\d+)')
-
 
 def unescape_chr(matchobj):
     try:
@@ -165,8 +57,8 @@ def decode_charref(s):
             c = int(s[1:], 16)
         else:
             c = int(s)
-        c = unichr(c)
-        if isinstance(s, str):
+        c = six.unichr(c)
+        if six.PY2 and isinstance(s, six.text_type):
             c = c.encode('utf8')
         return c
     except ValueError:
@@ -183,11 +75,10 @@ def decode_entityref(s):
         except KeyError:
             # strip unrecognized entities
             c = u''
-    if isinstance(s, str):
-        c = c.encode('utf8')
     return c
 
 
+CHR_RE = re.compile(r'\\(\d+)')
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")
 ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
 
@@ -201,9 +92,9 @@ def decode_htmlentities(s):
     return ENTITYREF_RE.sub(decode_entityref, s)
 
 
-# maps the HTML5 named character references to the equivalent Unicode
-# character(s) (taken from http://hg.python.org/cpython/rev/2b54e25d6ecb)
-html5entities = {
+# python3 has its own html5 entitydef translation dict
+# unfortunytely not backported in six for python 2
+html5entities = six.PY3 and six.moves.html_entities.html5 or {
     'Aacute;': u'\xc1',
     'Aacute': u'\xc1',
     'aacute;': u'\xe1',
@@ -2442,10 +2333,15 @@ class SafeHTML:
     """Simple transform which uses lxml to
     clean potentially bad tags.
 
+    We only want security related filtering here, all the rest has to be done
+    in TinyMCE & co.
+
     Tags must explicit be allowed in valid_tags to pass. Only
     the tags themself are removed, not their contents. If tags
     are removed and in nasty_tags, they are removed with
     all of their contents.
+
+    Settings are in plone.registry.
 
     Objects will not be transformed again with changed settings.
     You need to clear the cache by e.g.
@@ -2463,72 +2359,13 @@ class SafeHTML:
         self.config = {
             'inputs': self.inputs,
             'output': self.output,
-            'valid_tags': VALID_TAGS,
-            'nasty_tags': NASTY_TAGS,
-            'stripped_tags': [],
-            'stripped_attributes': [
-                'lang', 'valign', 'halign', 'border', 'frame', 'rules',
-                'cellspacing', 'cellpadding', 'bgcolor'],
-            'stripped_combinations': {'table th td': 'width height'},
-            'style_whitelist': ['text-align', 'list-style-type', 'float',
-                                'padding-left', ],
-            'class_blacklist': [],
-            'remove_javascript': 1,
-            'disable_transform': 0,
-            }
+        }
 
         self.config_metadata = {
             'inputs': ('list',
                        'Inputs',
                        'Input(s) MIME type. Change with care.'),
-            'valid_tags': ('dict',
-                           'valid_tags',
-                           'List of valid html-tags, value is 1 if they ' +
-                           'have a closing part (e.g. <p>...</p>) and 0 for ' +
-                           'empty tags (like <br />). Be carefull!',
-                           ('tag', 'value')),
-            'nasty_tags': ('dict',
-                           'nasty_tags',
-                           'Dynamic Tags that are striped with ' +
-                           'everything they contain (like applet, object). ' +
-                           'They are only deleted if they are not marked ' +
-                           'as valid_tags.',
-                           ('tag', 'value')),
-            'stripped_tags': ('list',
-                              'stripped_tags',
-                              'A list of tags to remove. Only the tags ' +
-                              'will be removed, their content will get ' +
-                              'pulled up into the parent tag.'),
-            'stripped_attributes': ('list',
-                                    'stripped_attributes',
-                                    'These attributes are stripped from ' +
-                                    'any tag.'),
-            'stripped_combinations': ('dict',
-                                      'stripped_combinations',
-                                      'These attributes are stripped from ' +
-                                      'any tag.',
-                                      ('tag', 'value')),
-            'style_whitelist': ('list',
-                                'style_whitelist',
-                                'These CSS styles are allowed in style ' +
-                                'attributes.'),
-            'class_blacklist': ('list',
-                                'class_blacklist',
-                                'These class names are not allowed in ' +
-                                'class attributes.'),
-            'remove_javascript': ("int",
-                                  'remove_javascript',
-                                  '1 to remove javascript attributes that ' +
-                                  'begin with on (e.g. onClick) and ' +
-                                  'attributes where the value starts with ' +
-                                  '"javascript:" (e.g. ' +
-                                  '<a href="javascript:function()". This ' +
-                                  'does not effect <script> tags. 0 to ' +
-                                  'leave the attributes.'),
-            'disable_transform': ("int",
-                                  'disable_transform',
-                                  'If 1, nothing is done.'),
-            }
+        }
 
         self.config.update(kwargs)
 
@@ -2546,31 +2383,62 @@ class SafeHTML:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
-        # note if we need an upgrade.
-        if 'disable_transform' not in self.config:
-            log(logging.ERROR, 'PortalTransforms safe_html transform needs '
-                'to be updated. Please re-install the PortalTransforms '
-                'product to fix.')
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(
+            IFilterSchema, prefix="plone")
 
         # if we have a config that we don't want to delete
         # we need a disable option
-        if self.config.get('disable_transform'):
+        if self.settings.disable_filtering:
             data.setData(orig)
         else:
             safe_html = self.scrub_html(orig)
             data.setData(safe_html)
         return data
 
+    def cleaner_options(self):
+        # Create dictionary of options that we pass to the html cleaner.
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(IFilterSchema, prefix="plone")
+
+        valid_tags = self.settings.valid_tags
+        nasty_tags = [t for t in self.settings.nasty_tags if t not in valid_tags]
+        if six.PY2:
+            safe_attrs = [attr.decode() for attr in html.defs.safe_attrs]
+        else:
+            safe_attrs = [i for i in html.defs.safe_attrs]
+        safe_attrs.extend(self.settings.custom_attributes)
+        remove_script = 'script' in nasty_tags and 1 or 0
+        options = dict(
+            kill_tags=nasty_tags,
+            remove_tags=[],
+            allow_tags=valid_tags,
+            page_structure=False,
+            safe_attrs_only=True,
+            safe_attrs=safe_attrs,
+            embedded=False,
+            remove_unknown_tags=False,
+            meta=False,
+            javascript=remove_script,
+            scripts=remove_script,
+            forms=False,
+            style=False,
+        )
+        return options
+
     def scrub_html(self, orig):
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding='utf-8')
-        if '<html' in orig.lower():
+        orig = safe_encode(orig)
+        tag = b'<html'
+        if tag in orig.lower():
             # full html
             tree = html.fromstring(orig, parser=html_parser)
             strip_outer = bodyfinder
         else:
             # partial html (i.e. coming from WYSIWYG editor)
-            tree = html.fragment_fromstring(orig, create_parent=True, parser=html_parser)
+            tree = html.fragment_fromstring(
+                orig, create_parent=True, parser=html_parser)
 
             def strip_outer(s):
                 return s[5:-6]
@@ -2581,35 +2449,19 @@ class SafeHTML:
                     if hasScript(value):
                         del elem.attrib[attrib]
 
-        valid_tags = [tag for tag, enabled in self.config['valid_tags'].items() if enabled]
-        nasty_tags = [tag for tag, enabled in self.config['nasty_tags'].items() if enabled]
-        safe_attrs = list(html.defs.safe_attrs) + ['style']
-
-        for attr in self.config['stripped_attributes']:
-            if attr in safe_attrs:
-                safe_attrs.remove(attr)
-
-        remove_script = self.config['nasty_tags'].get('script')
-
-        cleaner = Cleaner(kill_tags=nasty_tags,
-                          remove_tags=self.config.get('stripped_tags', []),
-                          allow_tags=valid_tags,
-                          page_structure=False,
-                          safe_attrs_only=True,
-                          safe_attrs=safe_attrs,
-                          embedded=False,
-                          remove_unknown_tags=False,
-                          meta=False,
-                          javascript=remove_script,
-                          scripts=remove_script,
-                          style=False)
+        options = self.cleaner_options()
+        cleaner = Cleaner(**options)
         try:
             cleaner(tree)
         except AssertionError:
             # some VERY invalid HTML
             return ''
         # remove all except body or outer div
-        return strip_outer(etree.tostring(tree, encoding='utf-8').strip())
+        if six.PY2:
+            result = etree.tostring(tree, encoding='utf-8').strip()
+        else:
+            result = etree.tounicode(tree).strip()
+        return strip_outer(result)
 
 
 def register():

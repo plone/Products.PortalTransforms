@@ -8,8 +8,9 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
-
 import os
+import six
+import subprocess
 
 
 @implementer(ITransform)
@@ -43,7 +44,10 @@ class rtf_to_html(commandtransform):
         htmlfile = "%s/%s.html" % (tmpdir, sansext(fullname))
         cmd = 'cd "%s" && %s -o %s "%s" 2>error_log 1>/dev/null' % (
             tmpdir, self.binary, htmlfile, fullname)
-        os.system(cmd)
+        if six.PY2:
+            os.system(cmd)
+        else:
+            subprocess.run(cmd, shell=True)
         try:
             html = open(htmlfile).read()
         except:

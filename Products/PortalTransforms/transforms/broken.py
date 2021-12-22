@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import logging
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
+
+import logging
 
 
 @implementer(ITransform)

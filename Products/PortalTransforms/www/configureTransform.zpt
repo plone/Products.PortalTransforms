@@ -1,9 +1,29 @@
 <h1 tal:replace="structure here/manage_page_header|nothing">Header</h1>
 <h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
     tal:replace="structure here/manage_tabs">Tabs</h2>
+<tal:set tal:define="is_safe_html python:context.getId() == 'safe_html';
+                     is_markdown_to_html python:context.getId() == 'markdown_to_html';">
+  <div tal:condition="is_safe_html">
+    <p>
+      Since Plone 5.1 all <em>safe_html</em> transform related parameters are no longer set through the Management Interface.
+    </p>
 
+    <p>
+      The new settings are found now in the Plone <a href="${context/portal_url}/@@filter-controlpanel">Filter Control Panel</a>
+    </p>
+  </div>
+  <div tal:condition="is_markdown_to_html">
+    <p>
+      Since Plone 5.2.2 all <em>markdown_to_html</em> transform related parameters are no longer set through the Management Interface.
+    </p>
+
+    <p>
+      The new settings are found now in the Plone <a href="${context/portal_url}/@@markup-controlpanel">Markup Control Panel</a>
+    </p>
+  </div>
 
   <form method="POST"
+        tal:condition="not: python:is_safe_html or is_markdown_to_html"
         tal:attributes="action string:${here/absolute_url}/set_parameters"
         tal:define="params here/get_parameters">
 
@@ -47,6 +67,6 @@
     </p>
 
   </form>
-
+</tal:set>
 <tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>
 

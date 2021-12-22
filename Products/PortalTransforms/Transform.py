@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
-from App.class_init import InitializeClass
+from AccessControl.class_init import InitializeClass
 from logging import ERROR
 from OFS.SimpleItem import SimpleItem
 from Persistence import PersistentMapping
@@ -13,8 +13,13 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from UserDict import UserDict
+from six.moves import reload_module
 from zope.interface import implementer
+
+try:
+    from collections import UserDict
+except ImportError:
+    from UserDict import UserDict
 
 
 def import_from_name(module_name):
@@ -53,6 +58,7 @@ def make_config_nonpersistent(kwargs):
         elif isinstance(value, PersistentList):
             p_value = list(value)
             kwargs[key] = p_value
+
 
 VALIDATORS = {
     'int': int,
@@ -276,7 +282,7 @@ class Transform(SimpleItem):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)
         m = import_from_name(self.module)
-        reload(m)
+        reload_module(m)
         self._tr_init()
 
     def preprocess_param(self, kwargs):

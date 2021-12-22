@@ -5,30 +5,12 @@ Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 """
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
-from Products.PortalTransforms.libtransforms.commandtransform import popentransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
-
 import os
-
-
-@implementer(ITransform)
-class popen_pdf_to_html(popentransform):
-
-    __version__ = '2004-07-02.01'
-
-    __name__ = "pdf_to_html"
-    inputs = ('application/pdf',)
-    output = 'text/html'
-    output_encoding = 'utf-8'
-
-    binaryName = "pdftohtml"
-    binaryArgs = "%(infile)s -noframes -stdout -enc UTF-8"
-    useStdin = False
-
-    def getData(self, couterr):
-        return bodyfinder(couterr.read())
+import six
+import subprocess
 
 
 @implementer(ITransform)
@@ -66,15 +48,19 @@ class pdf_to_html(commandtransform):
         else:
             cmd = 'cd "%s" && %s %s "%s"' % (
                   tmpdir, self.binary, self.binaryArgs, fullname)
-        os.system(cmd)
+        if six.PY2:
+            os.system(cmd)
+        else:
+            subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
-            htmlfile = open(htmlfilename, 'r')
-            html = htmlfile.read()
-            htmlfile.close()
+            with open(htmlfilename, 'rb') as htmlfile:
+                html = htmlfile.read()
         except:
             try:
-                return open("%s/error_log" % tmpdir, 'r').read()
+                with open("%s/error_log" % tmpdir, 'r') as fd:
+                    error_log = fd.read()
+                return error_log
             except:
                 return ("transform failed while running %s (maybe this pdf "
                         "file doesn't support transform)" % cmd)

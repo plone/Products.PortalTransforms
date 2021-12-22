@@ -3,7 +3,6 @@
 A custom transform using external command
 """
 
-from cStringIO import StringIO
 from os import system
 from os.path import dirname
 from os.path import exists
@@ -16,6 +15,9 @@ from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
 import re
+
+
+from six import StringIO as NativeStringIO
 
 
 @implementer(ITransform)
@@ -140,8 +142,9 @@ printed on stdout.
 def register():
     return XsltTransform()
 
-DT_RGX = re.compile('<!DOCTYPE \w* PUBLIC \"([^"]*)\" \"([^"]*)\"')
-DT_RGX2 = re.compile('<!DOCTYPE \w* SYSTEM \"([^"]*)\"')
+
+DT_RGX = re.compile(r'<!DOCTYPE \w* PUBLIC "([^"]*)" "([^"]*)"')
+DT_RGX2 = re.compile(r'<!DOCTYPE \w* SYSTEM "([^"]*)"')
 
 
 class DTException(Exception):
@@ -152,7 +155,7 @@ def get_doctype(data):
     """ return the public id for the doctype given some raw xml data
     """
     if not hasattr(data, 'readlines'):
-        data = StringIO(data)
+        data = NativeStringIO(data)
     for line in data.readlines():
         line = line.strip()
         if not line:
@@ -170,7 +173,7 @@ def get_dtd(data):
     """ return the public id for the doctype given some raw xml data
     """
     if not hasattr(data, 'readlines'):
-        data = StringIO(data)
+        data = NativeStringIO(data)
     for line in data.readlines():
         line = line.strip()
         if not line:
@@ -188,8 +191,8 @@ def get_dtd(data):
 
 
 if __name__ == '__main__':
-    print get_doctype('''<?xml version="1.0" encoding="iso-8859-1"?>
+    print(get_doctype('''<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE article PUBLIC "-//LOGILAB/DTD DocBook V4.1.2-Based Extension V0.1//EN" "dcbk-logilab.dtd" []>
 
 <book id="devtools_user_manual" lang="fr">
-''')
+'''))

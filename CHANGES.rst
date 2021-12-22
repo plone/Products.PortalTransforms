@@ -1,21 +1,157 @@
 Changelog
 =========
 
-3.0.0 (unreleased)
+.. You should *NOT* be adding new change log entries to this file.
+   You should create a file in the news directory instead.
+   For helpful instructions, please see:
+   https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
+
+.. towncrier release notes start
+
+3.1.12 (2021-09-15)
+-------------------
+
+Bug fixes:
+
+
+- Fix "ValueError: invalid literal for int() with base 10" when transforming some html to text.
+  [pbauer] (#46)
+
+
+3.1.11 (2021-06-30)
+-------------------
+
+Bug fixes:
+
+
+- Split method cleaner_options off from scrub_html in safe_html transform.
+  This makes it easier to monkey patch or subclass.
+  [maurits] (#44)
+- REST transform: ignore warnings and stylesheet keyword arguments.
+  They can be abused.
+  From `Products.PloneHotfix20210518 <https://plone.org/security/hotfix/20210518/writing-arbitrary-files-via-docutils-and-python-script>`_.
+  [maurits] (#3274)
+
+
+3.1.10 (2020-09-21)
+-------------------
+
+Bug fixes:
+
+
+- Fixed invalid escape sequences.
+  [maurits] (#3130)
+
+
+3.1.9 (2020-09-07)
+------------------
+
+Bug fixes:
+
+
+- Fixed deprecation warning for DocumentTemplate.DT_Util.html_quote.
+  [maurits] (#41)
+
+
+3.1.8 (2020-04-23)
+------------------
+
+Bug fixes:
+
+
+- Minor packaging updates. (#1)
+- Use markdown extension settings from markup control panel.
+  [pabo3000, thomasmassmann] (#30)
+
+
+3.1.7 (2019-05-21)
+------------------
+
+Bug fixes:
+
+
+- Fix: 'DeprecationWarning: Flags not at the start of the expression'
+  [jensens] (#40)
+
+
+3.1.6 (2019-03-02)
+------------------
+
+Bug fixes:
+
+
+- When form tag is added to the valid tags, do not remove it anyway.
+  By default the cleaner would always remove form tags and kill button, input, select, and textarea tags
+  Fixes `issue 2693 <https://github.com/plone/Products.CMFPlone/issues/2693>`_.
+  [maurits] (#2693)
+
+
+3.1.5 (2018-11-01)
+------------------
+
+Bug fixes:
+
+
+- Some transform were returning unicode instead of strings in Python 2 (#37)
+- fix scrub_html when passing unicode [pbauer] (#38)
+
+
+3.1.4 (2018-09-23)
+------------------
+
+Bug fixes:
+
+- fix test for python 3
+  [petschki]
+
+
+3.1.3 (2018-06-21)
+------------------
+
+Bug fixes:
+
+- Start fixing startup in py3
+  [ale-rt, pbauer]
+
+- Stop using ATTestCase for tests.
+  [davisagli]
+
+
+3.1.2 (2018-02-05)
+------------------
+
+Bug fixes:
+
+- Add Python 2 / 3 compatibility.  [maurits]
+
+
+3.1.1 (2017-11-24)
+------------------
+
+Bug fixes:
+
+- Do not expose dead settings in ``safe_html`` ZMI settings page.
+  This fixes `Products.CMFPlone #2130 <https://github.com/plone/Products.CMFPlone/issues/2130>`_
+  [jensens]
+
+
+3.1 (2017-09-03)
+----------------
+
+Breaking changes:
+
+- Fix and migrate safe_html filter completly into Plone registry and sync settings with TinyMCE.
+  Also some unused options in controlpanel where removed, like stripped_combinations and class_blacklist.
+  [MrTango]
+
+
+3.0.0 (2017-04-02)
 ------------------
 
 Breaking changes:
 
 - Use lxml.html.Cleaner for safe HTML transforms (PLIP 1441)
   [prakharjoshi, tomgross]
-
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
 
 
 2.2.2 (2017-02-20)

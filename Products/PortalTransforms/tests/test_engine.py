@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
+import re
+
+from Products.CMFPlone.utils import _createObjectByType
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.utils import TransformException
+from six.moves import urllib
 from zope.interface import implementer
-
-import re
-import urllib
 
 
 class BaseTransform:
@@ -22,7 +23,7 @@ class HtmlToText(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('<[^>]*>(?i)(?m)', '', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -41,7 +42,7 @@ class FooToBar(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('foo', 'bar', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -113,13 +114,15 @@ class BadTransformWildcardOutput(BaseTransform):
     output = 'text/*'
 
 
-class TestEngine(ATSiteTestCase):
+class TestEngine(TransformTestCase):
 
-    def afterSetUp(self):
-        ATSiteTestCase.afterSetUp(self)
+    def setUp(self):
+        super(TestEngine, self).setUp()
+        _createObjectByType('Folder', self.portal, id='folder')
+        self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'
-        for mt in self.engine._policies.keys():
+        for mt in list(self.engine._policies.keys()):
             self.engine.manage_delPolicies([mt])
 
     def register(self):
@@ -300,10 +303,3 @@ class TestEngine(ATSiteTestCase):
         self.assertEqual(
             out.getData(), '<a href="http://otherhost">vhost link</a>',
             out.getData())
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestEngine))
-    return suite
