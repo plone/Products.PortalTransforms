@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.2.0 (2022-03-17)
+------------------
+
+Bug fixes:
+
+
+- Prevent auto-closed empty tags in safe_html output.
+  [cekk] (#43)
+
+
 3.1.12 (2021-09-15)
 -------------------
 
