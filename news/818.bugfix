@@ -1,0 +1,3 @@
+Tests: fixed incompatibility with lxml 3.9+ on Linux.
+This gives slightly different output.
+[maurits]

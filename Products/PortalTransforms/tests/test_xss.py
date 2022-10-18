@@ -24,10 +24,14 @@ class TestXSSFilter(unittest.TestCase):
     def tearDown(self):
         self.settings.custom_attributes.remove('style')
 
-    def doTest(self, data_in, data_out):  # noqa
+    def doConvert(self, data_in):
         html = self.pt.convertTo(
             'text/x-html-safe', data_in, mimetype="text/html")
-        self.assertEqual(data_out, html.getData())
+        return html.getData()
+
+    def doTest(self, data_in, data_out):
+        result = self.doConvert(data_in)
+        self.assertEqual(data_out, result)
 
     def test_1(self):
         data_in = """<html><body><img src="javascript:Alert('XSS');" /></body></html>"""  # noqa
@@ -163,8 +167,13 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_25(self):
         data_in = """<![<a href="javascript:alert('1');">click me</a>"""
-        data_out = 'click me'
-        self.doTest(data_in, data_out)
+        # Conversion used to result in 'click me'.
+        # With lxml 3.9+, on Linux (not Mac), the result is different:
+        # '&lt;![<a>click me</a>'
+        # The important point is that the javascript is not included.
+        result = self.doConvert(data_in)
+        self.assertNotIn("javascript", result)
+        self.assertNotIn("alert", result)
 
     def test_26(self):
         data_in = """<a style="width: expression/**/(alert('xss'))">click me</a>"""  # noqa
@@ -213,8 +222,13 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_35(self):
         data_in = r"""<![CDATA[><script>alert(1);</script>]]>"""
-        data_out = ']]&gt;'
-        self.doTest(data_in, data_out)
+        # Conversion used to result in ']]&gt;'.
+        # With lxml 3.9+, on Linux (not Mac), the result is different:
+        # '&lt;![CDATA[&gt;]]&gt;'
+        # The important point is that the javascript is not included.
+        result = self.doConvert(data_in)
+        self.assertNotIn("script", result)
+        self.assertNotIn("alert", result)
 
     def test_36(self):
         data_in = r"""Normal text&mdash;whew."""
