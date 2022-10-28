@@ -8,6 +8,19 @@ Changelog
 
 .. towncrier release notes start
 
+3.2.1 (2022-10-28)
+------------------
+
+Bug fixes:
+
+
+- Fixed regular expression in tests on Python 3.11.
+  [maurits] (#48)
+- Tests: fixed incompatibility with lxml 3.9+ on Linux.
+  This gives slightly different output.
+  [maurits] (#818)
+
+
 3.2.0 (2022-03-17)
 ------------------
 
