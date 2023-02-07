@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.2.2 (2023-02-08)
+------------------
+
+Bug fixes:
+
+
+- Update to Zope4 only including troove classifiers. [jensens] (#50)
+
+
 3.2.1 (2022-10-28)
 ------------------
 
