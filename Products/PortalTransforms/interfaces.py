@@ -35,7 +35,7 @@ class IDataStream(Interface):
         """
 
     def isCacheable():
-        """Return a bool which indicates wether the result should be cached
+        """Return a bool which indicates whether the result should be cached
 
         Default is true
         """
@@ -45,7 +45,7 @@ class IDataStream(Interface):
 
 
 class ITransform(Interface):
-    """A transformation plugin -- tranform data somehow
+    """A transformation plugin -- transform data somehow
     must be threadsafe and stateless"""
 
     def name(self):
@@ -103,7 +103,7 @@ class IEngine(Interface):
         """
 
     def convert(name, orig, data=None, context=None, **kwargs):
-        """run a tranform of a given name on data
+        """run a transform of a given name on data
 
         * name is the name of a registered transform
 

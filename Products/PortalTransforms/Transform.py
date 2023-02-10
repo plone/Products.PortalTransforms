@@ -237,7 +237,7 @@ class Transform(SimpleItem):
 
     @security.protected(ManagePortal)
     def get_parameter_infos(self, key):
-        """get informations about a parameter
+        """get information about a parameter
 
         return a tuple (type, label, description [, type specific data])
         where type in (string, int, list, dict)

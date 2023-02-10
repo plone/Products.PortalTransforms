@@ -78,14 +78,14 @@ type are :
 
   * an icon path
 
-You can see regitered types by going to the *mimetypes_registry* object at the
+You can see registered types by going to the *mimetypes_registry* object at the
 root of your CMF site, using the ZMI. There you can modify existent information
 or add / delete types. This product cames with a default set of MIME types icons
 located in portal_skins/mimetypes_icons.
 
 
-The tranformation tool
-``````````````````````
+The transformation tool
+```````````````````````
 
 It's a MIME type based transformation engine. It has been designed to
 transform portal content from a given MIME type to another. You can add / delete
@@ -152,7 +152,7 @@ Safe transforms
   This is an example use of the *identity* transform, which does
   basically nothing :). It's used here to transform ReST files
   (text/x-rst) to text/plain. You can configure allowable inputs and
-  outuput on this transform.
+  output on this transform.
 
 
 Unsafe transforms
@@ -207,7 +207,7 @@ Transformation policy
 You can set a simple transformation policies for the transforms
 tool. A policy say that when you try to convert content to a given
 MIME type, you have to include a given transformation. For instance,
-imagine you have a *html_tidy* tranformation which tidy HTML page, you
+imagine you have a *html_tidy* transformation which tidy HTML page, you
 can say that the transformation path to text/html should include the
 *html_tidy* transform.
 

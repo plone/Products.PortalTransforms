@@ -17,7 +17,7 @@ To do the actual transform, Portal Transforms rely on a third party
 application
 to do the heavy lifting. If you have not installed such an application,
 Portal
-Transforms will not perfom Word to HTML transforms.
+Transforms will not perform Word to HTML transforms.
 
 One of the options is Open Office. It is not the easiest application to
 set up
@@ -27,7 +27,7 @@ fairly good HTML.
 
 Problems
 ====================
-- PyUNO is cool, but PyUNO now ship with its own python intepreter, which is not compatible with zope's
+- PyUNO is cool, but PyUNO now ship with its own python interpreter, which is not compatible with zope's
 - PyUNO is not threadsafe now.
 
 SETTING UP OPEN OFFICE ON WINDOWS

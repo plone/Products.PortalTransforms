@@ -167,7 +167,7 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
 
     @security.protected(ManagePortal)
     def move_object_to_position(self, id, newpos):
-        """overriden from OrderedFolder to store id instead of objects"""
+        """overridden from OrderedFolder to store id instead of objects"""
         oldpos = self._object_ids.index(id)
         if newpos < 0 or newpos == oldpos or newpos >= len(self._object_ids):
             return 0

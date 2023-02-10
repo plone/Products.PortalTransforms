@@ -72,12 +72,12 @@ class TestXSSFilter(unittest.TestCase):
         self.doTest(data_in, data_out)
 
     def test_8(self):
-        data_in = """<div style="bacground:url(jav asc ript:Alert('XSS')">test</div>"""  # noqa
+        data_in = """<div style="background:url(jav asc ript:Alert('XSS')">test</div>"""  # noqa
         data_out = """<div>test</div>"""
         self.doTest(data_in, data_out)
 
     def test_9(self):
-        data_in = """<div style="bacground:url(jav
+        data_in = """<div style="background:url(jav
         asc
         ript:
         Alert('XSS')">test</div>"""
@@ -85,12 +85,12 @@ class TestXSSFilter(unittest.TestCase):
         self.doTest(data_in, data_out)
 
     def test_10(self):
-        data_in = """<div style="bacground:url(&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;">test</div>"""  # noqa
+        data_in = """<div style="background:url(&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;">test</div>"""  # noqa
         data_out = """<div>test</div>"""
         self.doTest(data_in, data_out)
 
     def test_11(self):
-        data_in = """<div style="bacground:url(v b  sc  ript:msgbox('XSS')">test</div>"""  # noqa
+        data_in = """<div style="background:url(v b  sc  ript:msgbox('XSS')">test</div>"""  # noqa
         data_out = "<div>test</div>"
         self.doTest(data_in, data_out)
 
