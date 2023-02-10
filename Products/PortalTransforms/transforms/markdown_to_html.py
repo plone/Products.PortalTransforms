@@ -4,12 +4,12 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
+from plone.base.interfaces import IMarkupSchema
+from plone.base.utils import safe_text
 from plone.registry.interfaces import IRegistry
-from Products.CMFPlone.interfaces import IMarkupSchema
-from Products.CMFPlone.utils import safe_unicode
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
-from Products.PortalTransforms.utils import safe_nativestring
+from plone.base.utils import safe_text
 from zope.component import getUtility
 from zope.interface import implementer
 
@@ -47,13 +47,13 @@ class markdown(object):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
             html = markdown_transformer.markdown(
-                safe_unicode(orig),
+                safe_text(orig),
                 extensions=self.extensions()
             )
         else:
             html = orig
 
-        data.setData(safe_nativestring(html))
+        data.setData(safe_text(html))
         return data
 
 

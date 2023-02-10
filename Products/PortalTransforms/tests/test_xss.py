@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import six
 import unittest
 
-from Products.CMFPlone.interfaces import IFilterSchema
+from plone.base.interfaces import IFilterSchema
 from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
 from Products.PortalTransforms.tests.utils import html5entity
 from plone.registry.interfaces import IRegistry

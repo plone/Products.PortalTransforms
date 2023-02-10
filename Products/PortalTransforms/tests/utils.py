@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.transforms.safe_html import html5entities
-from Products.PortalTransforms.utils import safe_nativestring
+from plone.base.utils import safe_text
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
@@ -14,7 +14,7 @@ import six
 
 
 def normalize_html(s):
-    s = safe_nativestring(s)
+    s = safe_text(s)
     s = re.sub(r"&nbsp;", " ", s)
     s = re.sub(r"&#160;", " ", s)
     s = re.sub(r"\s+", " ", s)
