@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.utils import safe_nativestring
+from plone.base.utils import safe_text
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
@@ -26,7 +26,7 @@ class retransform:
         self.regexes.append((r, repl))
 
     def convert(self, orig, data, **kwargs):
-        orig = safe_nativestring(orig)
+        orig = safe_text(orig)
         for r, repl in self.regexes:
             orig = r.sub(repl, orig)
         data.setData(orig)

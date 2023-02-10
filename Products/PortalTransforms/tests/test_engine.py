@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from Products.CMFPlone.utils import _createObjectByType
+from plone.base.utils import unrestricted_construct_instance
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.tests.base import TransformTestCase
@@ -118,7 +118,7 @@ class TestEngine(TransformTestCase):
 
     def setUp(self):
         super(TestEngine, self).setUp()
-        _createObjectByType('Folder', self.portal, id='folder')
+        unrestricted_construct_instance('Folder', self.portal, id='folder')
         self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
         self.data = '<b>foo</b>'

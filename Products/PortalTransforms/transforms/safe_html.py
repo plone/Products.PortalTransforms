@@ -2,8 +2,8 @@
 import re
 import six
 
-from Products.CMFPlone.interfaces import IFilterSchema
-from Products.CMFPlone.utils import safe_encode
+from plone.base.interfaces import IFilterSchema
+from plone.base.utils import safe_bytes
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from lxml import etree
@@ -2429,7 +2429,7 @@ class SafeHTML:
     def scrub_html(self, orig):
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding='utf-8')
-        orig = safe_encode(orig)
+        orig = safe_bytes(orig)
         tag = b'<html'
         if tag in orig.lower():
             # full html

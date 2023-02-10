@@ -1,8 +1,8 @@
 # -*- coding: utf8  -*-
 from __future__ import print_function
 from copy import deepcopy
+from plone.base.interfaces import IFilterSchema
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.interfaces import IFilterSchema
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.libtransforms.utils import MissingBinary

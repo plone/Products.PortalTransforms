@@ -26,6 +26,8 @@ Compatibility
 
 - For Plone 5.1 and later, use version 3.
 
+- For Plone 6 and later, use version 4.
+
 
 Authors
 -------
