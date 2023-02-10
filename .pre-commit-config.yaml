@@ -22,6 +22,7 @@ repos:
     rev: 3.0.1
     hooks:
     -   id: zpretty
+        exclude: tests
 -   repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
@@ -30,6 +31,7 @@ repos:
     rev: v2.2.2
     hooks:
     -   id: codespell
+        exclude: (CHANGES.rst|tests)
 -   repo: https://github.com/mgedmin/check-manifest
     rev: "0.49"
     hooks:
