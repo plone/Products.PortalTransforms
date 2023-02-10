@@ -9,7 +9,6 @@ from plone.base.utils import safe_text
 from plone.registry.interfaces import IRegistry
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
-from plone.base.utils import safe_text
 from zope.component import getUtility
 from zope.interface import implementer
 
