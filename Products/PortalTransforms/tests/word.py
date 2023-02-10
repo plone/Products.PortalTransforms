@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from rigging import transformer
 
 
@@ -10,16 +9,15 @@ file = "/tmp/word.doc"
 
 
 class curry:
-
     def __init__(self, func, *fixed_args):
         self.func = func
         self.fixed_args = fixed_args
 
     def __call__(self, *variable_args):
-        return self.func(*self.fixed_args +
-                         variable_args)
+        return self.func(*self.fixed_args + variable_args)
 
-data = open("/tmp/word.doc", "r").read()
+
+data = open("/tmp/word.doc").read()
 
 data = transformer.convert("WordToHtml", data, filename="word.doc")
 print(data.getData())

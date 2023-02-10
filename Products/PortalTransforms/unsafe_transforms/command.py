@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
 
 from os import popen3
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
@@ -14,7 +13,7 @@ import os.path
 
 @implementer(ITransform)
 class ExternalCommandTransform(commandtransform):
-    """ Custom external command
+    """Custom external command
 
     transform content by launching an external command
 
@@ -27,53 +26,50 @@ class ExternalCommandTransform(commandtransform):
 
     def __init__(self, name=None, input_extension=None, **kwargs):
         self.config = {
-            'binary_path': '',
-            'command_line': '',
-            'inputs': ('text/plain',),
-            'output': 'text/plain',
+            "binary_path": "",
+            "command_line": "",
+            "inputs": ("text/plain",),
+            "output": "text/plain",
         }
         self.config_metadata = {
-            'binary_path': (
-                'string',
-                'Binary path',
-                'Path of the executable on the server.'),
-            'command_line': (
-                'string',
-                'Command line',
-                '''Additional command line option.
+            "binary_path": (
+                "string",
+                "Binary path",
+                "Path of the executable on the server.",
+            ),
+            "command_line": (
+                "string",
+                "Command line",
+                """Additional command line option.
 There should be at least the input file (designed by "%(input)s").
 The transformation\'s result must be printed on stdout.
-'''),
-            'inputs': (
-                'list',
-                'Inputs',
-                'Input(s) MIME type. Change with care.'),
-            'output': (
-                'string',
-                'Output',
-                'Output MIME type. Change with care.'),
+""",
+            ),
+            "inputs": ("list", "Inputs", "Input(s) MIME type. Change with care."),
+            "output": ("string", "Output", "Output MIME type. Change with care."),
         }
         self.config.update(kwargs)
-        commandtransform.__init__(self, name=name,
-                                  binary=self.config['binary_path'], **kwargs)
+        commandtransform.__init__(
+            self, name=name, binary=self.config["binary_path"], **kwargs
+        )
 
         # use the full binary path
-        self.config.update({'binary_path': self.binary})
+        self.config.update({"binary_path": self.binary})
         self.input_extension = input_extension
 
     def __getattr__(self, attr):
-        if attr == 'inputs':
-            return self.config['inputs']
-        if attr == 'output':
-            return self.config['output']
+        if attr == "inputs":
+            return self.config["inputs"]
+        if attr == "output":
+            return self.config["output"]
         raise AttributeError(attr)
 
     def convert(self, data, cache, **kwargs):
-        filename = kwargs.get('filename') or 'unknown'
+        filename = kwargs.get("filename") or "unknown"
         if self.input_extension is not None:
-            kwargs['filename'] = 'unknown' + self.input_extension
+            kwargs["filename"] = "unknown" + self.input_extension
         else:
-            kwargs['filename'] = 'unknown' + os.path.splitext(filename)[-1]
+            kwargs["filename"] = "unknown" + os.path.splitext(filename)[-1]
         tmpdir, fullname = self.initialize_tmpdir(data, **kwargs)
 
         data = self.invokeCommand(fullname)
@@ -87,7 +83,7 @@ The transformation\'s result must be printed on stdout.
         return cache
 
     def invokeCommand(self, input_name):
-        command = '%(binary_path)s %(command_line)s' % self.config
+        command = "%(binary_path)s %(command_line)s" % self.config
         input, output, error = popen3(command % input_name)
         input.close()
         # first read stderr, else we may hang on stout
@@ -100,8 +96,11 @@ The transformation\'s result must be printed on stdout.
         if error_data and not data:
             data = error_data
         else:
-            log('Error while running "%s":\n %s' % (command % input_name,
-                                                    error_data))
+            log(
+                'Error while running "{}":\n {}'.format(
+                    command % input_name, error_data
+                )
+            )
         return data
 
 

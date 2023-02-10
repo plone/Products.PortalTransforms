@@ -4,6 +4,7 @@
 class A:
     pass
 
+
 # comment
 
 

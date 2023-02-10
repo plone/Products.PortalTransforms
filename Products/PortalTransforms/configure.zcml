@@ -1,21 +1,20 @@
 <configure
-  xmlns="http://namespaces.zope.org/zope"
-  xmlns:five="http://namespaces.zope.org/five"
-  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-  i18n_domain="Products.PortalTransforms">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="Products.PortalTransforms"
+    >
 
-  <five:deprecatedManageAddDelete
-      class=".TransformEngine.TransformTool" />
+  <five:deprecatedManageAddDelete class=".TransformEngine.TransformTool" />
 
-  <five:deprecatedManageAddDelete
-      class=".Transform.Transform" />
+  <five:deprecatedManageAddDelete class=".Transform.Transform" />
 
   <genericsetup:registerProfile
       name="PortalTransforms"
       title="PortalTransforms"
-      directory="profiles/default"
       description="Extension profile for default PortalTransforms setup."
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/default"
       />
 
 </configure>

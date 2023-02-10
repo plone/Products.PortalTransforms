@@ -1,9 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <import-steps>
- <import-step id="portal-transforms-various" version="20070309-01"
-              handler="Products.PortalTransforms.setuphandlers.setupPortalTransforms"
-              title="PortalTransforms setup">
-  <dependency step="componentregistry"/>
+  <import-step id="portal-transforms-various"
+               handler="Products.PortalTransforms.setuphandlers.setupPortalTransforms"
+               title="PortalTransforms setup"
+               version="20070309-01"
+  >
+    <dependency step="componentregistry" />
     PortalTransforms installation step.
- </import-step>
+  </import-step>
 </import-steps>

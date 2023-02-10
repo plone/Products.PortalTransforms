@@ -42,7 +42,6 @@ setup(
     ),
     install_requires=[
         "setuptools",
-        "six",
         "plone.base",
         "plone.intelligenttext",
         "zope.interface",

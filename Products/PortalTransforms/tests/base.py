@@ -1,15 +1,15 @@
-# -*- coding: utf-8 -*-
-import unittest
+from Products.PortalTransforms.testing import (  # isort:skip
+    PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING,
+)
 
-from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
+import unittest
 
 
 class TransformTestCase(unittest.TestCase):
-
     layer = PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING
 
     allowed_types = str
 
     def setUp(self):
-        self.portal = self.layer['portal']
+        self.portal = self.layer["portal"]
         self.transforms = self.portal.portal_transforms
