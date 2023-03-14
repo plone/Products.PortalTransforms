@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.1 (2023-03-14)
+------------------
+
+Internal:
+
+
+- Merge the safest bits of the changes wanted by plone/meta (#58)
+
+
 4.0.0 (2023-02-22)
 ------------------
 
