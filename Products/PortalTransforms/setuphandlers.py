@@ -1,8 +1,8 @@
 """
 PortalTransforms setup handlers.
 """
-from Products.CMFCore.utils import getToolByName
 from io import StringIO as NativeStringIO
+from Products.CMFCore.utils import getToolByName
 
 
 def correctMapping(out, portal):

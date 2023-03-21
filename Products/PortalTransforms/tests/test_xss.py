@@ -1,10 +1,10 @@
-import unittest
-
 from plone.base.interfaces import IFilterSchema
+from plone.registry.interfaces import IRegistry
 from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
 from Products.PortalTransforms.tests.utils import html5entity
-from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
+
+import unittest
 
 
 class TestXSSFilter(unittest.TestCase):

@@ -2,6 +2,7 @@
 A custom transform using external command
 """
 
+from io import StringIO as NativeStringIO
 from os import system
 from os.path import dirname
 from os.path import exists
@@ -14,9 +15,6 @@ from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
 import re
-
-
-from io import StringIO as NativeStringIO
 
 
 @implementer(ITransform)

@@ -1,9 +1,10 @@
+from os.path import basename
+from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import getShortPathName
-from os.path import basename
-from os.path import join
 from zope.interface import implementer
+
 import os
 import re
 import shutil

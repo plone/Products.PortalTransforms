@@ -1,8 +1,8 @@
-import PIL.Image
-
-from Products.PortalTransforms.interfaces import ITransform
 from io import BytesIO
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
+
+import PIL.Image
 
 
 @implementer(ITransform)

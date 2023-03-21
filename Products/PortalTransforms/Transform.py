@@ -15,6 +15,7 @@ from Products.PortalTransforms.utils import TransformException
 from six.moves import reload_module
 from zope.interface import implementer
 
+
 try:
     from collections import UserDict
 except ImportError:

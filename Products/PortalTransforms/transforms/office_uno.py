@@ -1,8 +1,8 @@
+from com.sun.star.beans import PropertyValue
+from com.sun.star.util import CloseVetoException
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
-from com.sun.star.beans import PropertyValue
-from com.sun.star.util import CloseVetoException
 
 import uno
 import unohelper

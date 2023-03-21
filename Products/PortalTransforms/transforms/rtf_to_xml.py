@@ -6,6 +6,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
+
 import os
 import six
 import subprocess

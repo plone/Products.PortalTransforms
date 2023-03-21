@@ -1,16 +1,17 @@
-import re
-import six
-
-from plone.base.interfaces import IFilterSchema
-from plone.base.utils import safe_bytes
-from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from lxml import etree
 from lxml import html
 from lxml.html.clean import Cleaner
+from plone.base.interfaces import IFilterSchema
+from plone.base.utils import safe_bytes
 from plone.registry.interfaces import IRegistry
+from Products.PortalTransforms.interfaces import ITransform
+from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from zope.component import getUtility
 from zope.interface import implementer
+
+import re
+import six
+
 
 _strings = (bytes, str)
 

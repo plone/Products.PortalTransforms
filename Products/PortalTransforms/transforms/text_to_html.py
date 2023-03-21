@@ -1,6 +1,6 @@
 from DocumentTemplate.html_quote import html_quote
-from Products.PortalTransforms.interfaces import ITransform
 from plone.base.utils import safe_text
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 

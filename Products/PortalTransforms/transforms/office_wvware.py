@@ -1,10 +1,10 @@
-import os
-import six
-import subprocess
-
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
+
+import os
+import six
+import subprocess
 
 
 class document(commandtransform):

@@ -1,5 +1,7 @@
 from copy import deepcopy
+from os.path import exists
 from plone.base.interfaces import IFilterSchema
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
@@ -22,8 +24,6 @@ from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
-from os.path import exists
-from plone.registry.interfaces import IRegistry
 from xml.sax.saxutils import unescape
 from zope.component import getUtility
 
@@ -635,7 +635,8 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import makeSuite
+    from unittest import TestSuite
     suite = TestSuite()
     for test in make_tests():
         suite.addTest(makeSuite(test))

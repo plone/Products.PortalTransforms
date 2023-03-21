@@ -1,5 +1,5 @@
-from Products.PortalTransforms.utils import log
 from plone.base.utils import safe_text
+from Products.PortalTransforms.utils import log
 
 import os
 import sys
@@ -9,9 +9,8 @@ import warnings
 try:
     # Need to be imported before win32api to avoid dll loading
     # problems.
-    import pywintypes
     import pythoncom
-
+    import pywintypes
     import win32api
     WIN32 = True
 except ImportError:

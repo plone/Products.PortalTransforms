@@ -1,5 +1,5 @@
-from Products.PortalTransforms.interfaces import ITransform
 from docutils.core import publish_parts
+from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 import six

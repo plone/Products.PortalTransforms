@@ -1,5 +1,3 @@
-import re
-
 from plone.base.utils import unrestricted_construct_instance
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform
@@ -7,6 +5,8 @@ from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.utils import TransformException
 from six.moves import urllib
 from zope.interface import implementer
+
+import re
 
 
 class BaseTransform:

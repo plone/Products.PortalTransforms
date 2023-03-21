@@ -1,9 +1,9 @@
-from Products.PortalTransforms.transforms.safe_html import html5entities
-from plone.base.utils import safe_text
 from os.path import abspath
 from os.path import basename
 from os.path import dirname
 from os.path import join
+from plone.base.utils import safe_text
+from Products.PortalTransforms.transforms.safe_html import html5entities
 from sys import modules
 from unittest import TestSuite
 

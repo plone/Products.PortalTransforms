@@ -7,6 +7,7 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
+
 import os
 import six
 import subprocess

@@ -1,6 +1,6 @@
-import unittest
-
 from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa
+
+import unittest
 
 
 class TransformTestCase(unittest.TestCase):

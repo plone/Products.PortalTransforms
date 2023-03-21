@@ -1,8 +1,7 @@
 from Products.PortalTransforms.libtransforms.retransform import retransform
-
+from six.moves import html_entities
 
 import six
-from six.moves import html_entities
 
 
 class html_to_text(retransform):
