@@ -1,4 +1,4 @@
-from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml  # noqa
+from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
@@ -10,18 +10,15 @@ class WebIntelligentPlainTextToHtml:
     __name__ = "web_intelligent_plain_text_to_html"
     output = "text/html"
 
-    def __init__(self, name=None, inputs=('text/x-web-intelligent',),
-                 tab_width=4):
-        self.config = {'inputs': inputs, 'tab_width': 4}
+    def __init__(self, name=None, inputs=("text/x-web-intelligent",), tab_width=4):
+        self.config = {"inputs": inputs, "tab_width": 4}
         self.config_metadata = {
-            'inputs': (
-                'list',
-                'Inputs',
-                'Input(s) MIME type. Change with care.'),
-            'tab_width': (
-                'string',
-                'Tab width',
-                'Number of spaces for a tab in the input'),
+            "inputs": ("list", "Inputs", "Input(s) MIME type. Change with care."),
+            "tab_width": (
+                "string",
+                "Tab width",
+                "Number of spaces for a tab in the input",
+            ),
         }
         if name:
             self.__name__ = name
@@ -35,8 +32,7 @@ class WebIntelligentPlainTextToHtml:
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
-        text = convertWebIntelligentPlainTextToHtml(
-            orig, tab_width=self.tab_width)
+        text = convertWebIntelligentPlainTextToHtml(orig, tab_width=self.tab_width)
         data.setData(text)
         return data
 

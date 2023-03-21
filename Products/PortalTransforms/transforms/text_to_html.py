@@ -11,13 +11,12 @@ class TextToHTML:
     __name__ = "text_to_html"
     output = "text/html"
 
-    def __init__(self, name=None, inputs=('text/plain',)):
-        self.config = {'inputs': inputs, }
+    def __init__(self, name=None, inputs=("text/plain",)):
+        self.config = {
+            "inputs": inputs,
+        }
         self.config_metadata = {
-            'inputs': (
-                'list',
-                'Inputs',
-                'Input(s) MIME type. Change with care.'),
+            "inputs": ("list", "Inputs", "Input(s) MIME type. Change with care."),
         }
         if name:
             self.__name__ = name
@@ -26,17 +25,16 @@ class TextToHTML:
         return self.__name__
 
     def __getattr__(self, attr):
-        if attr == 'inputs':
-            return self.config['inputs']
-        if attr == 'output':
-            return self.config['output']
+        if attr == "inputs":
+            return self.config["inputs"]
+        if attr == "output":
+            return self.config["output"]
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
         orig = safe_text(orig)
         # Replaces all line breaks with a br tag, and wraps it in a p tag.
-        data.setData('<p>%s</p>' %
-                     html_quote(orig.strip()).replace('\n', '<br />'))
+        data.setData("<p>%s</p>" % html_quote(orig.strip()).replace("\n", "<br />"))
         return data
 
 

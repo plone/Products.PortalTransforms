@@ -6,13 +6,11 @@ from zope.interface import implementer
 class datastream:
     """A transformation datastream packet"""
 
-    __slots__ = (
-        'name_', '_data', '_metadata', '__name__', '_objects', '_cacheable'
-    )
+    __slots__ = ("name_", "_data", "_metadata", "__name__", "_objects", "_cacheable")
 
     def __init__(self, name_):
         self.__name__ = name_
-        self._data = ''
+        self._data = ""
         self._metadata = {}
         self._objects = {}
         self._cacheable = 1
@@ -64,6 +62,5 @@ class datastream:
         return self._cacheable
 
     def setCacheable(self, value):
-        """Set cacheable flag to yes or no
-        """
+        """Set cacheable flag to yes or no"""
         self._cacheable = not not value

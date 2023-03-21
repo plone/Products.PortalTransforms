@@ -4,10 +4,9 @@ from zope.interface import implementer
 
 @implementer(ITransform)
 class image_to_html:
-
     __name__ = "image_to_html"
-    inputs = ('image/*', )
-    output = 'text/html'
+    inputs = ("image/*",)
+    output = "text/html"
 
     def name(self):
         return self.__name__

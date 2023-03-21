@@ -6,13 +6,12 @@ FILE_PATH = input_file_path("demo1.pdf")
 
 
 class TestGraph(TransformTestCase):
-
     def testGraph(self):
-        with open(FILE_PATH, 'rb') as fd:
+        with open(FILE_PATH, "rb") as fd:
             data = fd.read()
-        requirements = self.transforms._policies.get('text/plain', [])
+        requirements = self.transforms._policies.get("text/plain", [])
         if requirements:
-            out = self.transforms.convertTo('text/plain', data, filename=FILE_PATH)
+            out = self.transforms.convertTo("text/plain", data, filename=FILE_PATH)
             self.assertTrue(out.getData())
 
     def testFindPath(self):
@@ -34,9 +33,9 @@ class TestGraph(TransformTestCase):
             v        |
             5<-------+
         """
+
         # we need a DummyTransform class
         class DT:
-
             def __init__(self, name):
                 self._name = name
 
@@ -44,39 +43,44 @@ class TestGraph(TransformTestCase):
                 return self._name
 
         dummyMap1 = {
-            '1': {'1': [DT('transform1-1')],
-                  '2': [DT('transform1-2')],
-                  '3': [DT('transform1-3')]},
-            '2': {'1': [DT('transform2-1')],
-                  '3': [DT('transform2-3')],
-                  '4': [DT('transform2-4')]},
-            '3': {'1': [DT('transform3-1')],
-                  '2': [DT('transform3-2')],
-                  '5': [DT('transform3-5')]},
-            '4': {'5': [DT('transform4-5')],
-                  '6': [DT('transform4-6')]},
-            '5': {'3': [DT('transform5-3')]},
-            '7': {'6': [DT('transform7-6')]},
+            "1": {
+                "1": [DT("transform1-1")],
+                "2": [DT("transform1-2")],
+                "3": [DT("transform1-3")],
+            },
+            "2": {
+                "1": [DT("transform2-1")],
+                "3": [DT("transform2-3")],
+                "4": [DT("transform2-4")],
+            },
+            "3": {
+                "1": [DT("transform3-1")],
+                "2": [DT("transform3-2")],
+                "5": [DT("transform3-5")],
+            },
+            "4": {"5": [DT("transform4-5")], "6": [DT("transform4-6")]},
+            "5": {"3": [DT("transform5-3")]},
+            "7": {"6": [DT("transform7-6")]},
         }
         expectedPathes = {
-            '1-1': [],
-            '1-2': ['transform1-2'],
-            '1-3': ['transform1-3'],
-            '1-4': ['transform1-2', 'transform2-4'],
-            '1-5': ['transform1-3', 'transform3-5'],
-            '1-6': ['transform1-2', 'transform2-4', 'transform4-6'],
-            '1-7': None,
-            '2-1': ['transform2-1'],
-            '2-2': [],
-            '2-4': ['transform2-4'],
-            '4-2': ['transform4-5', 'transform5-3', 'transform3-2'],
-            '5-3': ['transform5-3'],
+            "1-1": [],
+            "1-2": ["transform1-2"],
+            "1-3": ["transform1-3"],
+            "1-4": ["transform1-2", "transform2-4"],
+            "1-5": ["transform1-3", "transform3-5"],
+            "1-6": ["transform1-2", "transform2-4", "transform4-6"],
+            "1-7": None,
+            "2-1": ["transform2-1"],
+            "2-2": [],
+            "2-4": ["transform2-4"],
+            "4-2": ["transform4-5", "transform5-3", "transform3-2"],
+            "5-3": ["transform5-3"],
         }
         self.transforms._mtmap = dummyMap1
-        for orig in ['1', '2', '3', '4', '5', '6', '7']:
-            for target in ['1', '2', '3', '4', '5', '6', '7']:
+        for orig in ["1", "2", "3", "4", "5", "6", "7"]:
+            for target in ["1", "2", "3", "4", "5", "6", "7"]:
                 # build the name of the path
-                pathName = orig + '-' + target
+                pathName = orig + "-" + target
                 # do we have any expectation for this path ?
                 if pathName in expectedPathes.keys():
                     # we do. Here is the expected shortest path
@@ -91,15 +95,16 @@ class TestGraph(TransformTestCase):
         self.transforms._mtmap = originalMap
 
     def testFindPathWithEmptyTransform(self):
-        """ _findPath should not throw "index out of range" when dealing with
-            empty transforms list
+        """_findPath should not throw "index out of range" when dealing with
+        empty transforms list
         """
-        dummyMap = {'1': {'2': []}}
+        dummyMap = {"1": {"2": []}}
         self.transforms._mtmap = dummyMap
-        self.transforms._findPath('1', '2')
+        self.transforms._findPath("1", "2")
 
     def testIdentity(self):
-        orig = 'Some text'
+        orig = "Some text"
         converted = self.transforms.convertTo(
-            'text/plain', 'Some text', mimetype='text/plain')
+            "text/plain", "Some text", mimetype="text/plain"
+        )
         self.assertEqual(orig, str(converted))

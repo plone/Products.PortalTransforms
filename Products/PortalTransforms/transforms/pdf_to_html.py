@@ -3,7 +3,7 @@ Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
@@ -15,11 +15,10 @@ import subprocess
 
 @implementer(ITransform)
 class pdf_to_html(commandtransform):
-
     __name__ = "pdf_to_html"
-    inputs = ('application/pdf',)
-    output = 'text/html'
-    output_encoding = 'utf-8'
+    inputs = ("application/pdf",)
+    output = "text/html"
+    output_encoding = "utf-8"
 
     binaryName = "pdftohtml"
     binaryArgs = "-noframes -enc UTF-8"
@@ -28,7 +27,7 @@ class pdf_to_html(commandtransform):
         commandtransform.__init__(self, binary=self.binaryName)
 
     def convert(self, data, cache, **kwargs):
-        kwargs['filename'] = 'unknown.pdf'
+        kwargs["filename"] = "unknown.pdf"
 
         tmpdir, fullname = self.initialize_tmpdir(data, **kwargs)
         html = self.invokeCommand(tmpdir, fullname)
@@ -42,16 +41,18 @@ class pdf_to_html(commandtransform):
         return cache
 
     def invokeCommand(self, tmpdir, fullname):
-        if os.name == 'posix':
+        if os.name == "posix":
             cmd = 'cd "{}" && {} {} "{}" 2>error_log 1>/dev/null'.format(
-                tmpdir, self.binary, self.binaryArgs, fullname)
+                tmpdir, self.binary, self.binaryArgs, fullname
+            )
         else:
             cmd = 'cd "{}" && {} {} "{}"'.format(
-                  tmpdir, self.binary, self.binaryArgs, fullname)
+                tmpdir, self.binary, self.binaryArgs, fullname
+            )
         subprocess.run(cmd, shell=True)
         try:
-            htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
-            with open(htmlfilename, 'rb') as htmlfile:
+            htmlfilename = os.path.join(tmpdir, sansext(fullname) + ".html")
+            with open(htmlfilename, "rb") as htmlfile:
                 html = htmlfile.read()
         except:
             try:
@@ -59,8 +60,10 @@ class pdf_to_html(commandtransform):
                     error_log = fd.read()
                 return error_log
             except:
-                return ("transform failed while running %s (maybe this pdf "
-                        "file doesn't support transform)" % cmd)
+                return (
+                    "transform failed while running %s (maybe this pdf "
+                    "file doesn't support transform)" % cmd
+                )
         return html
 
 

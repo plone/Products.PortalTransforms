@@ -16,19 +16,18 @@ try:
     import markdown as markdown_transformer
 except ImportError:
     HAS_MARKDOWN = False
-    log('markdown_to_html: Could not import python-markdown.')
+    log("markdown_to_html: Could not import python-markdown.")
 else:
     HAS_MARKDOWN = True
 
 DEFAULT_EXTENSIONS = [
-    'markdown.extensions.fenced_code',
-    'markdown.extensions.nl2br',
+    "markdown.extensions.fenced_code",
+    "markdown.extensions.nl2br",
 ]
 
 
 @implementer(ITransform)
 class markdown:
-
     __name__ = "markdown_to_html"
     inputs = ("text/x-web-markdown",)
     output = "text/html"
@@ -39,14 +38,13 @@ class markdown:
     def extensions(self):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IMarkupSchema, prefix="plone")
-        return getattr(settings, 'markdown_extensions', DEFAULT_EXTENSIONS)
+        return getattr(settings, "markdown_extensions", DEFAULT_EXTENSIONS)
 
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
             html = markdown_transformer.markdown(
-                safe_text(orig),
-                extensions=self.extensions()
+                safe_text(orig), extensions=self.extensions()
             )
         else:
             html = orig

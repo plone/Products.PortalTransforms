@@ -13,7 +13,7 @@ IMAGE_PREFIX = "img_"
 # disable office_uno because it doesn't support multithread yet
 ENABLE_UNO = False
 
-if os.name == 'posix':
+if os.name == "posix":
     try:
         if ENABLE_UNO:
             from .office_uno import document
@@ -33,11 +33,10 @@ else:
 
 @implementer(ITransform)
 class word_to_html:
-
     __name__ = "word_to_html"
-    inputs = ('application/msword',)
-    output = 'text/html'
-    output_encoding = 'utf-8'
+    inputs = ("application/msword",)
+    output = "text/html"
+    output_encoding = "utf-8"
 
     tranform_engine = document.__module__
 
@@ -45,7 +44,7 @@ class word_to_html:
         return self.__name__
 
     def convert(self, data, cache, **kwargs):
-        orig_file = 'unknown.doc'
+        orig_file = "unknown.doc"
         doc = None
         try:
             doc = document(orig_file, data)

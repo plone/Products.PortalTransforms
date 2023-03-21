@@ -9,7 +9,6 @@ STX_LEVEL = DEFAULT_STX_LEVEL
 
 @implementer(ITransform)
 class st:
-
     __name__ = "st_to_html"
     inputs = ("text/structured",)
     output = "text/html"

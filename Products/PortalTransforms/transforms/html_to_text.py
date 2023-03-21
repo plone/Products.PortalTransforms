@@ -5,8 +5,8 @@ import six
 
 
 class html_to_text(retransform):
-    inputs = ('text/html',)
-    output = 'text/plain'
+    inputs = ("text/html",)
+    output = "text/plain"
 
 
 def register():
@@ -15,7 +15,7 @@ def register():
         ent = matchobj.group(1)
         result = html_entities.name2codepoint.get(ent)
         if result is None:
-            if ent.startswith('#'):
+            if ent.startswith("#"):
                 try:
                     number = int(ent[1:])
                     res = chr(number)
@@ -28,14 +28,14 @@ def register():
 
         if isinstance(full, str):
             return res
-        return res.encode('utf-8')
+        return res.encode("utf-8")
 
     return html_to_text(
         "html_to_text",
-        (r'(?im)<script [^>]>.*</script>', ' '),
-        (r'(?im)<style [^>]>.*</style>', ' '),
-        (r'(?im)<head [^>]>.*</head>', ' '),
-        (r'(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>', ''),
-        (r'(?i)(?m)<[^>]*>', ' '),
-        (r'&([a-zA-Z0-9#]*?);', sub_func),
+        (r"(?im)<script [^>]>.*</script>", " "),
+        (r"(?im)<style [^>]>.*</style>", " "),
+        (r"(?im)<head [^>]>.*</head>", " "),
+        (r"(?im)</?(font|em|i|strong|b)(?=\W)[^>]*>", ""),
+        (r"(?i)(?m)<[^>]*>", " "),
+        (r"&([a-zA-Z0-9#]*?);", sub_func),
     )

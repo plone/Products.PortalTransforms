@@ -9,7 +9,7 @@ import re
 class retransform:
     """abstract class for regex transforms (re.sub wrapper)"""
 
-    inputs = ('text/',)
+    inputs = ("text/",)
 
     def __init__(self, name, *args):
         self.__name__ = name

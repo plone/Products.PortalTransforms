@@ -15,8 +15,7 @@ import tempfile
 
 @implementer(ITransform)
 class commandtransform:
-    """abstract class for external command based transform
-    """
+    """abstract class for external command based transform"""
 
     def __init__(self, name=None, binary=None, **kwargs):
         if name is not None:
@@ -34,7 +33,7 @@ class commandtransform:
         """
         tmpdir = tempfile.mktemp()
         os.mkdir(tmpdir)
-        filename = kwargs.get("filename", '')
+        filename = kwargs.get("filename", "")
         fullname = join(tmpdir, basename(filename))
         with open(fullname, "wb") as fd:
             fd.write(data)
@@ -45,15 +44,15 @@ class commandtransform:
         for f in os.listdir(tmpdir):
             result = re.match(r"^.+\.(?P<ext>.+)$", f)
             if result is not None:
-                ext = result.group('ext')
-                if ext in ('png', 'jpg', 'gif'):
+                ext = result.group("ext")
+                if ext in ("png", "jpg", "gif"):
                     imgs.append(f)
-        path = join(tmpdir, '')
+        path = join(tmpdir, "")
         return path, imgs
 
     def fixImages(self, path, images, objects):
         for image in images:
-            objects[image] = open(join(path, image), 'rb').read()
+            objects[image] = open(join(path, image), "rb").read()
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
@@ -85,7 +84,8 @@ class popentransform:
     def convert(self, data, cache, **kwargs):
         command = f"{self.binary} {self.binaryArgs}"
         process = subprocess.run(
-            command, shell=True, input=data, stdout=subprocess.PIPE)
+            command, shell=True, input=data, stdout=subprocess.PIPE
+        )
         out = process.stdout
 
         cache.setData(out)

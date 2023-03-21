@@ -33,24 +33,21 @@ _TEXT = token.NT_OFFSET + 2
 
 
 class Parser:
-    """ Send colored python source.
-    """
+    """Send colored python source."""
 
     def __init__(self, raw, tags):
-        """ Store the source text.
-        """
+        """Store the source text."""
         self.raw = raw.expandtabs().strip()
         self.out = BytesIO()
         self.tags = tags
 
     def __call__(self):
-        """ Parse and send the colored source.
-        """
+        """Parse and send the colored source."""
         # store line offsets in self.lines
         self.lines = [0, 0]
         pos = 0
         while True:
-            pos = self.raw.find(b'\n', pos) + 1
+            pos = self.raw.find(b"\n", pos) + 1
             if not pos:
                 break
             self.lines.append(pos)
@@ -65,14 +62,15 @@ class Parser:
         except tokenize.TokenError as ex:
             msg = ex.args[0]
             line = ex.args[1][0]
-            self.out.write(b"<h5 class='error>'ERROR: %s%s</h5>" % (
-                msg, self.raw[self.lines[line]:]))
-        self.out.write(b'\n</pre>\n')
+            self.out.write(
+                b"<h5 class='error>'ERROR: %s%s</h5>"
+                % (msg, self.raw[self.lines[line] :])
+            )
+        self.out.write(b"\n</pre>\n")
         return safe_text(self.out.getvalue())
 
     def format_tokenizer(self, toktype, toktext, sx, ex, line):
-        """ Token handler.
-        """
+        """Token handler."""
         (srow, scol) = sx
         (erow, ecol) = ex
         oldpos = self.pos
@@ -85,7 +83,7 @@ class Parser:
 
         # handle newlines
         if toktype in [token.NEWLINE, tokenize.NL]:
-            self.out.write(b'\n')
+            self.out.write(b"\n")
             return
 
         # send the original whitespace, if needed
@@ -99,14 +97,14 @@ class Parser:
 
         # map token type to a group
         if token.LPAR <= toktype and toktype <= token.OP:
-            toktype = 'OP'
+            toktype = "OP"
         elif toktype == token.NAME and keyword.iskeyword(toktext):
-            toktype = 'KEYWORD'
+            toktype = "KEYWORD"
         else:
             toktype = tokenize.tok_name[toktype]
 
-        open_tag = self.tags.get('OPEN_' + toktype, self.tags['OPEN_TEXT'])
-        close_tag = self.tags.get('CLOSE_' + toktype, self.tags['CLOSE_TEXT'])
+        open_tag = self.tags.get("OPEN_" + toktype, self.tags["OPEN_TEXT"])
+        close_tag = self.tags.get("CLOSE_" + toktype, self.tags["CLOSE_TEXT"])
 
         # send text
         self.out.write(open_tag)
@@ -116,30 +114,29 @@ class Parser:
 
 @implementer(ITransform)
 class PythonTransform:
-    """Colorize Python source files
-    """
+    """Colorize Python source files"""
 
     __name__ = "python_to_html"
     inputs = ("text/x-python",)
     output = "text/html"
 
     config = {
-        'OPEN_NUMBER': b'<span style="color: #0080C0;">',
-        'CLOSE_NUMBER': b'</span>',
-        'OPEN_OP': b'<span style="color: #0000C0;">',
-        'CLOSE_OP': b'</span>',
-        'OPEN_STRING': b'<span style="color: #004080;">',
-        'CLOSE_STRING': b'</span>',
-        'OPEN_COMMENT': b'<span style="color: #008000;">',
-        'CLOSE_COMMENT': b'</span>',
-        'OPEN_NAME': b'<span style="color: #000000;">',
-        'CLOSE_NAME': b'</span>',
-        'OPEN_ERRORTOKEN': b'<span style="color: #FF8080;">',
-        'CLOSE_ERRORTOKEN': b'</span>',
-        'OPEN_KEYWORD': b'<span style="color: #C00000;">',
-        'CLOSE_KEYWORD': b'</span>',
-        'OPEN_TEXT': b'',
-        'CLOSE_TEXT': b'',
+        "OPEN_NUMBER": b'<span style="color: #0080C0;">',
+        "CLOSE_NUMBER": b"</span>",
+        "OPEN_OP": b'<span style="color: #0000C0;">',
+        "CLOSE_OP": b"</span>",
+        "OPEN_STRING": b'<span style="color: #004080;">',
+        "CLOSE_STRING": b"</span>",
+        "OPEN_COMMENT": b'<span style="color: #008000;">',
+        "CLOSE_COMMENT": b"</span>",
+        "OPEN_NAME": b'<span style="color: #000000;">',
+        "CLOSE_NAME": b"</span>",
+        "OPEN_ERRORTOKEN": b'<span style="color: #FF8080;">',
+        "CLOSE_ERRORTOKEN": b"</span>",
+        "OPEN_KEYWORD": b'<span style="color: #C00000;">',
+        "CLOSE_KEYWORD": b"</span>",
+        "OPEN_TEXT": b"",
+        "CLOSE_TEXT": b"",
     }
 
     def name(self):
@@ -147,7 +144,7 @@ class PythonTransform:
 
     def convert(self, orig, data, **kwargs):
         if isinstance(orig, str):
-            orig = orig.encode('utf8')
+            orig = orig.encode("utf8")
         parser = Parser(orig, self.config)
         data.setData(parser())
         return data
