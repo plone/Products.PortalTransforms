@@ -1,5 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <tool-setup>
- <required tool_id="portal_transforms"
-           class="Products.PortalTransforms.TransformEngine.TransformTool"/>
+  <required class="Products.PortalTransforms.TransformEngine.TransformTool"
+            tool_id="portal_transforms"
+  />
 </tool-setup>
