@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses the http://www.freewisdom.org/projects/python-markdown/ module
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
@@ -28,7 +27,7 @@ DEFAULT_EXTENSIONS = [
 
 
 @implementer(ITransform)
-class markdown(object):
+class markdown:
 
     __name__ = "markdown_to_html"
     inputs = ("text/x-web-markdown",)

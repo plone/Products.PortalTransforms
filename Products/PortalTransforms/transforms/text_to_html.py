@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from DocumentTemplate.html_quote import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from plone.base.utils import safe_text
@@ -6,7 +5,7 @@ from zope.interface import implementer
 
 
 @implementer(ITransform)
-class TextToHTML(object):
+class TextToHTML:
     """simple transform which wrap raw text in a verbatim environment"""
 
     __name__ = "text_to_html"

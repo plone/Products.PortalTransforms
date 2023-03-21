@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Need to be imported first to avoid dll loading problems.
 import pythoncom
 import pywintypes
@@ -62,7 +61,7 @@ class document(commandtransform):
         # word.Quit()
 
     def html(self):
-        htmlfile = open(self.fullname + '.htm', 'r')
+        htmlfile = open(self.fullname + '.htm')
         html = htmlfile.read()
         htmlfile.close()
         html = SafeHTML().scrub_html(html)

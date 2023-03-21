@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.piltransform import PILTransforms
 
 

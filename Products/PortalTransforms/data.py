@@ -3,7 +3,7 @@ from zope.interface import implementer
 
 
 @implementer(IDataStream)
-class datastream(object):
+class datastream:
     """A transformation datastream packet"""
 
     __slots__ = (

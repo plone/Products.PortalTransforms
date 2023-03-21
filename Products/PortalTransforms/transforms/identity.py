@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A simple identity transform
 """
@@ -8,7 +7,7 @@ from zope.interface import implementer
 
 
 @implementer(ITransform)
-class IdentityTransform(object):
+class IdentityTransform:
     """ Identity transform
 
     return content unchanged.

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import six
 
 from AccessControl import ClassSecurityInfo
@@ -297,7 +296,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                                 l.pop(i)
                                 break
                         else:
-                            log('Can\'t find transform %s from %s to %s' % (
+                            log("Can't find transform {} from {} to {}".format(
                                 transform.name(), mti, mt),
                                 severity=DEBUG)
 
@@ -393,7 +392,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if outputs:
                     for reachedType, transforms in outputs.items():
                         # Does this lead to a type we never reached before ?
-                        if reachedType not in six.iterkeys(pathToType) and transforms:  # noqa
+                        if reachedType not in pathToType.keys() and transforms:  # noqa
                             # Yes, we did not know any path reaching this type
                             # Let's remember the path to here
                             pathToType[reachedType] = (

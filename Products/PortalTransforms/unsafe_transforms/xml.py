@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
@@ -17,7 +16,7 @@ from zope.interface import implementer
 import re
 
 
-from six import StringIO as NativeStringIO
+from io import StringIO as NativeStringIO
 
 
 @implementer(ITransform)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.utils import log
 from plone.base.utils import safe_text
 

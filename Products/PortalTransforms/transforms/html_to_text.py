@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.retransform import retransform
 
 
@@ -20,15 +19,15 @@ def register():
             if ent.startswith('#'):
                 try:
                     number = int(ent[1:])
-                    res = six.unichr(number)
+                    res = chr(number)
                 except:
                     res = full
             else:
                 res = full
         else:
-            res = six.unichr(result)
+            res = chr(result)
 
-        if isinstance(full, six.text_type):
+        if isinstance(full, str):
             return res
         return res.encode('utf-8')
 

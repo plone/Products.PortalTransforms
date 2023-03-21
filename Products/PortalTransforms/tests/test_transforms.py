@@ -1,5 +1,3 @@
-# -*- coding: utf8  -*-
-from __future__ import print_function
 from copy import deepcopy
 from plone.base.interfaces import IFilterSchema
 from Products.CMFCore.utils import getToolByName
@@ -45,7 +43,7 @@ class TransformTest(TransformTestCase):
     allowed_types = str
 
     def setUp(self):
-        super(TransformTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(IFilterSchema, prefix="plone")
@@ -71,12 +69,12 @@ class TransformTest(TransformTestCase):
         self.assertIsInstance(got, self.allowed_types)
         try:
             expected = read_file_data(self.output)
-        except IOError:
+        except OSError:
             expected = ''
             import sys
             print('No output file found.', file=sys.stderr)
             print(
-                'File {0} created, check it !'.format(self.output),
+                f'File {self.output} created, check it !',
                 file=sys.stderr)
             with open(output, 'w') as fd:
                 fd.write(got)
@@ -89,11 +87,11 @@ class TransformTest(TransformTestCase):
         # show the first character ord table for debugging
         got_start = got.strip()[:20]
         expected_start = expected.strip()[:20]
-        msg = 'IN {0}({1}) expected:\n{2}\nbut got:\n{3}'.format(
+        msg = 'IN {}({}) expected:\n{}\nbut got:\n{}'.format(
             self.transform.name(),
             self.input,
-            "%s %s" % (expected_start, str([ord(x) for x in expected_start])),
-            "%s %s" % (got_start, str([ord(x) for x in got_start])),
+            f"{expected_start} {str([ord(x) for x in expected_start])}",
+            f"{got_start} {str([ord(x) for x in got_start])}",
         )
 
         # compare md5 sum of the whole file content
@@ -105,7 +103,7 @@ class TransformTest(TransformTestCase):
         self.assertEqual(
             self.subobjects,
             len(res_data.getSubObjects()),
-            '%s\n\n!=\n\n%s\n\nIN %s(%s)' % (
+            '{}\n\n!=\n\n{}\n\nIN {}({})'.format(
                 self.subobjects,
                 len(res_data.getSubObjects()),
                 self.transform.name(),
@@ -132,7 +130,7 @@ class TransformTest(TransformTestCase):
 class PILTransformsTest(TransformTestCase):
 
     def setUp(self):
-        super(PILTransformsTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         self.mimetypes_registry = getToolByName(self.portal,
                                                 'mimetypes_registry')
@@ -179,16 +177,16 @@ class PILTransformsTest(TransformTestCase):
 class SafeHtmlTransformsTest(TransformTestCase):
 
     def setUp(self):
-        super(SafeHtmlTransformsTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
         self.orig_valid_tags = deepcopy(self.settings.valid_tags)
         self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
-        self.settings.valid_tags.append(u'style')
-        self.settings.valid_tags.remove(u'h1')
-        self.settings.nasty_tags.append(u'h1')
+        self.settings.valid_tags.append('style')
+        self.settings.valid_tags.remove('h1')
+        self.settings.nasty_tags.append('h1')
 
     def tearDown(self):
         self.settings.valid_tags = self.orig_valid_tags
@@ -256,15 +254,15 @@ class SafeHtmlTransformsTest(TransformTestCase):
 class SafeHtmlTransformsWithScriptTest(TransformTestCase):
 
     def setUp(self):
-        super(SafeHtmlTransformsWithScriptTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
             IFilterSchema, prefix="plone")
         self.orig_valid_tags = deepcopy(self.settings.valid_tags)
         self.orig_nasty_tags = deepcopy(self.settings.nasty_tags)
-        self.settings.valid_tags.append(u'script')
-        self.settings.nasty_tags.remove(u'script')
+        self.settings.valid_tags.append('script')
+        self.settings.nasty_tags.remove('script')
 
     def tearDown(self):
         self.settings.valid_tags = self.orig_valid_tags
@@ -322,7 +320,7 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
                 '<p>(KU{}Loket)</p>'.format(html5entity('nbsp;')),
                 )
 
-        _all = six.moves.zip(orig, escd)
+        _all = zip(orig, escd)
         for tokens in itertools.product(_all, repeat=4):
             orig_tokens, escaped_tokens = zip(*tokens)
             orig = ''.join(orig_tokens)
@@ -339,7 +337,7 @@ class SafeHtmlTransformsWithScriptTest(TransformTestCase):
 class SafeHtmlTransformsWithFormTest(TransformTestCase):
 
     def setUp(self):
-        super(SafeHtmlTransformsWithFormTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
@@ -364,7 +362,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
 
     def test_form_tag_kept(self):
         # Allow form tag
-        self.settings.valid_tags.append(u'form')
+        self.settings.valid_tags.append('form')
         orig = "<form><label>Hello</label></form>"
         expected = "<form>Hello</form>"
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
@@ -417,7 +415,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
 
     def test_label_tag_kept(self):
         # Allow label tag
-        self.settings.valid_tags.append(u'label')
+        self.settings.valid_tags.append('label')
         orig = "<form><label>Hello</label></form>"
         expected = "<label>Hello</label>"
         data = self.transforms.convertTo(target_mimetype='text/x-html-safe', orig=orig)
@@ -429,7 +427,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
 class WordTransformsTest(TransformTestCase):
 
     def setUp(self):
-        super(WordTransformsTest, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
@@ -444,7 +442,7 @@ class WordTransformsTest(TransformTestCase):
 class ParsersTestCase(TransformTestCase):
 
     def setUp(self):
-        super(ParsersTestCase, self).setUp()
+        super().setUp()
         self.request = self.layer['request']
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(
@@ -521,7 +519,7 @@ TRANSFORMS_TESTINFO = (
      "test_lynx.html", "test_html_to_text.txt", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.identity',
-     "rest1.rst", "rest1.rst", None, 0, (six.binary_type, six.text_type),
+     "rest1.rst", "rest1.rst", None, 0, (bytes, str),
      ),
     ('Products.PortalTransforms.transforms.text_to_html',
      "rest1.rst", "rest1.html", None, 0, str,
@@ -530,25 +528,25 @@ TRANSFORMS_TESTINFO = (
      "test_safehtml.html", "test_safe.html", None, 0, str,
      ),
     ('Products.PortalTransforms.transforms.image_to_bmp',
-     "logo.jpg", "logo.bmp", None, 0, six.binary_type,
+     "logo.jpg", "logo.bmp", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_gif',
-     "logo.bmp", "logo.gif", None, 0, six.binary_type,
+     "logo.bmp", "logo.gif", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_jpeg',
-     "logo.gif", "logo.jpg", None, 0, six.binary_type,
+     "logo.gif", "logo.jpg", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_png',
-     "logo.bmp", "logo.png", None, 0, six.binary_type,
+     "logo.bmp", "logo.png", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_ppm',
-     "logo.gif", "logo.ppm", None, 0, six.binary_type,
+     "logo.gif", "logo.ppm", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_tiff',
-     "logo.png", "logo.tiff", None, 0, six.binary_type,
+     "logo.png", "logo.tiff", None, 0, bytes,
      ),
     ('Products.PortalTransforms.transforms.image_to_pcx',
-     "logo.png", "logo.pcx", None, 0, six.binary_type,
+     "logo.png", "logo.pcx", None, 0, bytes,
      ),
 )
 if HAS_MARKDOWN:
@@ -601,7 +599,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
         _allowed_types,
     ) in test_descr:
         # load transform if necessary
-        if isinstance(_transform, type('')):
+        if isinstance(_transform, str):
             try:
                 _transform = load(_transform).register()
             except MissingBinary:
@@ -613,7 +611,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
                 continue
 
         if TR_NAMES is not None and not _transform.name() in TR_NAMES:
-            print('skip test for {0}'.format(_transform.name()))
+            print(f'skip test for {_transform.name()}')
             continue
 
         class TransformTestSubclass(TransformTest):

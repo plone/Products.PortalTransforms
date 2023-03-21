@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from docutils.core import publish_parts
 from zope.interface import implementer
@@ -7,7 +6,7 @@ import six
 
 
 @implementer(ITransform)
-class rest(object):
+class rest:
     r"""Converts from reST to HTML.
 
       >>> transform = rest()
@@ -122,17 +121,17 @@ class rest(object):
             config_section='zope application'
         )
 
-        header = '<h%(level)s class="title">%(title)s</h%(level)s>\n' % {
-            'level': initial_header_level,
-            'title': parts['title']}
+        header = '<h{level} class="title">{title}</h{level}>\n'.format(
+            level=initial_header_level,
+            title=parts['title'])
 
-        subheader = '<h%(level)s class="subtitle">%(subtitle)s</h%(level)s>\n' % {  # noqa
-            'level': initial_header_level+1,
-            'subtitle': parts['subtitle']}
+        subheader = '<h{level} class="subtitle">{subtitle}</h{level}>\n'.format(  # noqa
+            level=initial_header_level+1,
+            subtitle=parts['subtitle'])
 
-        body = '%(docinfo)s%(body)s' % {
-            'docinfo': parts['docinfo'],
-            'body': parts['body']}
+        body = '{docinfo}{body}'.format(
+            docinfo=parts['docinfo'],
+            body=parts['body'])
 
         html = ''
         if parts['title']:

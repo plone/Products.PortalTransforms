@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
@@ -56,7 +55,7 @@ class document(commandtransform):
         ctx.ServiceManager
 
     def html(self):
-        htmlfile = open(self.outputfile, 'r')
+        htmlfile = open(self.outputfile)
         html = htmlfile.read()
         htmlfile.close()
         html = SafeHTML().scrub_html(html)

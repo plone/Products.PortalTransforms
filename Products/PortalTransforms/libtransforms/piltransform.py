@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 import PIL.Image
 
 from Products.PortalTransforms.interfaces import ITransform
-from six import BytesIO
+from io import BytesIO
 from zope.interface import implementer
 
 

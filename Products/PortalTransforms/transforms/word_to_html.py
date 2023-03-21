@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
@@ -33,7 +32,7 @@ else:
 
 
 @implementer(ITransform)
-class word_to_html(object):
+class word_to_html:
 
     __name__ = "word_to_html"
     inputs = ('application/msword',)

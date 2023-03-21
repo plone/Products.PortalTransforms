@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 from plone.base.utils import unrestricted_construct_instance
@@ -117,7 +116,7 @@ class BadTransformWildcardOutput(BaseTransform):
 class TestEngine(TransformTestCase):
 
     def setUp(self):
-        super(TestEngine, self).setUp()
+        super().setUp()
         unrestricted_construct_instance('Folder', self.portal, id='folder')
         self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms

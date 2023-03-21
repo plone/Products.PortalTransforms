@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.transforms.safe_html import html5entities
 from plone.base.utils import safe_text
 from os.path import abspath

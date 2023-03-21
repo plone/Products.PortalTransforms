@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 A custom transform using external command
 """
@@ -100,7 +99,7 @@ The transformation\'s result must be printed on stdout.
         if error_data and not data:
             data = error_data
         else:
-            log('Error while running "%s":\n %s' % (command % input_name,
+            log('Error while running "{}":\n {}'.format(command % input_name,
                                                     error_data))
         return data
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses Roberto A. F. De Almeida's http://dealmeida.net/ module to do its
 handy work
@@ -21,7 +20,7 @@ except ImportError:
 
 
 @implementer(ITransform)
-class textile(object):
+class textile:
 
     __name__ = "textile_to_html"
     inputs = ("text/x-web-textile",)

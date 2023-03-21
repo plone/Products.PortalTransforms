@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml  # noqa
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 
 @implementer(ITransform)
-class WebIntelligentPlainTextToHtml(object):
+class WebIntelligentPlainTextToHtml:
     """Transform which replaces urls and email into hyperlinks"""
 
     __name__ = "web_intelligent_plain_text_to_html"

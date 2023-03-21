@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 
 @implementer(ITransform)
-class image_to_html(object):
+class image_to_html:
 
     __name__ = "image_to_html"
     inputs = ('image/*', )

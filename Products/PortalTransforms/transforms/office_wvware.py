@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import six
 import subprocess
@@ -31,15 +30,12 @@ class document(commandtransform):
         #    d:\temp\test.doc > test.html
 
         if os.name == 'posix':
-            cmd = 'cd "%s" && %s --charset=utf-8 "%s" "%s.html"' % (
+            cmd = 'cd "{}" && {} --charset=utf-8 "{}" "{}.html"'.format(
                 tmpdir, self.binary, self.fullname, self.__name__)
-            if six.PY2:
-                os.system(cmd)
-            else:
-                subprocess.run(cmd, shell=True)
+            subprocess.run(cmd, shell=True)
 
     def html(self):
-        htmlfile = open("%s/%s.html" % (self.tmpdir, self.__name__), 'r')
+        htmlfile = open(f"{self.tmpdir}/{self.__name__}.html")
         html = htmlfile.read()
         htmlfile.close()
         html = SafeHTML().scrub_html(html)

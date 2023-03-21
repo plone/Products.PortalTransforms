@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses the http://freshmeat.net/projects/rtfconverter/ bin to do its handy work
 """
@@ -41,18 +40,15 @@ class rtf_to_html(commandtransform):
 
     def invokeCommand(self, tmpdir, fullname):
         # FIXME: windows users...
-        htmlfile = "%s/%s.html" % (tmpdir, sansext(fullname))
-        cmd = 'cd "%s" && %s -o %s "%s" 2>error_log 1>/dev/null' % (
+        htmlfile = f"{tmpdir}/{sansext(fullname)}.html"
+        cmd = 'cd "{}" && {} -o {} "{}" 2>error_log 1>/dev/null'.format(
             tmpdir, self.binary, htmlfile, fullname)
-        if six.PY2:
-            os.system(cmd)
-        else:
-            subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True)
         try:
             html = open(htmlfile).read()
         except:
             try:
-                return open("%s/error_log" % tmpdir, 'r').read()
+                return open("%s/error_log" % tmpdir).read()
             except:
                 return ''
         return html

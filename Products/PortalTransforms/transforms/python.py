@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Original code from active state recipe
         'Colorize Python source using the built-in tokenizer'
@@ -33,7 +32,7 @@ _KEYWORD = token.NT_OFFSET + 1
 _TEXT = token.NT_OFFSET + 2
 
 
-class Parser(object):
+class Parser:
     """ Send colored python source.
     """
 
@@ -61,11 +60,8 @@ class Parser(object):
         text = BytesIO(self.raw)
         self.out.write(b'<pre class="python">\n')
         try:
-            if six.PY2:
-                tokenize.tokenize(text.readline, self.format_tokenizer)
-            else:
-                for args in tokenize.tokenize(text.readline):
-                    self.format_tokenizer(*args)
+            for args in tokenize.tokenize(text.readline):
+                self.format_tokenizer(*args)
         except tokenize.TokenError as ex:
             msg = ex.args[0]
             line = ex.args[1][0]
@@ -119,7 +115,7 @@ class Parser(object):
 
 
 @implementer(ITransform)
-class PythonTransform(object):
+class PythonTransform:
     """Colorize Python source files
     """
 
@@ -150,7 +146,7 @@ class PythonTransform(object):
         return self.__name__
 
     def convert(self, orig, data, **kwargs):
-        if isinstance(orig, six.text_type):
+        if isinstance(orig, str):
             orig = orig.encode('utf8')
         parser = Parser(orig, self.config)
         data.setData(parser())

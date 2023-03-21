@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import getShortPathName
@@ -14,7 +13,7 @@ import tempfile
 
 
 @implementer(ITransform)
-class commandtransform(object):
+class commandtransform:
     """abstract class for external command based transform
     """
 
@@ -60,7 +59,7 @@ class commandtransform(object):
 
 
 @implementer(ITransform)
-class popentransform(object):
+class popentransform:
     """abstract class for external command based transform
 
     Command must read from stdin and write to stdout
@@ -83,19 +82,10 @@ class popentransform(object):
         return self.__name__
 
     def convert(self, data, cache, **kwargs):
-        command = "%s %s" % (self.binary, self.binaryArgs)
-        if six.PY2:
-            cin, couterr = os.popen4(command, 'b')
-
-            cin.write(data)
-            cin.close()
-
-            out = couterr.read()
-            couterr.close()
-        else:
-            process = subprocess.run(
-                command, shell=True, input=data, stdout=subprocess.PIPE)
-            out = process.stdout
+        command = f"{self.binary} {self.binaryArgs}"
+        process = subprocess.run(
+            command, shell=True, input=data, stdout=subprocess.PIPE)
+        out = process.stdout
 
         cache.setData(out)
         return cache

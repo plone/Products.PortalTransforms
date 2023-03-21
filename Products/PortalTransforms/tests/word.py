@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from rigging import transformer
 
 
@@ -19,7 +18,7 @@ class curry:
         return self.func(*self.fixed_args +
                          variable_args)
 
-data = open("/tmp/word.doc", "r").read()
+data = open("/tmp/word.doc").read()
 
 data = transformer.convert("WordToHtml", data, filename="word.doc")
 print(data.getData())

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses the xpdf (www.foolabs.com/xpdf)
 """

@@ -1,9 +1,8 @@
 """
 PortalTransforms setup handlers.
 """
-from __future__ import print_function
 from Products.CMFCore.utils import getToolByName
-from six import StringIO as NativeStringIO
+from io import StringIO as NativeStringIO
 
 
 def correctMapping(out, portal):
@@ -17,7 +16,7 @@ def correctMapping(out, portal):
                     # error, mapped transform is no object in
                     # portal_transforms. correct it!
                     print(
-                        'have to unmap transform ({0}) cause its not in '
+                        'have to unmap transform ({}) cause its not in '
                         'portal_transforms ...'.format(transform.id), file=out)
                     try:
                         pt._unmapTransform(transform)
@@ -28,8 +27,8 @@ def correctMapping(out, portal):
 
 
 def updateTransform(out, portal, transform_id):
-    print('Update {0}...'.format(transform_id), file=out)
-    transform_module = "Products.PortalTransforms.transforms.{0}".format(transform_id)
+    print(f'Update {transform_id}...', file=out)
+    transform_module = f"Products.PortalTransforms.transforms.{transform_id}"
     pt = getToolByName(portal, 'portal_transforms')
     for item in pt.objectIds():
         transform = getattr(pt, item)
@@ -38,7 +37,7 @@ def updateTransform(out, portal, transform_id):
             try:
                 transform.get_parameter_value('disable_transform')
             except KeyError:
-                out.write('  replace {0} ({1}, {2}) ...'.format(
+                out.write('  replace {} ({}, {}) ...'.format(
                     item, transform.name(), transform.module))
                 try:
                     pt.unregisterTransform(item)

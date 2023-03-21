@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses the http://sf.net/projects/rtf2xml bin to do its handy work
 
@@ -40,18 +39,15 @@ class rtf_to_xml(commandtransform):
 
     def invokeCommand(self, tmpdir, fullname):
         # FIXME: windows users...
-        xmlfile = "%s/%s.xml" % (tmpdir, sansext(fullname))
-        cmd = 'cd "%s" && %s -o %s "%s" 2>error_log 1>/dev/null' % (
+        xmlfile = f"{tmpdir}/{sansext(fullname)}.xml"
+        cmd = 'cd "{}" && {} -o {} "{}" 2>error_log 1>/dev/null'.format(
             tmpdir, self.binary, xmlfile, fullname)
-        if six.PY2:
-            os.system(cmd)
-        else:
-            subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True)
         try:
             xml = open(xmlfile).read()
         except:
             try:
-                return open("%s/error_log" % tmpdir, 'r').read()
+                return open("%s/error_log" % tmpdir).read()
             except:
                 return ''
         return xml

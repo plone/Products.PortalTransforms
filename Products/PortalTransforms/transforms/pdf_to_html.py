@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 
@@ -43,22 +42,19 @@ class pdf_to_html(commandtransform):
 
     def invokeCommand(self, tmpdir, fullname):
         if os.name == 'posix':
-            cmd = 'cd "%s" && %s %s "%s" 2>error_log 1>/dev/null' % (
+            cmd = 'cd "{}" && {} {} "{}" 2>error_log 1>/dev/null'.format(
                 tmpdir, self.binary, self.binaryArgs, fullname)
         else:
-            cmd = 'cd "%s" && %s %s "%s"' % (
+            cmd = 'cd "{}" && {} {} "{}"'.format(
                   tmpdir, self.binary, self.binaryArgs, fullname)
-        if six.PY2:
-            os.system(cmd)
-        else:
-            subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True)
         try:
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + '.html')
             with open(htmlfilename, 'rb') as htmlfile:
                 html = htmlfile.read()
         except:
             try:
-                with open("%s/error_log" % tmpdir, 'r') as fd:
+                with open("%s/error_log" % tmpdir) as fd:
                     error_log = fd.read()
                 return error_log
             except:

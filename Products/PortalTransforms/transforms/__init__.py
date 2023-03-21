@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Register Transforms
 # This is interesting because we don't expect all transforms to be
 # available on all platforms. To do this we allow things to fail at
@@ -59,14 +58,14 @@ for m in modules:
         ns = import_module(m, __name__)
         transforms.append(ns.register())
     except ImportError as e:
-        msg = "Problem importing module %s : %s" % (m, e)
+        msg = f"Problem importing module {m} : {e}"
         log(msg, severity=ERROR)
     except MissingBinary as e:
         log(str(e), severity=DEBUG)
     except Exception as e:
         import traceback
         traceback.print_exc()
-        log("Raised error %s for %s" % (e, m), severity=ERROR)
+        log(f"Raised error {e} for {m}", severity=ERROR)
 
 
 def initialize(engine):

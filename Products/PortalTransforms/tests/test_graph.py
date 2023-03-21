@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.tests.utils import input_file_path
 

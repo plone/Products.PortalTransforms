@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 
 from Products.PortalTransforms.testing import PRODUCTS_PORTALTRANSFORMS_INTEGRATION_TESTING  # noqa

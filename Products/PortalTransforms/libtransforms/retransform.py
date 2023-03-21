@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from plone.base.utils import safe_text
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer

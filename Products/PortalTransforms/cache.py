@@ -20,7 +20,7 @@ class Cache:
     def _genCacheKey(self, identifier, *args):
         key = identifier
         for arg in args:
-            key = '%s_%s' % (key, arg)
+            key = f'{key}_{arg}'
         key = key.replace('/', '_')
         key = key.replace('+', '_')
         key = key.replace('-', '_')
