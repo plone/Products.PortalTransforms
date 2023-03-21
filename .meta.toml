@@ -1,0 +1,24 @@
+# Generated from:
+# https://github.com/plone/meta/tree/master/config/default
+# See the inline comments on how to expand/tweak this configuration file
+[meta]
+template = "default"
+commit-id = "5444602e"
+
+[pyproject]
+dependencies_mappings = [
+    "Pillow = ['PIL']",
+    ]
+dependencies_ignores = "['com.sun.star', 'pythoncom', 'pywintypes', 'textile', 'uno', 'unohelper', 'win32api', 'win32com']"
+codespell_ignores = "transforme,nin,"
+
+[pre_commit]
+zpretty_extra_lines = """
+        exclude: tests/.*.html
+"""
+extra_lines = """
+        exclude: www/.*.zpt
+"""
+
+[github]
+os_dependencies = "wv"
