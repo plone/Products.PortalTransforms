@@ -345,7 +345,7 @@ class SafeHtmlTransformsWithFormTest(TransformTestCase):
         # strings instead of the expected unicode,
         # then some other test is adding strings and not cleaning up.
         # Note that with valid_tags.append no validation is done,
-        # but only when realling setting valid_tags.
+        # but only when really setting valid_tags.
         self.settings.valid_tags = self.orig_valid_tags
 
     def test_form_tag_removed(self):
@@ -681,7 +681,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
             try:
                 _transform = load(_transform).register()
             except MissingBinary:
-                # we are not interessted in tests with missing binaries
+                # we are not interested in tests with missing binaries
                 continue
             except Exception:
                 import traceback

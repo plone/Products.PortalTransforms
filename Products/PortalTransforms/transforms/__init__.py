@@ -39,8 +39,8 @@ modules = [
     ".image_to_tiff",  # transforms any image to a TIFF image
     ".image_to_bmp",  # transforms any image to a BMP image
     ".lynx_dump",  # lynx -dump
-    ".python",  # python source files, no dependancies
-    ".identity",  # identity transform, no dependancies
+    ".python",  # python source files, no dependencies
+    ".identity",  # identity transform, no dependencies
     # markdown, depends on
     # http://surfnet.dl.sourceforge.net/sourceforge/python-markdown/markdown-1-5.py
     ".markdown_to_html",

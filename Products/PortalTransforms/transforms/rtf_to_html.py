@@ -23,7 +23,7 @@ class rtf_to_html(commandtransform):
         commandtransform.__init__(self, binary=self.binaryName)
 
     def convert(self, data, cache, **kwargs):
-        kwargs["filename"] = "unknow.rtf"
+        kwargs["filename"] = "unknown.rtf"
 
         tmpdir, fullname = self.initialize_tmpdir(data, **kwargs)
         html = self.invokeCommand(tmpdir, fullname)

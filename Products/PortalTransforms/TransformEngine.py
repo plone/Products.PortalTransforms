@@ -218,7 +218,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     @security.public
     def convert(self, name, orig, data=None, context=None, **kwargs):
-        # run a tranform of a given name on data
+        # run a transform of a given name on data
 
         # * name is the name of a registered transform
 
@@ -249,7 +249,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _setMetaData(self, datastream, transform):
         """set metadata on datastream according to the given transform
-        (mime type and optionaly encoding)
+        (mime type and optionally encoding)
         """
         md = datastream.getMetadata()
         if hasattr(transform, "output_encoding"):
@@ -616,7 +616,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         try:
             return Folder.ZopeFind(self, *args, **kwargs)
         except MissingBinary:
-            log("ZopeFind: catched MissingBinary exception")
+            log("ZopeFind: caught MissingBinary exception")
 
     @security.protected(View)
     def objectItems(self, *args, **kwargs):
@@ -624,7 +624,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         try:
             return Folder.objectItems(self, *args, **kwargs)
         except MissingBinary:
-            log("objectItems: catched MissingBinary exception")
+            log("objectItems: caught MissingBinary exception")
             return []
 
     # available mimetypes ####################################################

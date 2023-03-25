@@ -55,7 +55,7 @@ class datastream:
         return self._metadata
 
     def isCacheable(self):
-        """Return a bool which indicates wether the result should be cached
+        """Return a bool which indicates whether the result should be cached
 
         Default is true
         """

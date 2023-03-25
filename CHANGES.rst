@@ -196,7 +196,7 @@ Bug fixes:
 
 Breaking changes:
 
-- Fix and migrate safe_html filter completly into Plone registry and sync settings with TinyMCE.
+- Fix and migrate safe_html filter completely into Plone registry and sync settings with TinyMCE.
   Also some unused options in controlpanel where removed, like stripped_combinations and class_blacklist.
   [MrTango]
 
@@ -352,7 +352,7 @@ Fixes:
   transform
   [gotcha]
 
-- Handle charrefs & entityrefs in data and attributes equaly (unchanged)
+- Handle charrefs & entityrefs in data and attributes equally (unchanged)
   if converting to safe_html
   [tom_gross]
 
@@ -668,7 +668,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
   Archetypes 1.4.2 (used for Plone 2.5.2) of PortalTransforms is then the 1.5
   final.
   We dont need increasing of release numbers because of Plone 3.0,
-  Archetypes 1.5, ... if theres no change in the dependen product, like
+  Archetypes 1.5, ... if there's no change in the dependen product, like
   this one.
   [jensens]
 
@@ -737,7 +737,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
   [csenger] [dreamcatcher]
 
 * Removed CoUnInitialize call. According to Mark Hammond: The
-  right thing to do is call that function, although almost noone
+  right thing to do is call that function, although almost no one
   does (including pywin32 itself, which does CoInitialize the main
   thread) and I've never heard of problem caused by this
   omission.
@@ -791,7 +791,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 1.3.5-final02 - 2005-07-17
 --------------------------
 
-* changed version to stick to appropiate Archetypes Version.
+* changed version to stick to appropriate Archetypes Version.
   [yenzenz]
 
 1.3.5-final - 2005-07-06
@@ -840,18 +840,18 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
   [tiran]
 
 * Fixed [ 1121812 ] fix PortalTransforms unregisterTransformation()
-  unregisterTransformation() misses to remove from the zodb the persistance
-  wrapper added to the trasformation
+  unregisterTransformation() misses to remove from the zodb the persistence
+  wrapper added to the transformation
   [dan_t]
 
 * Fixed [ 1118739 ] popentransform does not work on windows
   [duncanb]
 
-* Fixed [ 1122175 ] extra indnt sytax error in office_uno.py
+* Fixed [ 1122175 ] extra indnt syntax error in office_uno.py
   [ryuuguu]
 
 * fixed bug with some transformers' temp filename: it tried to use original
-  filename which is encoded in utf8 and may contrain invalid charset for my
+  filename which is encoded in utf8 and may constrain invalid charset for my
   Windows server. Just use filename as: unknown.suffix
   [panjunyong]
 
@@ -866,7 +866,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 
 * Fixed [ 1041637 ] RichWidget: STX level should be set to 3 instead 1. The
   structured text transform is now using the zope.conf option or has an
-  optional level paramenter in the convert method.
+  optional level parameter in the convert method.
   [tiran]
 
 * Added win32api.GetShortPathName to libtransforms/commandtransform
@@ -937,7 +937,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 * cache.py: Added purgeCache, fixed has cache test.
   [tiran]
 
-* Fixed non critical typo in error message: Unvalid -> Invalid
+* Fixed non critical typo in error message
   [tiran]
 
 1.3.0-3 - 2004-08-06
