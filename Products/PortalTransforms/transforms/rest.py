@@ -2,8 +2,6 @@ from docutils.core import publish_parts
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
-import six
-
 
 @implementer(ITransform)
 class rest:
@@ -143,10 +141,6 @@ class rest:
         if parts["subtitle"]:
             html = html + subheader
         html = html + body
-
-        # TODO: check if this unicode condition works on Python 3.
-        if six.PY2 and output_encoding != "unicode":
-            html = html.encode(output_encoding)
 
         html = html.replace(' class="document"', "", 1)
         data.setData(html)

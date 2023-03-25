@@ -21,7 +21,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 import keyword
-import six
 import token
 import tokenize
 
@@ -78,7 +77,7 @@ class Parser:
         self.pos = newpos + len(toktext)
 
         # skip encoding
-        if six.PY3 and toktype == tokenize.ENCODING:
+        if toktype == tokenize.ENCODING:
             return
 
         # handle newlines
@@ -108,7 +107,7 @@ class Parser:
 
         # send text
         self.out.write(open_tag)
-        self.out.write(six.b(html_quote(toktext)))
+        self.out.write(bytes(html_quote(toktext), "utf-8"))
         self.out.write(close_tag)
 
 

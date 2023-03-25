@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from Acquisition import Implicit
+from collections import UserList
 from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from Persistence import Persistent
@@ -12,12 +13,6 @@ from Products.PortalTransforms.interfaces import IChain
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import _www
 from zope.interface import implementer
-
-
-try:
-    from collections import UserList
-except ImportError:
-    from UserList import UserList
 
 
 @implementer(IChain, ITransform)

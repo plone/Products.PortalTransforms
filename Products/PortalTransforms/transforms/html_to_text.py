@@ -1,5 +1,5 @@
+from html.entities import name2codepoint
 from Products.PortalTransforms.libtransforms.retransform import retransform
-from six.moves import html_entities
 
 
 class html_to_text(retransform):
@@ -11,7 +11,7 @@ def register():
     def sub_func(matchobj):
         full = matchobj.group()
         ent = matchobj.group(1)
-        result = html_entities.name2codepoint.get(ent)
+        result = name2codepoint.get(ent)
         if result is None:
             if ent.startswith("#"):
                 try:

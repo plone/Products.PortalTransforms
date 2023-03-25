@@ -11,7 +11,6 @@ from zope.component import getUtility
 from zope.interface import implementer
 
 import re
-import six
 
 
 _strings = (bytes, str)
@@ -59,8 +58,6 @@ def decode_charref(s):
         else:
             c = int(s)
         c = chr(c)
-        if six.PY2 and isinstance(s, str):
-            c = c.encode("utf8")
         return c
     except ValueError:
         return "&#" + s + ";"

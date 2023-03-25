@@ -1,5 +1,7 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
+from collections import UserDict
+from importlib import reload as reload_module
 from logging import ERROR
 from OFS.SimpleItem import SimpleItem
 from Persistence import PersistentMapping
@@ -12,14 +14,7 @@ from Products.PortalTransforms.transforms.broken import BrokenTransform
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
-from six.moves import reload_module
 from zope.interface import implementer
-
-
-try:
-    from collections import UserDict
-except ImportError:
-    from UserDict import UserDict
 
 
 def import_from_name(module_name):

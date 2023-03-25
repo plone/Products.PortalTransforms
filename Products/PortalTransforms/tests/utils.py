@@ -9,7 +9,6 @@ from unittest import TestSuite
 
 import glob
 import re
-import six
 
 
 def normalize_html(s):
@@ -26,8 +25,6 @@ def normalize_html(s):
 
 def html5entity(ent):
     mapped_ent = html5entities[ent]
-    if six.PY2:
-        mapped_ent = mapped_ent.encode("utf-8")
     return mapped_ent
 
 
