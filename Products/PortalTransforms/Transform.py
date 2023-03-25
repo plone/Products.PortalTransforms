@@ -298,12 +298,12 @@ class Transform(SimpleItem):
                 try:
                     keys = kwargs[param + "_key"]
                     del kwargs[param + "_key"]
-                except:
+                except Exception:
                     keys = ()
                 try:
                     values = kwargs[param + "_value"]
                     del kwargs[param + "_value"]
-                except:
+                except Exception:
                     values = ()
                 kwargs[param] = dict = {}
                 for key, value in zip(keys, values):

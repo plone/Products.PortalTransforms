@@ -28,8 +28,6 @@ from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
 from zope.interface import implementer
 
-import six
-
 
 @implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
@@ -322,10 +320,10 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     output = transform.output
                     mto = registry.lookup(output)
                     for mt2 in mto[0].mimetypes:
-                        l = mt_in[mt2]
-                        for i in range(len(l)):
-                            if transform.name() == l[i].name():
-                                l.pop(i)
+                        a_list = mt_in[mt2]
+                        for i in range(len(a_list)):
+                            if transform.name() == a_list[i].name():
+                                a_list.pop(i)
                                 break
                         else:
                             log(

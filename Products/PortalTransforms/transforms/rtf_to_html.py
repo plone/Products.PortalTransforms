@@ -8,8 +8,6 @@ from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
 
-import os
-import six
 import subprocess
 
 
@@ -47,10 +45,10 @@ class rtf_to_html(commandtransform):
         subprocess.run(cmd, shell=True)
         try:
             html = open(htmlfile).read()
-        except:
+        except Exception:
             try:
                 return open("%s/error_log" % tmpdir).read()
-            except:
+            except Exception:
                 return ""
         return html
 

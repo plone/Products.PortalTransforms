@@ -8,7 +8,6 @@ from zope.interface import implementer
 import os
 import re
 import shutil
-import six
 import subprocess
 import tempfile
 

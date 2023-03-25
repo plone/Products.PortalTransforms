@@ -1,8 +1,6 @@
 from Products.PortalTransforms.libtransforms.retransform import retransform
 from six.moves import html_entities
 
-import six
-
 
 class html_to_text(retransform):
     inputs = ("text/html",)
@@ -19,7 +17,7 @@ def register():
                 try:
                     number = int(ent[1:])
                     res = chr(number)
-                except:
+                except Exception:
                     res = full
             else:
                 res = full

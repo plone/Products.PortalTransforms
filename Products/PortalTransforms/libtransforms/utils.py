@@ -9,8 +9,8 @@ import warnings
 try:
     # Need to be imported before win32api to avoid dll loading
     # problems.
-    import pythoncom
-    import pywintypes
+    import pythoncom  # noqa: F401
+    import pywintypes  # noqa: F401
     import win32api
 
     WIN32 = True

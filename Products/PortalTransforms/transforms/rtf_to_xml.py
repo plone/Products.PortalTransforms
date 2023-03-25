@@ -7,8 +7,6 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
 
-import os
-import six
 import subprocess
 
 
@@ -46,10 +44,10 @@ class rtf_to_xml(commandtransform):
         subprocess.run(cmd, shell=True)
         try:
             xml = open(xmlfile).read()
-        except:
+        except Exception:
             try:
                 return open("%s/error_log" % tmpdir).read()
-            except:
+            except Exception:
                 return ""
         return xml
 

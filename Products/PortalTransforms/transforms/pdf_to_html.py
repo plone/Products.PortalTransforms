@@ -9,7 +9,6 @@ from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
 
 import os
-import six
 import subprocess
 
 
@@ -54,12 +53,12 @@ class pdf_to_html(commandtransform):
             htmlfilename = os.path.join(tmpdir, sansext(fullname) + ".html")
             with open(htmlfilename, "rb") as htmlfile:
                 html = htmlfile.read()
-        except:
+        except Exception:
             try:
                 with open("%s/error_log" % tmpdir) as fd:
                     error_log = fd.read()
                 return error_log
-            except:
+            except Exception:
                 return (
                     "transform failed while running %s (maybe this pdf "
                     "file doesn't support transform)" % cmd

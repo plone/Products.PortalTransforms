@@ -30,7 +30,6 @@ from zope.component import getUtility
 import hashlib
 import itertools
 import os
-import six
 import unittest
 
 

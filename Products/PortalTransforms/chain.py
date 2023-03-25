@@ -83,7 +83,7 @@ class chain(UserList):
         else:
             try:
                 del self.output_encoding
-            except:
+            except Exception:
                 pass
 
 

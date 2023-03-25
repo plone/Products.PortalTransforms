@@ -2,17 +2,15 @@
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
-from win32com.client import constants
+from win32com.client import constants  # noqa: F401
 from win32com.client import Dispatch
-from win32com.client import gencache
+from win32com.client import gencache  # noqa: F401
 
-import os
-import os.path
 import pythoncom
-import pywintypes
-import win32api
+import pywintypes  # noqa: F401
+import win32api  # noqa: F401
 import win32com
-import win32com.client
+import win32com.client  # noqa: F401
 
 
 class document(commandtransform):

@@ -22,7 +22,7 @@ def correctMapping(out, portal):
                     )
                     try:
                         pt._unmapTransform(transform)
-                    except:
+                    except Exception:
                         raise
                     else:
                         print("...ok", file=out)
@@ -46,7 +46,7 @@ def updateTransform(out, portal, transform_id):
                 try:
                     pt.unregisterTransform(item)
                     pt.manage_addTransform(item, transform_module)
-                except:
+                except Exception:
                     raise
                 else:
                     out.write("  ...done")

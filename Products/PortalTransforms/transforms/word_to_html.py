@@ -19,7 +19,7 @@ if os.name == "posix":
             from .office_uno import document
         else:
             raise
-    except:
+    except Exception:
         from .office_wvware import document
 else:
     try:
@@ -27,7 +27,7 @@ else:
             from .office_uno import document
         else:
             raise
-    except:
+    except Exception:
         from .office_com import document
 
 

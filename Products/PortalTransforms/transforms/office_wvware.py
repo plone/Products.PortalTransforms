@@ -3,7 +3,6 @@ from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
 
 import os
-import six
 import subprocess
 
 
