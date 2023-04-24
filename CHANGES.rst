@@ -8,6 +8,30 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.1 (2023-03-14)
+------------------
+
+Internal:
+
+
+- Merge the safest bits of the changes wanted by plone/meta (#58)
+
+
+4.0.0 (2023-02-22)
+------------------
+
+Breaking changes:
+
+
+- The package is now compatible with Plone 6 and Python 3.8+. (#51)
+
+
+Bug fixes:
+
+
+- Fix deprecation warnings (#51)
+
+
 3.2.2 (2023-02-08)
 ------------------
 
