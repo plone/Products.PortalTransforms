@@ -35,18 +35,17 @@ class IDataStream(Interface):
         """
 
     def isCacheable():
-        """Return a bool which indicates wether the result should be cached
+        """Return a bool which indicates whether the result should be cached
 
         Default is true
         """
 
     def setCachable(value):
-        """Set cacheable flag to yes or no
-        """
+        """Set cacheable flag to yes or no"""
 
 
 class ITransform(Interface):
-    """A transformation plugin -- tranform data somehow
+    """A transformation plugin -- transform data somehow
     must be threadsafe and stateless"""
 
     def name(self):
@@ -67,13 +66,11 @@ class ITransform(Interface):
 
 
 class IChain(ITransform):
-
     def registerTransform(transform, condition=None):
         """Append a transform to the chain"""
 
 
 class IEngine(Interface):
-
     def registerTransform(transform):
         """register a transform
 
@@ -81,12 +78,11 @@ class IEngine(Interface):
         """
 
     def unregisterTransform(name):
-        """ unregister a transform
+        """unregister a transform
         name is the name of a registered transform
         """
 
-    def convertTo(mimetype, orig, data=None, object=None, context=None,
-                  **kwargs):
+    def convertTo(mimetype, orig, data=None, object=None, context=None, **kwargs):
         """Convert orig to a given mimetype
 
         * orig is a native string
@@ -107,7 +103,7 @@ class IEngine(Interface):
         """
 
     def convert(name, orig, data=None, context=None, **kwargs):
-        """run a tranform of a given name on data
+        """run a transform of a given name on data
 
         * name is the name of a registered transform
 

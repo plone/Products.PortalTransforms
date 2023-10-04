@@ -6,7 +6,7 @@ DONT USE ChangeLog USE HISTORY.txt instead.
 
 2004-05-25  Christian Heimes <heimes@faho.rwth-aachen.de>
 
-    * Seperate MimetypesRegistry to a new product
+    * Separate MimetypesRegistry to a new product
 
 2004-04-20  Christian Heimes <heimes@faho.rwth-aachen.de>
 
@@ -106,7 +106,7 @@ DONT USE ChangeLog USE HISTORY.txt instead.
 2003-08-12  Sylvain Thénault  <syt@logilab.fr>
 
 	* TransformEngine.py: set "encoding" in datastream metadata if
-	tranform provides a "output_encoding" attribute. Fix access to
+	transform provides a "output_encoding" attribute. Fix access to
 	"id" instead of "name()"
 
 	* zope/Transform.py: add some code to handle output encoding...
@@ -206,7 +206,7 @@ DONT USE ChangeLog USE HISTORY.txt instead.
 
 	* interfaces.py: complete / cleanup interfaces
 
-	* bin/tranform: add command line tool
+	* bin/transform: add command line tool
 
 	* unsafe_transforms/command.py: bug fix
 
@@ -227,7 +227,7 @@ DONT USE ChangeLog USE HISTORY.txt instead.
 2003-07-05  Sylvain Thenault  <sylvain.thenault@logilab.fr>
 
 	* make the PortalTransforms product from the original transform
-	package and the mimetypes / transforms tools originaly defined in
+	package and the mimetypes / transforms tools originally defined in
 	Archetypes.
 
 	* drop the ability to use it as a standalone python package, since
@@ -259,7 +259,7 @@ DONT USE ChangeLog USE HISTORY.txt instead.
 
 	* transforms/rest.py (rest.convert): Rendering of
 	reST was broken. It was not rendering references the right way,
-	and it didnt seem like it was doing the right thing with
+	and it didn't seem like it was doing the right thing with
 	titles. Updated to use docutils.core.publish_string.
 
 	* tests/test_all.py (test_suite): Added lynx_dump to transform

@@ -1,22 +1,20 @@
-# -*- coding: utf-8 -*-
+from os.path import basename
+from os.path import join
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import getShortPathName
-from os.path import basename
-from os.path import join
 from zope.interface import implementer
+
 import os
 import re
 import shutil
-import six
 import subprocess
 import tempfile
 
 
 @implementer(ITransform)
-class commandtransform(object):
-    """abstract class for external command based transform
-    """
+class commandtransform:
+    """abstract class for external command based transform"""
 
     def __init__(self, name=None, binary=None, **kwargs):
         if name is not None:
@@ -34,7 +32,7 @@ class commandtransform(object):
         """
         tmpdir = tempfile.mktemp()
         os.mkdir(tmpdir)
-        filename = kwargs.get("filename", '')
+        filename = kwargs.get("filename", "")
         fullname = join(tmpdir, basename(filename))
         with open(fullname, "wb") as fd:
             fd.write(data)
@@ -45,22 +43,22 @@ class commandtransform(object):
         for f in os.listdir(tmpdir):
             result = re.match(r"^.+\.(?P<ext>.+)$", f)
             if result is not None:
-                ext = result.group('ext')
-                if ext in ('png', 'jpg', 'gif'):
+                ext = result.group("ext")
+                if ext in ("png", "jpg", "gif"):
                     imgs.append(f)
-        path = join(tmpdir, '')
+        path = join(tmpdir, "")
         return path, imgs
 
     def fixImages(self, path, images, objects):
         for image in images:
-            objects[image] = open(join(path, image), 'rb').read()
+            objects[image] = open(join(path, image), "rb").read()
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
 
 
 @implementer(ITransform)
-class popentransform(object):
+class popentransform:
     """abstract class for external command based transform
 
     Command must read from stdin and write to stdout
@@ -83,19 +81,11 @@ class popentransform(object):
         return self.__name__
 
     def convert(self, data, cache, **kwargs):
-        command = "%s %s" % (self.binary, self.binaryArgs)
-        if six.PY2:
-            cin, couterr = os.popen4(command, 'b')
-
-            cin.write(data)
-            cin.close()
-
-            out = couterr.read()
-            couterr.close()
-        else:
-            process = subprocess.run(
-                command, shell=True, input=data, stdout=subprocess.PIPE)
-            out = process.stdout
+        command = f"{self.binary} {self.binaryArgs}"
+        process = subprocess.run(
+            command, shell=True, input=data, stdout=subprocess.PIPE
+        )
+        out = process.stdout
 
         cache.setData(out)
         return cache

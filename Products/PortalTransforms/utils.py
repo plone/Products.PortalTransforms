@@ -12,14 +12,14 @@ class TransformException(Exception):
 FB_REGISTRY = None
 
 # logging function
-logger = logging.getLogger('PortalTransforms')
+logger = logging.getLogger("PortalTransforms")
 
 
 def log(message, severity=logging.DEBUG):
     logger.log(severity, message)
 
 
-_www = os.path.join(os.path.dirname(__file__), 'www')
+_www = os.path.join(os.path.dirname(__file__), "www")
 
 
 def safeToInt(value):

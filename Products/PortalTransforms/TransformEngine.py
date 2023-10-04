@@ -1,64 +1,62 @@
-# -*- coding: utf-8 -*-
-import six
-
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
+from logging import DEBUG
 from OFS.Folder import Folder
 from Persistence import PersistentMapping
+from persistent.list import PersistentList
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal
 from Products.CMFCore.permissions import View
-from Products.CMFCore.utils import UniqueObject
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import registerToolInterface
+from Products.CMFCore.utils import UniqueObject
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.cache import Cache
-from Products.PortalTransforms.chain import TransformsChain
 from Products.PortalTransforms.chain import chain
+from Products.PortalTransforms.chain import TransformsChain
 from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.interfaces import IDataStream
 from Products.PortalTransforms.interfaces import IEngine
 from Products.PortalTransforms.interfaces import IPortalTransformsTool
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
+from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.transforms import initialize
-from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.utils import log
-from logging import DEBUG
-from persistent.list import PersistentList
+from Products.PortalTransforms.utils import TransformException
 from zope.interface import implementer
 
 
 @implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
-
-    id = 'portal_transforms'
-    meta_type = id.title().replace('_', ' ')
+    id = "portal_transforms"
+    meta_type = id.title().replace("_", " ")
     isPrincipiaFolderish = 1  # Show up in the ZMI
 
     meta_types = all_meta_types = (
-        {'name': 'Transform', 'action': 'manage_addTransformForm'},
-        {'name': 'TransformsChain', 'action': 'manage_addTransformsChainForm'},
+        {"name": "Transform", "action": "manage_addTransformForm"},
+        {"name": "TransformsChain", "action": "manage_addTransformsChainForm"},
     )
 
-    manage_addTransformForm = PageTemplateFile('addTransform', _www)
-    manage_addTransformsChainForm = PageTemplateFile(
-        'addTransformsChain', _www)
-    manage_cacheForm = PageTemplateFile('setCacheTime', _www)
+    manage_addTransformForm = PageTemplateFile("addTransform", _www)
+    manage_addTransformsChainForm = PageTemplateFile("addTransformsChain", _www)
+    manage_cacheForm = PageTemplateFile("setCacheTime", _www)
     manage_editTransformationPolicyForm = PageTemplateFile(
-        'editTransformationPolicy', _www)
-    manage_reloadAllTransforms = PageTemplateFile('reloadAllTransforms', _www)
+        "editTransformationPolicy", _www
+    )
+    manage_reloadAllTransforms = PageTemplateFile("reloadAllTransforms", _www)
 
     manage_options = (
-        (Folder.manage_options[0], ) + Folder.manage_options[2:] +
-        ({'label': 'Caches', 'action': 'manage_cacheForm'},
-         {'label': 'Policy', 'action': 'manage_editTransformationPolicyForm'},
-         {'label': 'Reload transforms',
-          'action': 'manage_reloadAllTransforms'},
-         ))
+        (Folder.manage_options[0],)
+        + Folder.manage_options[2:]
+        + (
+            {"label": "Caches", "action": "manage_cacheForm"},
+            {"label": "Policy", "action": "manage_editTransformationPolicyForm"},
+            {"label": "Reload transforms", "action": "manage_reloadAllTransforms"},
+        )
+    )
 
     security = ClassSecurityInfo()
 
@@ -72,7 +70,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     @security.private
     def unregisterTransform(self, name):
-        """ unregister a transform
+        """unregister a transform
         name is the name of a registered transform
         """
         self._unmapTransform(getattr(self, name))
@@ -80,8 +78,16 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             self._delObject(name)
 
     @security.public
-    def convertTo(self, target_mimetype, orig, data=None, object=None,
-                  usedby=None, context=None, **kwargs):
+    def convertTo(
+        self,
+        target_mimetype,
+        orig,
+        data=None,
+        object=None,
+        usedby=None,
+        context=None,
+        **kwargs,
+    ):
         """Convert orig to a given mimetype
 
         * orig is a native string
@@ -111,29 +117,33 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if data is None:
             data = self._wrap(target_mimetype)
 
-        registry = getToolByName(self, 'mimetypes_registry')
+        registry = getToolByName(self, "mimetypes_registry")
 
-        if not getattr(aq_base(registry), 'classify', None):
+        if not getattr(aq_base(registry), "classify", None):
             # avoid problems when importing a site with an old mimetype
             # registry
             return None
 
-        orig_mt = registry.classify(orig,
-                                    mimetype=kwargs.get('mimetype'),
-                                    filename=kwargs.get('filename'))
+        orig_mt = registry.classify(
+            orig, mimetype=kwargs.get("mimetype"), filename=kwargs.get("filename")
+        )
         orig_mt = str(orig_mt)
         if not orig_mt:
-            log('Unable to guess input mime type (filename=%s, mimetype=%s)' %
-                (kwargs.get('mimetype'), kwargs.get('filename')),
-                severity=DEBUG)
+            log(
+                "Unable to guess input mime type (filename=%s, mimetype=%s)"
+                % (kwargs.get("mimetype"), kwargs.get("filename")),
+                severity=DEBUG,
+            )
             return None
 
         target_mt = registry.lookup(target_mimetype)
         if target_mt:
             target_mt = target_mt[0]
         else:
-            log('Unable to match target mime type %s' % str(target_mimetype),
-                severity=DEBUG)
+            log(
+                "Unable to match target mime type %s" % str(target_mimetype),
+                severity=DEBUG,
+            )
             return None
 
         # fastpath
@@ -143,7 +153,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if orig_mt == str(target_mt):
             data.setData(orig)
             md = data.getMetadata()
-            md['mimetype'] = str(orig_mt)
+            md["mimetype"] = str(orig_mt)
             if object is not None:
                 cache.setCache(str(target_mimetype), data)
             return data
@@ -152,13 +162,17 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         requirements = self._policies.get(str(target_mt), [])
         path = self._findPath(orig_mt, target_mt, list(requirements))
         if not path and requirements:
-            log('Unable to satisfy requirements %s' % ', '.join(requirements),
-                severity=DEBUG)
+            log(
+                "Unable to satisfy requirements %s" % ", ".join(requirements),
+                severity=DEBUG,
+            )
             path = self._findPath(orig_mt, target_mt)
 
         if not path:
-            log('NO PATH FROM %s TO %s : %s' %
-                (orig_mt, target_mimetype, path), severity=DEBUG)
+            log(
+                f"NO PATH FROM {orig_mt} TO {target_mimetype} : {path}",
+                severity=DEBUG,
+            )
             return None
 
         if len(path) > 1:
@@ -169,8 +183,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         else:
             transform = path[0]
 
-        result = transform.convert(orig, data, context=context,
-                                   usedby=usedby, **kwargs)
+        result = transform.convert(orig, data, context=context, usedby=usedby, **kwargs)
         self._setMetaData(result, transform)
 
         # set cache if possible
@@ -179,23 +192,33 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         # return IDataStream object
         return result
+
     # make sure it's not publishable (XSS risk)
     del convertTo.__doc__
 
     @security.public
-    def convertToData(self, target_mimetype, orig, data=None, object=None,
-                      usedby=None, context=None, **kwargs):
+    def convertToData(
+        self,
+        target_mimetype,
+        orig,
+        data=None,
+        object=None,
+        usedby=None,
+        context=None,
+        **kwargs,
+    ):
         # Convert to a given mimetype and return the raw data
         # ignoring subobjects. see convertTo for more information
-        data = self.convertTo(target_mimetype, orig, data, object, usedby,
-                              context, **kwargs)
+        data = self.convertTo(
+            target_mimetype, orig, data, object, usedby, context, **kwargs
+        )
         if data:
             return data.getData()
         return None
 
     @security.public
     def convert(self, name, orig, data=None, context=None, **kwargs):
-        # run a tranform of a given name on data
+        # run a transform of a given name on data
 
         # * name is the name of a registered transform
 
@@ -226,12 +249,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _setMetaData(self, datastream, transform):
         """set metadata on datastream according to the given transform
-        (mime type and optionaly encoding)
+        (mime type and optionally encoding)
         """
         md = datastream.getMetadata()
-        if hasattr(transform, 'output_encoding'):
-            md['encoding'] = transform.output_encoding
-        md['mimetype'] = transform.output
+        if hasattr(transform, "output_encoding"):
+            md["encoding"] = transform.output_encoding
+        md["mimetype"] = transform.output
 
     def _wrap(self, name):
         """wrap a data object in an icache"""
@@ -245,33 +268,39 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _mapTransform(self, transform):
         """map transform to internal structures"""
-        registry = getToolByName(self, 'mimetypes_registry')
-        inputs = getattr(transform, 'inputs', None)
+        registry = getToolByName(self, "mimetypes_registry")
+        inputs = getattr(transform, "inputs", None)
         if not inputs:
-            raise TransformException('Bad transform %s : no input MIME type' %
-                                     (transform))
+            raise TransformException(
+                "Bad transform %s : no input MIME type" % (transform)
+            )
         for i in inputs:
             mts = registry.lookup(i)
             if not mts:
-                msg = 'Input MIME type %r for transform %s is not registered '\
-                      'in the MIME types registry' % (i, transform.name())
+                msg = (
+                    "Input MIME type %r for transform %s is not registered "
+                    "in the MIME types registry" % (i, transform.name())
+                )
                 raise TransformException(msg)
             for mti in mts:
                 for mt in mti.mimetypes:
                     mt_in = self._mtmap.setdefault(mt, PersistentMapping())
-                    output = getattr(transform, 'output', None)
+                    output = getattr(transform, "output", None)
                     if not output:
-                        msg = 'Bad transform %s : no output MIME type'
+                        msg = "Bad transform %s : no output MIME type"
                         raise TransformException(msg % transform.name())
                     mto = registry.lookup(output)
                     if not mto:
-                        msg = 'Output MIME type %r for transform %s is not '\
-                              'registered in the MIME types registry' % \
-                              (output, transform.name())
+                        msg = (
+                            "Output MIME type %r for transform %s is not "
+                            "registered in the MIME types registry"
+                            % (output, transform.name())
+                        )
                         raise TransformException(msg)
                     if len(mto) > 1:
-                        msg = ("Wildcarding not allowed in transform's output "
-                               "MIME type")
+                        msg = (
+                            "Wildcarding not allowed in transform's output " "MIME type"
+                        )
                         raise TransformException(msg)
 
                     for mt2 in mto[0].mimetypes:
@@ -283,7 +312,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def _unmapTransform(self, transform):
         """unmap transform from internal structures"""
-        registry = getToolByName(self, 'mimetypes_registry')
+        registry = getToolByName(self, "mimetypes_registry")
         for i in transform.inputs:
             for mti in registry.lookup(i):
                 for mt in mti.mimetypes:
@@ -291,15 +320,18 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     output = transform.output
                     mto = registry.lookup(output)
                     for mt2 in mto[0].mimetypes:
-                        l = mt_in[mt2]
-                        for i in range(len(l)):
-                            if transform.name() == l[i].name():
-                                l.pop(i)
+                        a_list = mt_in[mt2]
+                        for i in range(len(a_list)):
+                            if transform.name() == a_list[i].name():
+                                a_list.pop(i)
                                 break
                         else:
-                            log('Can\'t find transform %s from %s to %s' % (
-                                transform.name(), mti, mt),
-                                severity=DEBUG)
+                            log(
+                                "Can't find transform {} from {} to {}".format(
+                                    transform.name(), mti, mt
+                                ),
+                                severity=DEBUG,
+                            )
 
     def _findPath(self, orig, target, required_transforms=()):
         """return the shortest path for transformation from orig mimetype to
@@ -322,7 +354,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 for output, transforms in outputs.items():
                     for transform in transforms:
                         if transform.name() == required_transform:
-                            supportedInputs[input] = 'ok'
+                            supportedInputs[input] = "ok"
                             # BTW, let's remember the output type
                             transformOutput = output
                             # and remember the transform, it is
@@ -354,8 +386,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # transforms.
             thirdOrig = transformOutput
             thirdTarget = target
-            thirdPath = self._findPath(thirdOrig, thirdTarget,
-                                       required_transforms)
+            thirdPath = self._findPath(thirdOrig, thirdTarget, required_transforms)
             if thirdPath is None:
                 return None  # no path
             # Final result is the concatenation of these 3 parts
@@ -374,7 +405,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         pathToType = {orig: []}  # all paths we know, by end of path.
 
         def typesWithPathOfLength(length):
-            '''Returns the lists of known paths of a given length'''
+            """Returns the lists of known paths of a given length"""
             result = []
             for type_, path in pathToType.items():
                 if len(path) == length:
@@ -393,11 +424,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if outputs:
                     for reachedType, transforms in outputs.items():
                         # Does this lead to a type we never reached before ?
-                        if reachedType not in six.iterkeys(pathToType) and transforms:  # noqa
+                        if reachedType not in pathToType.keys() and transforms:  # noqa
                             # Yes, we did not know any path reaching this type
                             # Let's remember the path to here
-                            pathToType[reachedType] = (
-                                pathToType[startingType] + [transforms[0]])
+                            pathToType[reachedType] = pathToType[startingType] + [
+                                transforms[0]
+                            ]
                             if reachedType == target:
                                 # This is the first time we reach our target.
                                 # We have our shortest path to target.
@@ -433,7 +465,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         if outputs is None:
             return result
 
-        registry = getToolByName(self, 'mimetypes_registry')
+        registry = getToolByName(self, "mimetypes_registry")
         mto = registry.lookup(target)
         # target mimetype aliases
         target_aliases = mto[0].mimetypes
@@ -459,8 +491,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 else:
                     if len(path) < shortest:
                         # keep exploring this path, it is still short enough
-                        self._getPaths(o_mt, target, requirements,
-                                       path, result)
+                        self._getPaths(o_mt, target, requirements, path, result)
                 if required:
                     requirements.append(name)
         path.pop()
@@ -469,7 +500,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     @security.private
     def manage_afterAdd(self, item, container):
-        """ overload manage_afterAdd to finish initialization when the
+        """overload manage_afterAdd to finish initialization when the
         transform tool is added
         """
         Folder.manage_afterAdd(self, item, container)
@@ -481,32 +512,32 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     @security.protected(ManagePortal)
     def manage_addTransform(self, id, module, REQUEST=None):
-        """ add a new transform to the tool """
+        """add a new transform to the tool"""
         transform = Transform(id, module)
         self._setObject(id, transform)
         self._mapTransform(transform)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     @security.protected(ManagePortal)
     def manage_addTransformsChain(self, id, description, REQUEST=None):
-        """ add a new transform to the tool """
+        """add a new transform to the tool"""
         transform = TransformsChain(id, description)
         self._setObject(id, transform)
         self._mapTransform(transform)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     @security.protected(ManagePortal)
     def manage_setCacheValidityTime(self, seconds, REQUEST=None):
         """set  the lifetime of cached data in seconds"""
         self.max_sec_in_cache = int(seconds)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     @security.protected(ManagePortal)
     def reloadTransforms(self, ids=()):
-        """ reload transforms with the given ids
+        """reload transforms with the given ids
         if no ids, reload all registered transforms
 
         return a list of (transform_id, transform_module) describing reloaded
@@ -523,37 +554,38 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     # Policy handling methods
 
-    def manage_addPolicy(self, output_mimetype, required_transforms,
-                         REQUEST=None):
-        """ add a policy for a given output mime types"""
-        registry = getToolByName(self, 'mimetypes_registry')
+    def manage_addPolicy(self, output_mimetype, required_transforms, REQUEST=None):
+        """add a policy for a given output mime types"""
+        registry = getToolByName(self, "mimetypes_registry")
         if not registry.lookup(output_mimetype):
-            raise TransformException('Unknown MIME type')
+            raise TransformException("Unknown MIME type")
         if output_mimetype in self._policies:
-            msg = 'A policy for output %s is yet defined' % output_mimetype
+            msg = "A policy for output %s is yet defined" % output_mimetype
             raise TransformException(msg)
 
         required_transforms = tuple(required_transforms)
         self._policies[output_mimetype] = required_transforms
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                                         '/manage_editTransformationPolicyForm')
+            REQUEST["RESPONSE"].redirect(
+                self.absolute_url() + "/manage_editTransformationPolicyForm"
+            )
 
     def manage_delPolicies(self, outputs, REQUEST=None):
-        """ remove policies for given output mime types"""
+        """remove policies for given output mime types"""
         for mimetype in outputs:
             del self._policies[mimetype]
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() +
-                                         '/manage_editTransformationPolicyForm')
+            REQUEST["RESPONSE"].redirect(
+                self.absolute_url() + "/manage_editTransformationPolicyForm"
+            )
 
     def listPolicies(self):
-        """ return the list of defined policies
+        """return the list of defined policies
 
         a policy is a 2-uple (output_mime_type, [list of required transforms])
         """
         # XXXFIXME: backward compat, should be removed latter
-        if not hasattr(self, '_policies'):
+        if not hasattr(self, "_policies"):
             self._policies = PersistentMapping()
         return list(self._policies.items())
 
@@ -571,8 +603,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         module = str(transform.__module__)
         transform = Transform(transform.name(), module, transform)
         if not ITransform.providedBy(transform):
-            raise TransformException('%s does not implement ITransform' %
-                                     transform)
+            raise TransformException("%s does not implement ITransform" % transform)
         name = transform.name()
         __traceback_info__ = (name, transform)
         if name not in self.objectIds():
@@ -581,21 +612,19 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     @security.protected(ManagePortal)
     def ZopeFind(self, *args, **kwargs):
-        """Don't break ZopeFind feature when a transform can't be loaded
-        """
+        """Don't break ZopeFind feature when a transform can't be loaded"""
         try:
             return Folder.ZopeFind(self, *args, **kwargs)
         except MissingBinary:
-            log('ZopeFind: catched MissingBinary exception')
+            log("ZopeFind: caught MissingBinary exception")
 
     @security.protected(View)
     def objectItems(self, *args, **kwargs):
-        """Don't break ZopeFind feature when a transform can't be loaded
-        """
+        """Don't break ZopeFind feature when a transform can't be loaded"""
         try:
             return Folder.objectItems(self, *args, **kwargs)
         except MissingBinary:
-            log('objectItems: catched MissingBinary exception')
+            log("objectItems: caught MissingBinary exception")
             return []
 
     # available mimetypes ####################################################
@@ -612,5 +641,6 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     available_types.append(input)
         return available_types
 
+
 InitializeClass(TransformTool)
-registerToolInterface('portal_transforms', IPortalTransformsTool)
+registerToolInterface("portal_transforms", IPortalTransformsTool)

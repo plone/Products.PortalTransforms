@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
@@ -8,8 +7,7 @@ WARNING = 100
 
 
 @implementer(ITransform)
-class BrokenTransform(object):
-
+class BrokenTransform:
     __name__ = "broken transform"
     inputs = ("BROKEN",)
     output = "BROKEN"
@@ -24,11 +22,14 @@ class BrokenTransform(object):
 
     def convert(self, orig, data, **kwargs):
         # do the format
-        msg = "Calling convert on BROKEN transform %s (%s). Error: %s" % \
-              (self.id, self.module, self.error)
+        msg = "Calling convert on BROKEN transform {} ({}). Error: {}".format(
+            self.id,
+            self.module,
+            self.error,
+        )
         log(msg, severity=WARNING)
         print(msg)
-        data.setData('')
+        data.setData("")
         return data
 
 

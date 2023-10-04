@@ -52,8 +52,8 @@ The MIME types registry
 
 
 
-The tranformation tool
-----------------------
+The transformation tool
+-----------------------
 ::
 
     class IEngine(Interface):
@@ -75,7 +75,7 @@ The tranformation tool
 	    """
 
 	def convert(name, orig, idata=None, **kwargs):
-	    """run a tranform of a given name on data
+	    """run a transform of a given name on data
 	    name is the name of a registered transform
 	    return an object implementing idatastream
 	    """
@@ -100,7 +100,7 @@ Related interfaces
 ::
 
     class ITransform(Interface):
-	"""A transformation plugin -- tranform data somehow must be threadsafe and stateless"""
+	"""A transformation plugin -- transform data somehow must be threadsafe and stateless"""
 
         inputs = Attribute("""list of imimetypes (or registered rfc-2046
                               names) this transform accepts as inputs""")
@@ -145,7 +145,7 @@ Important note about encoding
 A transform receive data as an encoded string. A priori, no assumption can be
 made about the used encoding. Data returned by a transform must use the same
 encoding as received data, unless the transform provides a *output_encoding*
-attribute indicating the output encoding (for instance this may be usefull for
+attribute indicating the output encoding (for instance this may be useful for
 XSLT based transforms).
 
 
@@ -153,7 +153,7 @@ Configurable transformation
 ---------------------------
 You can make your transformation configurable through the ZMI by setting a
 *config* dictionary on your transform instance or class. Keys are parameter's
-name and values parameter's value. Another dictionnary *config_metadata*
+name and values parameter's value. Another dictionary *config_metadata*
 describes each parameter. In this mapping, keys are also parameter's name but
 values are a tree-uple : (<parameter's type>, <parameter's label>, <parameter's
 description>).
@@ -163,7 +163,7 @@ Possible types for parameters are:
 :int: field is an integer
 :string: field is a string
 :list: field is a list
-:dict: field is a dictionnary
+:dict: field is a dictionary
 
 You can look at the **command** and **xml** transforms for an example of
 configurable transform.
@@ -224,7 +224,7 @@ In this example:
 - "drink.beer" is the file containing expected transform result (what the getData
   method of idatastream will return).
 
-- Additional arguments (*None* and *0*) are respectivly an optional normalizing
+- Additional arguments (*None* and *0*) are respectively an optional normalizing
   function to apply to both the transform result and the output file content, and
   the number of subobjects that the transform is expected to produce.
 

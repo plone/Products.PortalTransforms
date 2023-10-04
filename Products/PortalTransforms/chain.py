@@ -1,6 +1,7 @@
 from AccessControl import ClassSecurityInfo
-from Acquisition import Implicit
 from AccessControl.class_init import InitializeClass
+from Acquisition import Implicit
+from collections import UserList
 from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from Persistence import Persistent
@@ -13,17 +14,12 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import _www
 from zope.interface import implementer
 
-try:
-    from collections import UserList
-except ImportError:
-    from UserList import UserList
-
 
 @implementer(IChain, ITransform)
 class chain(UserList):
     """A chain of transforms used to transform data"""
 
-    def __init__(self, name='', *args):
+    def __init__(self, name="", *args):
         UserList.__init__(self, *args)
         self.__name__ = name
         if args:
@@ -42,14 +38,14 @@ class chain(UserList):
                 self.pop(i)
                 break
         else:
-            raise Exception('No transform named %s registered' % name)
+            raise Exception("No transform named %s registered" % name)
 
     def convert(self, orig, data, **kwargs):
         for transform in self:
             data = transform.convert(orig, data, **kwargs)
             orig = data.getData()
         md = data.getMetadata()
-        md['mimetype'] = self.output
+        md["mimetype"] = self.output
         return data
 
     def __setitem__(self, key, value):
@@ -76,35 +72,33 @@ class chain(UserList):
         self.inputs = self[0].inputs
         self.output = self[-1].output
         for i in range(len(self)):
-            if hasattr(self[-i - 1], 'output_encoding'):
+            if hasattr(self[-i - 1], "output_encoding"):
                 self.output_encoding = self[-i - 1].output_encoding
                 break
         else:
             try:
                 del self.output_encoding
-            except:
+            except Exception:
                 pass
 
 
 class TransformsChain(Implicit, Item, RoleManager, Persistent):
-    """ a transforms chain is suite of transforms to apply in order.
+    """a transforms chain is suite of transforms to apply in order.
     It follows the transform API so that a chain is itself a transform.
     """
 
-    module = 'N/A'
-    meta_type = 'TransformsChain'
+    module = "N/A"
+    meta_type = "TransformsChain"
 
     meta_types = all_meta_types = ()
 
     manage_options = (
-        ({'label': 'Configure',
-          'action': 'manage_main'},
-         {'label': 'Reload',
-          'action': 'manage_reloadTransform'},) +
-        Item.manage_options)
+        {"label": "Configure", "action": "manage_main"},
+        {"label": "Reload", "action": "manage_reloadTransform"},
+    ) + Item.manage_options
 
-    manage_main = PageTemplateFile('editTransformsChain', _www)
-    manage_reloadTransform = PageTemplateFile('reloadTransform', _www)
+    manage_main = PageTemplateFile("editTransformsChain", _www)
+    manage_reloadTransform = PageTemplateFile("reloadTransform", _www)
 
     security = ClassSecurityInfo()
 
@@ -112,23 +106,23 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         self.id = id
         self.description = description
         self._object_ids = list(ids)
-        self.inputs = ('application/octet-stream',)
-        self.output = 'application/octet-stream'
+        self.inputs = ("application/octet-stream",)
+        self.output = "application/octet-stream"
         self._chain = None
 
     def _chain_init(self):
-        """ build the transforms chain """
-        tr_tool = getToolByName(self, 'portal_transforms')
+        """build the transforms chain"""
+        tr_tool = getToolByName(self, "portal_transforms")
         self._chain = c = chain()
         for id in self._object_ids:
             object = getattr(tr_tool, id)
             c.registerTransform(object)
-        self.inputs = c.inputs or ('application/octet-stream',)
-        self.output = c.output or 'application/octet-stream'
+        self.inputs = c.inputs or ("application/octet-stream",)
+        self.output = c.output or "application/octet-stream"
 
     @security.public
     def convert(self, *args, **kwargs):
-        """ return apply the transform and return the result """
+        """return apply the transform and return the result"""
         if self._chain is None:
             self._chain_init()
         return self._chain.convert(*args, **kwargs)
@@ -143,35 +137,34 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
         Item.manage_beforeDelete(self, item, container)
         if self is item:
             # unregister self from catalog on deletion
-            tr_tool = getToolByName(self, 'portal_transforms')
+            tr_tool = getToolByName(self, "portal_transforms")
             tr_tool.unregisterTransform(self.id)
 
     @security.protected(ManagePortal)
     def manage_addObject(self, id, REQUEST=None):
-        """ add a new transform or chain to the chain """
+        """add a new transform or chain to the chain"""
         assert id not in self._object_ids
         self._object_ids.append(id)
         self._chain_init()
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     @security.protected(ManagePortal)
     def manage_delObjects(self, ids, REQUEST=None):
-        """ delete the selected mime types """
+        """delete the selected mime types"""
         for id in ids:
             self._object_ids.remove(id)
         self._chain_init()
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     # transforms order handling #
 
     @security.protected(ManagePortal)
     def move_object_to_position(self, id, newpos):
-        """ overriden from OrderedFolder to store id instead of objects
-        """
+        """Overridden from OrderedFolder to store id instead of objects"""
         oldpos = self._object_ids.index(id)
-        if (newpos < 0 or newpos == oldpos or newpos >= len(self._object_ids)):
+        if newpos < 0 or newpos == oldpos or newpos >= len(self._object_ids):
             return 0
         self._object_ids.pop(oldpos)
         self._object_ids.insert(newpos, id)
@@ -180,25 +173,25 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
 
     @security.protected(ManageProperties)
     def move_object_up(self, id, REQUEST=None):
-        """  move object with the given id up in the list """
+        """move object with the given id up in the list"""
         newpos = self._object_ids.index(id) - 1
         self.move_object_to_position(id, newpos)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     @security.protected(ManageProperties)
     def move_object_down(self, id, REQUEST=None):
-        """  move object with the given id down in the list """
+        """move object with the given id down in the list"""
         newpos = self._object_ids.index(id) + 1
         self.move_object_to_position(id, newpos)
         if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(self.absolute_url() + '/manage_main')
+            REQUEST["RESPONSE"].redirect(self.absolute_url() + "/manage_main")
 
     # Z transform interface #
 
     @security.protected(ManagePortal)
     def reload(self):
-        """ reload the module where the transformation class is defined """
+        """reload the module where the transformation class is defined"""
         for tr in self.objectValues():
             tr.reload()
         self._chain_init()
@@ -207,20 +200,24 @@ class TransformsChain(Implicit, Item, RoleManager, Persistent):
 
     @security.protected(ManagePortal)
     def listAddableObjectIds(self):
-        """ return a list of addable transform """
-        tr_tool = getToolByName(self, 'portal_transforms')
-        return [id for id in tr_tool.objectIds()
-                if not (id == self.id or id in self._object_ids)]
+        """return a list of addable transform"""
+        tr_tool = getToolByName(self, "portal_transforms")
+        return [
+            id
+            for id in tr_tool.objectIds()
+            if not (id == self.id or id in self._object_ids)
+        ]
 
     @security.protected(ManagePortal)
     def objectIds(self):
-        """ return a list of addable transform """
+        """return a list of addable transform"""
         return tuple(self._object_ids)
 
     @security.protected(ManagePortal)
     def objectValues(self):
-        """ return a list of addable transform """
-        tr_tool = getToolByName(self, 'portal_transforms')
+        """return a list of addable transform"""
+        tr_tool = getToolByName(self, "portal_transforms")
         return [getattr(tr_tool, id) for id in self.objectIds()]
+
 
 InitializeClass(TransformsChain)

@@ -1,26 +1,28 @@
-# -*- coding: utf-8 -*-
 from Products.PortalTransforms.tests.base import TransformTestCase
 
 
 class TestIntelligentTextToHtml(TransformTestCase):
-
-    def performTransform(self, orig, targetMimetype='text/html',
-                         mimetype='text/x-web-intelligent'):
+    def performTransform(
+        self, orig, targetMimetype="text/html", mimetype="text/x-web-intelligent"
+    ):
         return self.transforms.convertTo(
-            targetMimetype, orig, context=self.portal,
-            mimetype=mimetype).getData()
+            targetMimetype, orig, context=self.portal, mimetype=mimetype
+        ).getData()
 
     def testHyperlinks(self):
         orig = "A test http://test.com"
         new = self.performTransform(orig)
         self.assertEqual(
-            new, 'A test <a href="http://test.com" rel="nofollow">http://test.com</a>')
+            new, 'A test <a href="http://test.com" rel="nofollow">http://test.com</a>'
+        )
 
     def testMailto(self):
         orig = "A test test@test.com of mailto"
         new = self.performTransform(orig)
         self.assertEqual(
-            new, 'A test <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a> of mailto')
+            new,
+            'A test <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a> of mailto',
+        )
 
     def testTextAndLinks(self):
         orig = """A test
@@ -28,10 +30,13 @@ URL: http://test.com End
 Mail: test@test.com End
 URL: http://foo.com End"""
         new = self.performTransform(orig)
-        self.assertEqual(new, 'A test<br />'
-                              'URL: <a href="http://test.com" rel="nofollow">http://test.com</a> End<br />'
-                              'Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a> End<br />'
-                              'URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a> End')
+        self.assertEqual(
+            new,
+            "A test<br />"
+            'URL: <a href="http://test.com" rel="nofollow">http://test.com</a> End<br />'
+            'Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a> End<br />'
+            'URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a> End',
+        )
 
     def testTextAndLinksAtEndOfLine(self):
         orig = """A test
@@ -39,10 +44,13 @@ URL: http://test.com
 Mail: test@test.com
 URL: http://foo.com"""
         new = self.performTransform(orig)
-        self.assertEqual(new, 'A test<br />'
-                              'URL: <a href="http://test.com" rel="nofollow">http://test.com</a><br />'
-                              'Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />'
-                              'URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>')
+        self.assertEqual(
+            new,
+            "A test<br />"
+            'URL: <a href="http://test.com" rel="nofollow">http://test.com</a><br />'
+            'Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />'
+            'URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>',
+        )
 
     def testIndents(self):
         orig = """A test
@@ -50,10 +58,13 @@ URL: http://foo.com"""
     Mail: test@test.com
       URL: http://foo.com"""
         new = self.performTransform(orig)
-        self.assertEqual(new, 'A test<br />'
-                              '&nbsp;&nbsp;URL: <a href="http://test.com" rel="nofollow">http://test.com</a><br />'
-                              '&nbsp;&nbsp;&nbsp;&nbsp;Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />'
-                              '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>')
+        self.assertEqual(
+            new,
+            "A test<br />"
+            '&nbsp;&nbsp;URL: <a href="http://test.com" rel="nofollow">http://test.com</a><br />'
+            '&nbsp;&nbsp;&nbsp;&nbsp;Mail: <a href="&#0109;ailto&#0058;test&#0064;test.com">test&#0064;test.com</a><br />'
+            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL: <a href="http://foo.com" rel="nofollow">http://foo.com</a>',
+        )
 
     def testEntities(self):
         orig = "Some & funny < characters"
@@ -64,16 +75,18 @@ URL: http://foo.com"""
         orig = "The French use é à ô ù à and ç"
         new = self.performTransform(orig)
         self.assertEqual(
-            new, "The French use &eacute; &agrave; &ocirc; &ugrave; &agrave; and &ccedil;")
+            new,
+            "The French use &eacute; &agrave; &ocirc; &ugrave; &agrave; and &ccedil;",
+        )
 
 
 class TestHtmlToIntelligentText(TransformTestCase):
-
-    def performTransform(self, orig, targetMimetype='text/x-web-intelligent',
-                         mimetype='text/html'):
+    def performTransform(
+        self, orig, targetMimetype="text/x-web-intelligent", mimetype="text/html"
+    ):
         return self.transforms.convertTo(
-            targetMimetype, orig, context=self.portal,
-            mimetype=mimetype).getData()
+            targetMimetype, orig, context=self.portal, mimetype=mimetype
+        ).getData()
 
     def testStripTags(self):
         orig = "Some <b>bold</b> text."
@@ -142,7 +155,9 @@ class TestHtmlToIntelligentText(TransformTestCase):
 
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import makeSuite
+    from unittest import TestSuite
+
     suite = TestSuite()
     suite.addTest(makeSuite(TestIntelligentTextToHtml))
     suite.addTest(makeSuite(TestHtmlToIntelligentText))

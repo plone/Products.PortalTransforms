@@ -1,29 +1,27 @@
-# -*- coding: utf-8 -*-
-import re
-
 from plone.base.utils import unrestricted_construct_instance
 from Products.PortalTransforms.chain import chain
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.tests.base import TransformTestCase
 from Products.PortalTransforms.utils import TransformException
-from six.moves import urllib
 from zope.interface import implementer
+
+import re
+import urllib
 
 
 class BaseTransform:
-
     def name(self):
-        return getattr(self, '__name__', self.__class__.__name__)
+        return getattr(self, "__name__", self.__class__.__name__)
 
 
 @implementer(ITransform)
 class HtmlToText(BaseTransform):
-    inputs = ('text/html',)
-    output = 'text/plain'
+    inputs = ("text/html",)
+    output = "text/plain"
 
     def __call__(self, orig, **kwargs):
-        orig = re.sub(r'(?i)(?m)<[^>]*>', '', orig)
-        return urllib.parse.unquote(re.sub(r'\n+', '\n', orig)).strip()
+        orig = re.sub(r"(?i)(?m)<[^>]*>", "", orig)
+        return urllib.parse.unquote(re.sub(r"\n+", "\n", orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -32,17 +30,17 @@ class HtmlToText(BaseTransform):
 
 
 class HtmlToTextWithEncoding(HtmlToText):
-    output_encoding = 'ascii'
+    output_encoding = "ascii"
 
 
 @implementer(ITransform)
 class FooToBar(BaseTransform):
-    inputs = ('text/*',)
-    output = 'text/plain'
+    inputs = ("text/*",)
+    output = "text/plain"
 
     def __call__(self, orig, **kwargs):
-        orig = re.sub('foo', 'bar', orig)
-        return urllib.parse.unquote(re.sub(r'\n+', '\n', orig)).strip()
+        orig = re.sub("foo", "bar", orig)
+        return urllib.parse.unquote(re.sub(r"\n+", "\n", orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -52,9 +50,9 @@ class FooToBar(BaseTransform):
 
 @implementer(ITransform)
 class DummyHtmlFilter1(BaseTransform):
-    __name__ = 'dummy_html_filter1'
-    inputs = ('text/html',)
-    output = 'text/html'
+    __name__ = "dummy_html_filter1"
+    inputs = ("text/html",)
+    output = "text/html"
 
     def convert(self, orig, data, **kwargs):
         data.setData("<span class='dummy'>%s</span>" % orig)
@@ -63,9 +61,9 @@ class DummyHtmlFilter1(BaseTransform):
 
 @implementer(ITransform)
 class DummyHtmlFilter2(BaseTransform):
-    __name__ = 'dummy_html_filter2'
-    inputs = ('text/html',)
-    output = 'text/html'
+    __name__ = "dummy_html_filter2"
+    inputs = ("text/html",)
+    output = "text/html"
 
     def convert(self, orig, data, **kwargs):
         data.setData("<div class='dummy'>%s</div>" % orig)
@@ -73,10 +71,10 @@ class DummyHtmlFilter2(BaseTransform):
 
 
 class QuxToVHost(DummyHtmlFilter1):
-    __name__ = 'qux_to_vhost'
+    __name__ = "qux_to_vhost"
 
     def convert(self, orig, data, context, **kwargs):
-        data.setData(re.sub('qux', context.REQUEST['SERVER_URL'], orig))
+        data.setData(re.sub("qux", context.REQUEST["SERVER_URL"], orig))
         return data
 
 
@@ -86,42 +84,41 @@ class TransformNoIO(BaseTransform):
 
 
 class BadTransformMissingImplements(BaseTransform):
-    inputs = ('text/*',)
-    output = 'text/plain'
+    inputs = ("text/*",)
+    output = "text/plain"
 
 
 @implementer(ITransform)
 class BadTransformBadMIMEType1(BaseTransform):
-    inputs = ('truc/muche',)
-    output = 'text/plain'
+    inputs = ("truc/muche",)
+    output = "text/plain"
 
 
 @implementer(ITransform)
 class BadTransformBadMIMEType2(BaseTransform):
-    inputs = ('text/plain',)
-    output = 'truc/muche'
+    inputs = ("text/plain",)
+    output = "truc/muche"
 
 
 @implementer(ITransform)
 class BadTransformNoInput(BaseTransform):
     inputs = ()
-    output = 'text/plain'
+    output = "text/plain"
 
 
 @implementer(ITransform)
 class BadTransformWildcardOutput(BaseTransform):
-    inputs = ('text/plain',)
-    output = 'text/*'
+    inputs = ("text/plain",)
+    output = "text/*"
 
 
 class TestEngine(TransformTestCase):
-
     def setUp(self):
-        super(TestEngine, self).setUp()
-        unrestricted_construct_instance('Folder', self.portal, id='folder')
+        super().setUp()
+        unrestricted_construct_instance("Folder", self.portal, id="folder")
         self.folder = self.portal.folder
         self.engine = self.portal.portal_transforms
-        self.data = '<b>foo</b>'
+        self.data = "<b>foo</b>"
         for mt in list(self.engine._policies.keys()):
             self.engine.manage_delPolicies([mt])
 
@@ -135,115 +132,111 @@ class TestEngine(TransformTestCase):
 
     def testFailRegister(self):
         register = self.engine.registerTransform
-        self.assertRaises(TransformException, register,
-                          TransformNoIO())
-        self.assertRaises(TransformException, register,
-                          BadTransformMissingImplements())
-        self.assertRaises(TransformException, register,
-                          BadTransformBadMIMEType1())
-        self.assertRaises(TransformException, register,
-                          BadTransformBadMIMEType2())
-        self.assertRaises(TransformException, register,
-                          BadTransformNoInput())
-        self.assertRaises(TransformException, register,
-                          BadTransformWildcardOutput())
+        self.assertRaises(TransformException, register, TransformNoIO())
+        self.assertRaises(TransformException, register, BadTransformMissingImplements())
+        self.assertRaises(TransformException, register, BadTransformBadMIMEType1())
+        self.assertRaises(TransformException, register, BadTransformBadMIMEType2())
+        self.assertRaises(TransformException, register, BadTransformNoInput())
+        self.assertRaises(TransformException, register, BadTransformWildcardOutput())
 
     def testCall(self):
         self.register()
-        data = self.engine('HtmlToText', self.data)
+        data = self.engine("HtmlToText", self.data)
         self.assertEqual(data, "foo")
 
-        data = self.engine('FooToBar', self.data)
+        data = self.engine("FooToBar", self.data)
         self.assertEqual(data, "<b>bar</b>")
 
     def testConvert(self):
         self.register()
 
-        data = self.engine.convert('HtmlToText', self.data)
+        data = self.engine.convert("HtmlToText", self.data)
         self.assertEqual(data.getData(), "foo")
-        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.assertEqual(data.getMetadata().get('encoding'), None)
+        self.assertEqual(data.getMetadata()["mimetype"], "text/plain")
+        self.assertEqual(data.getMetadata().get("encoding"), None)
         self.assertEqual(data.name(), "HtmlToText")
 
         self.engine.registerTransform(HtmlToTextWithEncoding())
-        data = self.engine.convert('HtmlToTextWithEncoding', self.data)
-        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.assertEqual(data.getMetadata()['encoding'], 'ascii')
+        data = self.engine.convert("HtmlToTextWithEncoding", self.data)
+        self.assertEqual(data.getMetadata()["mimetype"], "text/plain")
+        self.assertEqual(data.getMetadata()["encoding"], "ascii")
         self.assertEqual(data.name(), "HtmlToTextWithEncoding")
 
     def testConvertTo(self):
         self.register()
 
-        data = self.engine.convertTo('text/plain', self.data,
-                                     mimetype="text/html")
+        data = self.engine.convertTo("text/plain", self.data, mimetype="text/html")
         self.assertEqual(data.getData(), "foo")
-        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
-        self.assertEqual(data.getMetadata().get('encoding'), None)
+        self.assertEqual(data.getMetadata()["mimetype"], "text/plain")
+        self.assertEqual(data.getMetadata().get("encoding"), None)
         self.assertEqual(data.name(), "text/plain")
 
-        self.engine.unregisterTransform('HtmlToText')
-        self.engine.unregisterTransform('FooToBar')
+        self.engine.unregisterTransform("HtmlToText")
+        self.engine.unregisterTransform("FooToBar")
         self.engine.registerTransform(HtmlToTextWithEncoding())
-        data = self.engine.convertTo('text/plain', self.data,
-                                     mimetype="text/html")
-        self.assertEqual(data.getMetadata()['mimetype'], 'text/plain')
+        data = self.engine.convertTo("text/plain", self.data, mimetype="text/html")
+        self.assertEqual(data.getMetadata()["mimetype"], "text/plain")
         # HtmlToTextWithEncoding. Now None is the right
-        #self.assertEqual(data.getMetadata()['encoding'], 'ascii')
+        # self.assertEqual(data.getMetadata()['encoding'], 'ascii')
         # XXX the new algorithm is choosing html_to_text instead of
-        self.assertEqual(data.getMetadata()['encoding'], None)
+        self.assertEqual(data.getMetadata()["encoding"], None)
         self.assertEqual(data.name(), "text/plain")
 
     def testChain(self):
         self.register()
-        hb = chain('hbar')
+        hb = chain("hbar")
         hb.registerTransform(HtmlToText())
         hb.registerTransform(FooToBar())
 
         self.engine.registerTransform(hb)
-        cache = self.engine.convert('hbar', self.data)
+        cache = self.engine.convert("hbar", self.data)
         self.assertEqual(cache.getData(), "bar")
         self.assertEqual(cache.name(), "hbar")
 
     def testPolicy(self):
-        mt = 'text/x-html-safe'
-        data = '<script>this_is_unsafe();</script><p>this is safe</p>'
+        mt = "text/x-html-safe"
+        data = "<script>this_is_unsafe();</script><p>this is safe</p>"
 
-        cache = self.engine.convertTo(mt, data, mimetype='text/html')
-        self.assertEqual(cache.getData(), '<p>this is safe</p>')
+        cache = self.engine.convertTo(mt, data, mimetype="text/html")
+        self.assertEqual(cache.getData(), "<p>this is safe</p>")
 
         self.engine.registerTransform(DummyHtmlFilter1())
         self.engine.registerTransform(DummyHtmlFilter2())
-        required = ['dummy_html_filter1', 'dummy_html_filter2']
+        required = ["dummy_html_filter1", "dummy_html_filter2"]
 
         self.engine.manage_addPolicy(mt, required)
-        expected_policy = [('text/x-html-safe',
-                            ('dummy_html_filter1', 'dummy_html_filter2'))]
+        expected_policy = [
+            ("text/x-html-safe", ("dummy_html_filter1", "dummy_html_filter2"))
+        ]
         self.assertEqual(self.engine.listPolicies(), expected_policy)
 
-        cache = self.engine.convertTo(mt, data, mimetype='text/html')
+        cache = self.engine.convertTo(mt, data, mimetype="text/html")
         self.assertEqual(
             cache.getData(),
-            '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>')
+            '<div class="dummy"><span class="dummy"><p>this is safe</p></span></div>',
+        )
 
-        self.assertEqual(cache.getMetadata()['mimetype'], mt)
+        self.assertEqual(cache.getMetadata()["mimetype"], mt)
         self.assertEqual(cache.name(), mt)
 
-        path = self.engine._findPath('text/html', mt, required)
-        self.assertEqual(str(path),
-                         "[<Transform at dummy_html_filter1>, "
-                         "<Transform at dummy_html_filter2>, "
-                         "<Transform at safe_html>]")
+        path = self.engine._findPath("text/html", mt, required)
+        self.assertEqual(
+            str(path),
+            "[<Transform at dummy_html_filter1>, "
+            "<Transform at dummy_html_filter2>, "
+            "<Transform at safe_html>]",
+        )
 
     def testSame(self):
         data = "This is a test"
         mt = "text/plain"
-        out = self.engine.convertTo('text/plain', data, mimetype=mt)
+        out = self.engine.convertTo("text/plain", data, mimetype=mt)
         self.assertEqual(out.getData(), data)
-        self.assertEqual(out.getMetadata()['mimetype'], 'text/plain')
+        self.assertEqual(out.getMetadata()["mimetype"], "text/plain")
 
     def testCache(self):
         data = "This is a test"
-        other_data = 'some different data'
+        other_data = "some different data"
         mt = "text/plain"
         self.engine.max_sec_in_cache = 20
         out = self.engine.convertTo(mt, data, mimetype=mt, object=self)
@@ -262,44 +255,43 @@ class TestEngine(TransformTestCase):
         hosting don't get invalid data from the cache.  This happens,
         for example, in the resolve UID functionality used by visual
         editors."""
-        mt = 'text/x-html-safe'
+        mt = "text/x-html-safe"
         self.engine.registerTransform(QuxToVHost())
-        required = ['qux_to_vhost']
+        required = ["qux_to_vhost"]
         self.engine.manage_addPolicy(mt, required)
 
         data = '<a href="qux">vhost link</a>'
 
         out = self.engine.convertTo(
-            mt, data, mimetype='text/html', object=self.folder,
-            context=self.folder)
+            mt, data, mimetype="text/html", object=self.folder, context=self.folder
+        )
 
         self.assertEqual(
-            out.getData(), '<a href="http://nohost">vhost link</a>',
-            out.getData()
+            out.getData(), '<a href="http://nohost">vhost link</a>', out.getData()
         )
 
         # Test when object is not a context
         out = self.engine.convertTo(
-            mt, data, mimetype='text/html', object=self,
-            context=self.folder)
+            mt, data, mimetype="text/html", object=self, context=self.folder
+        )
         self.assertEqual(
-            out.getData(), '<a href="http://nohost">vhost link</a>',
-            out.getData())
+            out.getData(), '<a href="http://nohost">vhost link</a>', out.getData()
+        )
 
         # Change the virtual hosting
-        self.folder.REQUEST['SERVER_URL'] = 'http://otherhost'
+        self.folder.REQUEST["SERVER_URL"] = "http://otherhost"
 
         out = self.engine.convertTo(
-            mt, data, mimetype='text/html', object=self.folder,
-            context=self.folder)
+            mt, data, mimetype="text/html", object=self.folder, context=self.folder
+        )
         self.assertEqual(
-            out.getData(), '<a href="http://otherhost">vhost link</a>',
-            out.getData())
+            out.getData(), '<a href="http://otherhost">vhost link</a>', out.getData()
+        )
 
         # Test when object is not a context
         out = self.engine.convertTo(
-            mt, data, mimetype='text/html', object=self,
-            context=self.folder)
+            mt, data, mimetype="text/html", object=self, context=self.folder
+        )
         self.assertEqual(
-            out.getData(), '<a href="http://otherhost">vhost link</a>',
-            out.getData())
+            out.getData(), '<a href="http://otherhost">vhost link</a>', out.getData()
+        )

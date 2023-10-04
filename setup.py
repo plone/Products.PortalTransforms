@@ -1,14 +1,22 @@
+from pathlib import Path
 from setuptools import find_packages
 from setuptools import setup
 
 
 version = "4.0.2.dev0"
 
+long_description = (
+    f"{Path('README.rst').read_text()}\n{Path('CHANGES.rst').read_text()}"
+)
+
 setup(
     name="Products.PortalTransforms",
     version=version,
     description="MIME based content transformations",
-    long_description=open("README.rst").read() + "\n" + open("CHANGES.rst").read(),
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
+    # Get more strings from
+    # https://pypi.org/classifiers/
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
@@ -36,22 +44,25 @@ setup(
     python_requires=">=3.8",
     extras_require=dict(
         test=[
-            "zope.testing",
-            "Pillow",
+            "plone.app.contenttypes[test]",
+            "plone.app.testing",
         ],
     ),
     install_requires=[
+        "docutils",
+        "DocumentTemplate",
+        "Persistence",
+        "Products.GenericSetup",
         "setuptools",
-        "six",
+        "lxml",
+        "persistent",
         "plone.base",
+        "plone.registry",
         "plone.intelligenttext",
-        "zope.interface",
         "zope.structuredtext",
         "Pillow>=3.1.0",
         "Products.CMFCore",
         "Products.MimetypesRegistry",
-        "Acquisition",
-        "ZODB",
         "Zope",
         "Markdown>=2.6.5",
     ],

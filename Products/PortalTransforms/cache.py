@@ -8,8 +8,7 @@ _marker = object()
 
 
 class Cache:
-
-    def __init__(self, obj, context=None, _id='_v_transform_cache'):
+    def __init__(self, obj, context=None, _id="_v_transform_cache"):
         self.obj = obj
         if context is None:
             self.context = obj
@@ -20,12 +19,12 @@ class Cache:
     def _genCacheKey(self, identifier, *args):
         key = identifier
         for arg in args:
-            key = '%s_%s' % (key, arg)
-        key = key.replace('/', '_')
-        key = key.replace('+', '_')
-        key = key.replace('-', '_')
-        key = key.replace(' ', '_')
-        if hasattr(aq_base(self.context), 'absolute_url'):
+            key = f"{key}_{arg}"
+        key = key.replace("/", "_")
+        key = key.replace("+", "_")
+        key = key.replace("-", "_")
+        key = key.replace(" ", "_")
+        if hasattr(aq_base(self.context), "absolute_url"):
             return key, self.context.absolute_url()
         return key
 
@@ -58,8 +57,7 @@ class Cache:
             return None
 
     def purgeCache(self, key=None):
-        """Remove cache
-        """
+        """Remove cache"""
         obj = self.obj
         id = self._id
         if getattr(obj, id, _marker) is _marker:

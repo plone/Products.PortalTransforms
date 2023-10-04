@@ -1,33 +1,27 @@
-# -*- coding: utf-8 -*-
 # Need to be imported first to avoid dll loading problems.
-import pythoncom
-import pywintypes
-
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 from Products.PortalTransforms.transforms.safe_html import SafeHTML
+from win32com.client import constants  # noqa: F401
 from win32com.client import Dispatch
-from win32com.client import constants
-from win32com.client import gencache
+from win32com.client import gencache  # noqa: F401
 
-import os
-import os.path
-import win32api
+import pythoncom
+import pywintypes  # noqa: F401
+import win32api  # noqa: F401
 import win32com
-import win32com.client
+import win32com.client  # noqa: F401
 
 
 class document(commandtransform):
-
     def __init__(self, name, data):
         """Initialization: create tmp work
         directory and copy the document into a file"""
         commandtransform.__init__(self, name)
         name = self.name()
-        if not name.endswith('.doc'):
+        if not name.endswith(".doc"):
             name = name + ".doc"
-        self.tmpdir, self.fullname = self.initialize_tmpdir(data,
-                                                            filename=name)
+        self.tmpdir, self.fullname = self.initialize_tmpdir(data, filename=name)
 
     def convert(self):
         try:
@@ -50,8 +44,9 @@ class document(commandtransform):
         doc.WebOptions.RelyOnVML = 0
         doc.WebOptions.AllowPNG = 1
         # And then save the document into HTML
-        doc.SaveAs(FileName="%s.htm" % (self.fullname),
-                   FileFormat=8)  # constants.wdFormatHTML)
+        doc.SaveAs(
+            FileName="%s.htm" % (self.fullname), FileFormat=8
+        )  # constants.wdFormatHTML)
 
         # TODO -- Extract Metadata (author, title, keywords) so we
         # can populate the dublin core
@@ -62,12 +57,13 @@ class document(commandtransform):
         # word.Quit()
 
     def html(self):
-        htmlfile = open(self.fullname + '.htm', 'r')
+        htmlfile = open(self.fullname + ".htm")
         html = htmlfile.read()
         htmlfile.close()
         html = SafeHTML().scrub_html(html)
         body = bodyfinder(html)
         return body
+
 
 # This function has to be done. It's more difficult to delete the temp
 # directory under Windows, because there is sometimes a directory in it.

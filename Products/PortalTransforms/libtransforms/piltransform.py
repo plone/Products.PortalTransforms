@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-import PIL.Image
-
+from io import BytesIO
 from Products.PortalTransforms.interfaces import ITransform
-from six import BytesIO
 from zope.interface import implementer
+
+import PIL.Image
 
 
 @implementer(ITransform)
@@ -20,13 +19,13 @@ class PILTransforms:
     def convert(self, orig, data, **kwargs):
         imgio = BytesIO()
         orig = BytesIO(orig)
-        newwidth = kwargs.get('width', None)
-        newheight = kwargs.get('height', None)
+        newwidth = kwargs.get("width", None)
+        newheight = kwargs.get("height", None)
         pil_img = PIL.Image.open(orig)
-        if(self.format in ['jpeg', 'ppm']):
+        if self.format in ["jpeg", "ppm"]:
             pil_img.draft("RGB", pil_img.size)
             pil_img = pil_img.convert("RGB")
-        if(newwidth or newheight):
+        if newwidth or newheight:
             pil_img.thumbnail((newwidth, newheight), PIL.Image.ANTIALIAS)
         pil_img.save(imgio, self.format)
         data.setData(imgio.getvalue())

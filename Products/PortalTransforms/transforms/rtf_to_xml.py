@@ -1,23 +1,20 @@
-# -*- coding: utf-8 -*-
 """
 Uses the http://sf.net/projects/rtf2xml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform  # noqa
+from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import sansext
 from zope.interface import implementer
-import os
-import six
+
 import subprocess
 
 
 @implementer(ITransform)
 class rtf_to_xml(commandtransform):
-
     __name__ = "rtf_to_xml"
-    inputs = ('application/rtf',)
-    output = 'text/xml'
+    inputs = ("application/rtf",)
+    output = "text/xml"
 
     binaryName = "rtf2xml"
 
@@ -25,7 +22,7 @@ class rtf_to_xml(commandtransform):
         commandtransform.__init__(self, binary=self.binaryName)
 
     def convert(self, data, cache, **kwargs):
-        kwargs['filename'] = 'unknown.rtf'
+        kwargs["filename"] = "unknown.rtf"
 
         tmpdir, fullname = self.initialize_tmpdir(data, **kwargs)
         xml = self.invokeCommand(tmpdir, fullname)
@@ -40,20 +37,18 @@ class rtf_to_xml(commandtransform):
 
     def invokeCommand(self, tmpdir, fullname):
         # FIXME: windows users...
-        xmlfile = "%s/%s.xml" % (tmpdir, sansext(fullname))
-        cmd = 'cd "%s" && %s -o %s "%s" 2>error_log 1>/dev/null' % (
-            tmpdir, self.binary, xmlfile, fullname)
-        if six.PY2:
-            os.system(cmd)
-        else:
-            subprocess.run(cmd, shell=True)
+        xmlfile = f"{tmpdir}/{sansext(fullname)}.xml"
+        cmd = 'cd "{}" && {} -o {} "{}" 2>error_log 1>/dev/null'.format(
+            tmpdir, self.binary, xmlfile, fullname
+        )
+        subprocess.run(cmd, shell=True)
         try:
             xml = open(xmlfile).read()
-        except:
+        except Exception:
             try:
-                return open("%s/error_log" % tmpdir, 'r').read()
-            except:
-                return ''
+                return open("%s/error_log" % tmpdir).read()
+            except Exception:
+                return ""
         return xml
 
 

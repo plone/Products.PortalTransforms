@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from DocumentTemplate.html_quote import html_quote
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
@@ -9,13 +8,12 @@ class TextPreToHTML:
     """simple transform which wraps raw text into a <pre> tag"""
 
     __name__ = "text-pre_to_html"
-    inputs = ('text/plain-pre',)
+    inputs = ("text/plain-pre",)
     output = "text/html"
 
     def __init__(self, name=None):
         self.config_metadata = {
-            'inputs': ('list', 'Inputs',
-                       'Input(s) MIME type. Change with care.'),
+            "inputs": ("list", "Inputs", "Input(s) MIME type. Change with care."),
         }
         if name:
             self.__name__ = name
@@ -24,10 +22,10 @@ class TextPreToHTML:
         return self.__name__
 
     def __getattr__(self, attr):
-        if attr == 'inputs':
-            return self.config['inputs']
-        if attr == 'output':
-            return self.config['output']
+        if attr == "inputs":
+            return self.config["inputs"]
+        if attr == "output":
+            return self.config["output"]
         raise AttributeError(attr)
 
     def convert(self, orig, data, **kwargs):
