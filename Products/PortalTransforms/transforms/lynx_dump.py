@@ -1,6 +1,7 @@
 """
 Uses lynx -dump
 """
+
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 from zope.interface import implementer
