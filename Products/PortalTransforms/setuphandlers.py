@@ -1,6 +1,7 @@
 """
 PortalTransforms setup handlers.
 """
+
 from io import StringIO as NativeStringIO
 from Products.CMFCore.utils import getToolByName
 

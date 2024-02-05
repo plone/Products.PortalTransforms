@@ -1,6 +1,7 @@
 """try to build some useful transformations with the command and xml
 transforms and the available binaries
 """
+
 from command import ExternalCommandTransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
