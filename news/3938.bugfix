@@ -1,0 +1,4 @@
+Use ``Cleaner`` from new package ``lxml_html_clean``.
+This was factored out from ``lxml`` in version 5.2.0.
+See https://lxml-html-clean.readthedocs.io/
+[maurits]

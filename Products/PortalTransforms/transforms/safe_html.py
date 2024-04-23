@@ -1,7 +1,7 @@
 from html.entities import html5 as html5entities
 from lxml import etree
 from lxml import html
-from lxml.html.clean import Cleaner
+from lxml_html_clean import Cleaner
 from plone.base.interfaces import IFilterSchema
 from plone.base.utils import safe_bytes
 from plone.registry.interfaces import IRegistry
