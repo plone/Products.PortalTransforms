@@ -251,7 +251,12 @@ class TestXSSFilter(unittest.TestCase):
             """<p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>"""  # noqa
         )
         data_out = """<p><a href="http://T%5Cfoo%5C20111015%5Cbar.msg">FOO</a></p>"""
-        self.doTest(data_in, data_out)
+        # When we were still using lxml.xml, converting data_in gave data_in as anwer.
+        # Then we switched to lxml.html, which caused the backslashes to be converted
+        # into '%5C'.  And now when we upgrade from lxml 4 to 5, data_in is again
+        # unchanged after converting.  So let's accept both.
+        result = self.doConvert(data_in)
+        self.assertIn(result, (data_in, data_out))
 
     def test_39(self):
         data_in = """<a href="&#42;&Ascr;\xa9"></a>"""
