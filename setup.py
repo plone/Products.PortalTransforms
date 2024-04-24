@@ -55,6 +55,7 @@ setup(
         "Products.GenericSetup",
         "setuptools",
         "lxml",
+        "lxml_html_clean",
         "persistent",
         "plone.base",
         "plone.registry",
