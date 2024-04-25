@@ -8,6 +8,18 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.3 (2024-04-25)
+------------------
+
+Bug fixes:
+
+
+- Use ``Cleaner`` from new package ``lxml_html_clean``.
+  This was factored out from ``lxml`` in version 5.2.0.
+  See https://lxml-html-clean.readthedocs.io/
+  [maurits] (#3938)
+
+
 4.0.2 (2024-01-22)
 ------------------
 
