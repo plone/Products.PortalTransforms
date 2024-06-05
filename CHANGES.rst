@@ -573,7 +573,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
   [hannosch]
 
 * Purge old zope2 Interface interfaces for Zope 2.12 compatibility.
-  Consider branching before this checkin if releases required before Plone 4.
+  Consider branching before this checking if releases required before Plone 4.
   [elro]
 
 1.6.4 - 2009-10-08
@@ -913,7 +913,7 @@ http://plone.org/products/plone/security/advisories/CVE-2011-1949
 * Fixed [ 1025066 ] Serious persistency bug
   [dmaurer]
 
-* Fixed some unit tests failurs. Some unit tests did fail because the reST
+* Fixed some unit tests failures. Some unit tests did fail because the reST
   and STX output has changed slightly.
   [tiran]
 
