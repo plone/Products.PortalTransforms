@@ -100,7 +100,7 @@ Archetypes integration
 ``````````````````````
 
 Archetypes will use this product for automatic transformation if you have
-configurated it to use the new base unit (set USE_NEW_BASEUNIT to 1 in the
+configured it to use the new base unit (set USE_NEW_BASEUNIT to 1 in the
 Archetypes config.py). If you're using the old base unit (still default in 1.0),
 the transform tool won't be used (at least by the Archetypes library).
 
