@@ -2,7 +2,7 @@
 transforms and the available binaries
 """
 
-from command import ExternalCommandTransform
+from .command import ExternalCommandTransform
 from Products.PortalTransforms.libtransforms.utils import bin_search
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 
