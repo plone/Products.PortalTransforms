@@ -189,7 +189,7 @@ class SafeHTML:
         if not orig or not (
             hasScript(orig_text)
             or "<" in orig_text
-            or any((entity in orig_text for entity in html5entities.values()))
+            or any(entity in orig_text for entity in html5entities.values())
         ):
             return orig_text
         # append html tag to create a dummy parent for the tree
