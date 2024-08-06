@@ -4,6 +4,7 @@ from lxml import html
 from lxml_html_clean import Cleaner
 from plone.base.interfaces import IFilterSchema
 from plone.base.utils import safe_bytes
+from plone.base.utils import safe_text
 from plone.registry.interfaces import IRegistry
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
@@ -183,6 +184,14 @@ class SafeHTML:
         return options
 
     def scrub_html(self, orig):
+        orig_text = safe_text(orig)
+        # short cut if no html or script is detected
+        if not orig or not (
+            hasScript(orig_text)
+            or "<" in orig_text
+            or any(entity in orig_text for entity in html5entities.values())
+        ):
+            return orig_text
         # append html tag to create a dummy parent for the tree
         html_parser = html.HTMLParser(encoding="utf-8")
         orig = safe_bytes(orig)
