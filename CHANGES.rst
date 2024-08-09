@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.1.0 (2024-08-09)
+------------------
+
+New features:
+
+
+- Shortcut in safe_html: Check for signs of html or script, skip further processing if none are found. (#66)
+
+
 4.0.3 (2024-04-25)
 ------------------
 
