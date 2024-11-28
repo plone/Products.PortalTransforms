@@ -92,7 +92,7 @@ Writing a new transformation
 ============================
 Writing a new transform should be an easy task. You only have to follow a
 simple interface to do it, but knowing some advanced features and provided
-utilities may help to do it quicker... 
+utilities may help to do it quicker...
 
 
 Related interfaces
@@ -182,16 +182,16 @@ Transform utilities may be found in the libtransforms subpackage. You'll find
 there the following modules :
 
 *commandtransform*
-  provides a base class for external command based transforms. 
+  provides a base class for external command based transforms.
 
 *retransform*
-  provides a base class for regular expression based transforms. 
+  provides a base class for regular expression based transforms.
 
 *html4zope*
   provides a docutils HTML writer for Zope.
 
 *utils*
-  provides some utilities functions. 
+  provides some utilities functions.
 
 
 Write a test your transform!
@@ -202,11 +202,11 @@ cola into beer (I let you find MIME type for these content types ;). Basically,
 your test file should be::
 
     from test_transforms import make_tests
-    
+
     tests =('Products.MyTransforms.colabeer', "drink.cola", "drink.beer", None, 0)
 
     def test_suite():
-        return TestSuite([makeSuite(test) for test in make_tests()])
+        return TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(test) for test in make_tests()])
 
     if __name__=='__main__':
         main(defaultTest='test_suite')
@@ -216,10 +216,10 @@ your test file should be::
 In this example:
 
 - "Products.MyTransforms.colabeer" is the module defining your transform (you
-  can also give directly the transform instance).  
+  can also give directly the transform instance).
 
 - "drink.cola" is the name of the file containing data to give to your transform
-  as input. 
+  as input.
 
 - "drink.beer" is the file containing expected transform result (what the getData
   method of idatastream will return).
