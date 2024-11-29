@@ -155,10 +155,11 @@ class TestHtmlToIntelligentText(TransformTestCase):
 
 
 def test_suite():
-    from unittest import makeSuite
-    from unittest import TestSuite
+    import unittest
 
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestIntelligentTextToHtml))
-    suite.addTest(makeSuite(TestHtmlToIntelligentText))
-    return suite
+    return unittest.TestSuite(
+        (
+            unittest.defaultTestLoader.loadTestsFromTestCase(TestIntelligentTextToHtml),
+            unittest.defaultTestLoader.loadTestsFromTestCase(TestHtmlToIntelligentText),
+        )
+    )
