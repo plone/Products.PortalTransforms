@@ -1,4 +1,4 @@
-""" nice docstring """
+"""nice docstring"""
 
 
 class A:

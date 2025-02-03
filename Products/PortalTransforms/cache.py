@@ -1,5 +1,4 @@
-"""Cache
-"""
+"""Cache"""
 
 from Acquisition import aq_base
 from time import time
