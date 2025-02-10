@@ -251,7 +251,7 @@ class TestXSSFilter(unittest.TestCase):
             """<p><a href="http://T\\foo\\20111015\\bar.msg">FOO</a></p>"""  # noqa
         )
         data_out = """<p><a href="http://T%5Cfoo%5C20111015%5Cbar.msg">FOO</a></p>"""
-        # When we were still using lxml.xml, converting data_in gave data_in as anwer.
+        # When we were still using lxml.xml, converting data_in gave data_in as answer.
         # Then we switched to lxml.html, which caused the backslashes to be converted
         # into '%5C'.  And now when we upgrade from lxml 4 to 5, data_in is again
         # unchanged after converting.  So let's accept both.

@@ -1,5 +1,4 @@
-"""some common utilities
-"""
+"""some common utilities"""
 
 # directory where template for the ZMI are located
 import logging
