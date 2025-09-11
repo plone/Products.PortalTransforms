@@ -2,7 +2,7 @@ include *
 exclude .installed.cfg
 
 recursive-include docs *
-recursive-include Products *
+recursive-include src *
 
 global-exclude *pyc
 include pyproject.toml
