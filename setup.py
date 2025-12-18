@@ -57,7 +57,6 @@ setup(
         "zope.structuredtext",
         "Pillow>=3.1.0",
         "Products.CMFCore",
-        "Products.MimetypesRegistry",
         "Zope",
         "Markdown>=2.6.5",
     ],
