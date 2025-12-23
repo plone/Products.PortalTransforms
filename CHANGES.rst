@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0a2 (2025-12-23)
+--------------------
+
+Breaking changes:
+
+
+- Drop embedding Products.MimetypesRegistry inside here [gforcada]
+
+
 5.0.0a1 (2025-11-20)
 --------------------
 
