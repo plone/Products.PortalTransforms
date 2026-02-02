@@ -13,7 +13,6 @@ from zope.interface import implementer
 
 import re
 
-
 _strings = (bytes, str)
 
 CSS_COMMENT = re.compile(r"/\*.*\*/")

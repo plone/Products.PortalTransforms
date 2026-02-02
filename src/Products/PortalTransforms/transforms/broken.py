@@ -2,7 +2,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
-
 WARNING = 100
 
 

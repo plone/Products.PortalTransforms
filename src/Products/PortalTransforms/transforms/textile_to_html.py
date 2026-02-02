@@ -10,7 +10,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
-
 HAS_TEXTILE = True
 try:
     import textile as textile_transformer

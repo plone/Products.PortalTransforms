@@ -3,7 +3,6 @@ from zope.interface import implementer
 
 import os
 
-
 EXTRACT_BODY = 1
 EXTRACT_STYLE = 0
 
