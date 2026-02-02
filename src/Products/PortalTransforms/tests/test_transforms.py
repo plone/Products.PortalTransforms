@@ -32,7 +32,6 @@ import itertools
 import os
 import unittest
 
-
 # we have to set locale because lynx output is locale sensitive !
 os.environ["LC_ALL"] = "C"
 

@@ -17,7 +17,6 @@ from logging import ERROR
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.utils import log
 
-
 modules = [
     ".st",  # zopish
     ".rest",  # docutils
