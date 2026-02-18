@@ -1,3 +1,5 @@
+from importlib.metadata import version
+from packaging.version import Version
 from plone.base.interfaces import IFilterSchema
 from plone.registry.interfaces import IRegistry
 from Products.PortalTransforms.testing import (
@@ -260,5 +262,9 @@ class TestXSSFilter(unittest.TestCase):
 
     def test_39(self):
         data_in = """<a href="&#42;&Ascr;\xa9"></a>"""
-        data_out = '<a href="*&amp;Ascr;%C2%A9"></a>'
+        if Version(version("lxml")) >= Version("6"):
+            data_out = '<a href="*%F0%9D%92%9C%C2%A9"></a>'
+        else:
+            # BBB With lxml 5 we get this:
+            data_out = '<a href="*&amp;Ascr;%C2%A9"></a>'
         self.doTest(data_in, data_out)

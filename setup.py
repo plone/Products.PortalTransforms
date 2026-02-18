@@ -39,6 +39,7 @@ setup(
     python_requires=">=3.10",
     extras_require=dict(
         test=[
+            "packaging",
             "plone.app.contenttypes[test]",
             "plone.app.testing",
         ],
