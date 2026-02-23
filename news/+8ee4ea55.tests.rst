@@ -1,1 +1,0 @@
-Fix one XSS test to pass with both lxml 5 and 6.  [maurits]

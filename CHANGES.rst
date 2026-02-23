@@ -8,6 +8,15 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.0a3 (2026-02-23)
+--------------------
+
+Tests:
+
+
+- Fix one XSS test to pass with both lxml 5 and 6.  [maurits]
+
+
 5.0.0a2 (2025-12-23)
 --------------------
 
