@@ -11,7 +11,6 @@ from Products.PortalTransforms.utils import log
 from zope.component import getUtility
 from zope.interface import implementer
 
-
 try:
     import markdown as markdown_transformer
 except ImportError:
