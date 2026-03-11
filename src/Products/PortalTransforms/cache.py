@@ -3,7 +3,6 @@
 from Acquisition import aq_base
 from time import time
 
-
 _marker = object()
 
 

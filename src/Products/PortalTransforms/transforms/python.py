@@ -24,7 +24,6 @@ import keyword
 import token
 import tokenize
 
-
 # Python Source Parser #####################################################
 
 _KEYWORD = token.NT_OFFSET + 1

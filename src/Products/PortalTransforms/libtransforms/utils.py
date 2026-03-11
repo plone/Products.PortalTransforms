@@ -5,7 +5,6 @@ import os
 import sys
 import warnings
 
-
 try:
     # Need to be imported before win32api to avoid dll loading
     # problems.
