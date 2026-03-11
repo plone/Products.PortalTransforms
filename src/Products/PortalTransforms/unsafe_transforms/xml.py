@@ -177,12 +177,8 @@ def get_dtd(data):
 
 
 if __name__ == "__main__":
-    print(
-        get_doctype(
-            """<?xml version="1.0" encoding="iso-8859-1"?>
+    print(get_doctype("""<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE article PUBLIC "-//LOGILAB/DTD DocBook V4.1.2-Based Extension V0.1//EN" "dcbk-logilab.dtd" []>
 
 <book id="devtools_user_manual" lang="fr">
-"""
-        )
-    )
+"""))

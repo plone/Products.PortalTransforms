@@ -69,8 +69,8 @@ class Parser:
 
     def format_tokenizer(self, toktype, toktext, sx, ex, line):
         """Token handler."""
-        (srow, scol) = sx
-        (erow, ecol) = ex
+        srow, scol = sx
+        erow, ecol = ex
         oldpos = self.pos
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)
