@@ -162,7 +162,7 @@ class SafeHTML:
 
         valid_tags = self.settings.valid_tags
         nasty_tags = [t for t in self.settings.nasty_tags if t not in valid_tags]
-        safe_attrs = [i for i in html.defs.safe_attrs]
+        safe_attrs = [*html.defs.safe_attrs]
         safe_attrs.extend(self.settings.custom_attributes)
         remove_script = "script" in nasty_tags and 1 or 0
         options = dict(
