@@ -1,0 +1,2 @@
+Rename ``IDataStream.setCachable`` to ``setCacheable``, the name ``datastream`` has always implemented.
+[jensens]
