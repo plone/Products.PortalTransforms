@@ -1,0 +1,3 @@
+Keep the ``BrokenTransform`` as ``_v_transform`` when the transform module cannot be imported,
+so that ``convert()`` logs a warning instead of raising ``AttributeError``.
+[jensens]

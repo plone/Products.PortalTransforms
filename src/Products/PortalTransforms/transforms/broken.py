@@ -14,7 +14,11 @@ class BrokenTransform:
     def __init__(self, id, module, error):
         self.id = id
         self.module = module
-        self.error = error
+        # Keep only the message. An exception instance would keep its
+        # traceback, and with it every frame of the request that loaded the
+        # transform, alive for as long as the Transform stays in the ZODB
+        # connection cache.
+        self.error = str(error)
 
     def name(self):
         return self.__name__
