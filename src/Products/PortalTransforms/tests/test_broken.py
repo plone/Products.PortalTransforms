@@ -17,8 +17,8 @@ class BrokenTransformTests(unittest.TestCase):
         ref = weakref.ref(marker)
         try:
             try:
-                import no_such_module_for_this_test  # noqa: F401
-            except ImportError:
+                raise ValueError("inner")
+            except ValueError:
                 # raised inside a handler, so the error carries a __context__
                 raise RuntimeError("Unable to find binary")
         except RuntimeError as err:
