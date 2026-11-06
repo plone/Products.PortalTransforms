@@ -1,4 +1,5 @@
 from Products.PortalTransforms.data import datastream
+from Products.PortalTransforms.Transform import Transform
 from Products.PortalTransforms.transforms.broken import BrokenTransform
 
 import gc
@@ -41,3 +42,17 @@ class BrokenTransformTests(unittest.TestCase):
             "BROKEN transform broken (some.module). Error: Unable to find binary",
             logs.output[0],
         )
+
+
+class TransformLoadTests(unittest.TestCase):
+    def test_convert_with_unimportable_module_uses_broken_transform(self):
+        with self.assertLogs("PortalTransforms", level="ERROR"):
+            transform = Transform(
+                "broken", "Products.PortalTransforms.transforms.no_such_module"
+            )
+        self.assertEqual(transform.title, "BROKEN")
+        data = datastream("broken")
+        with self.assertLogs("PortalTransforms", level="WARNING"):
+            result = transform.convert("orig", data)
+        self.assertIs(result, data)
+        self.assertEqual(data.getData(), "")

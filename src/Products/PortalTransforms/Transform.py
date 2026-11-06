@@ -157,6 +157,7 @@ class Transform(SimpleItem):
             )
             self.title = "BROKEN"
             log(msg, severity=ERROR)
+            self._v_transform = transform
             return transform
         if not hasattr(m, "register"):
             msg = (
