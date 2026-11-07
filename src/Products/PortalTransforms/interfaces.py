@@ -40,7 +40,7 @@ class IDataStream(Interface):
         Default is true
         """
 
-    def setCachable(value):
+    def setCacheable(value):
         """Set cacheable flag to yes or no"""
 
 
