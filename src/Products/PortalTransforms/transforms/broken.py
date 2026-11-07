@@ -2,7 +2,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
 from zope.interface import implementer
 
-WARNING = 100
+import logging
 
 
 @implementer(ITransform)
@@ -26,8 +26,7 @@ class BrokenTransform:
             self.module,
             self.error,
         )
-        log(msg, severity=WARNING)
-        print(msg)
+        log(msg, severity=logging.WARNING)
         data.setData("")
         return data
 
