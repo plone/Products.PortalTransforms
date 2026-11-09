@@ -10,7 +10,7 @@ requires = ["setuptools>=68.2,<83", "wheel"]
 
 [project]
 name = "Products.PortalTransforms"
-version = "5.0.1"
+version = "5.0.2.dev0"
 description = "MIME based content transformations"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
