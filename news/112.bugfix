@@ -1,0 +1,3 @@
+``BrokenTransform`` stores only the error message instead of the exception instance,
+whose traceback kept every frame of the request that loaded the transform alive.
+[jensens]
