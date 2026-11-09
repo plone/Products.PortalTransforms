@@ -8,6 +8,31 @@ Changelog
 
 .. towncrier release notes start
 
+5.0.1 (2026-11-09)
+------------------
+
+Bug fixes:
+
+
+- Fix: Improper warnings on broken transform 
+  [ewohnlich, jensens] (#19)
+- Rename ``IDataStream.setCachable`` to ``setCacheable``, the name ``datastream`` has always implemented.
+  [jensens] (#72)
+- ``BrokenTransform`` stores only the error message instead of the exception instance,
+  whose traceback kept every frame of the request that loaded the transform alive.
+  [jensens] (#112)
+- Keep the ``BrokenTransform`` as ``_v_transform`` when the transform module cannot be imported,
+  so that ``convert()`` logs a warning instead of raising ``AttributeError``.
+  [jensens] (#113)
+
+
+Internal:
+
+
+- Move package metadata from ``setup.py`` to ``pyproject.toml``.
+  [plone devs]
+
+
 5.0.0 (2026-05-18)
 ------------------
 
