@@ -1,0 +1,3 @@
+Deprecate ``Products.PortalTransforms.unsafe_transforms``, it will be removed in version 6.0.
+Nothing in Plone uses it, it has no tests, and its ``command`` and ``build_transforms`` modules cannot be imported on Python 3.
+[jensens]
